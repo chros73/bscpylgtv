@@ -68,3 +68,7 @@ We use [`pre-commit`](https://pre-commit.com) to keep a consistent code style, s
 pre-commit install
 ```
 to install the hooks.
+
+## Forum
+
+Forum [topic](https://forum.doom9.org/showthread.php?t=175007).

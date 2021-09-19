@@ -1432,6 +1432,11 @@ class WebOsClient:
 
         return await self.luna_request(uri, params)
 
+    async def show_screen_saver(self):
+        uri = "com.webos.service.tvpower/power/turnOnScreenSaver"
+
+        return await self.luna_request(uri, {})
+
     async def get_picture_settings(
         self, keys=["contrast", "backlight", "brightness", "color"]
     ):

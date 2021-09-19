@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import json
 
 from bscpylgtv import WebOsClient
 
@@ -18,6 +19,10 @@ def convert_arg(arg):
         pass
     try:
         return float(arg)
+    except ValueError:
+        pass
+    try:
+        return json.loads(arg)
     except ValueError:
         pass
     if arg.lower() == "true":

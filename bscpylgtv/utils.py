@@ -5,7 +5,7 @@ from bscpylgtv import WebOsClient
 
 
 async def runloop(args):
-    client = await WebOsClient.create(args.host, timeout_connect=2)
+    client = await WebOsClient.create(args.host, timeout_connect=2, ping_interval=None)
     await client.connect()
     print(await getattr(client, args.command)(*args.parameters))
     await client.disconnect()

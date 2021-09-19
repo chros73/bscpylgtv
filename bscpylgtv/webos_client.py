@@ -7,22 +7,12 @@ import logging
 import os
 from datetime import timedelta
 
-import numpy as np
 import websockets
 from sqlitedict import SqliteDict
 
 from . import buttons as btn
-from . import cal_commands as cal
 from . import endpoints as ep
-from .constants import BT2020_PRIMARIES, CALIBRATION_TYPE_MAP, DEFAULT_CAL_DATA
 from .handshake import REGISTRATION_MESSAGE
-from .lut_tools import (
-    create_dolby_vision_config,
-    read_cal_file,
-    read_cube_file,
-    unity_lut_1d,
-    unity_lut_3d,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -186,7 +176,6 @@ class WebOsClient:
 
         handler_tasks = set()
         ws = None
-        inputws = None
         try:
             ws = await asyncio.wait_for(
                 websockets.connect(
@@ -232,57 +221,33 @@ class WebOsClient:
                 )
             self.connection = ws
 
-            # open additional connection needed to send button commands
-            # the url is dynamically generated and returned from the ep.INPUT_SOCKET
-            # endpoint on the main connection
-            sockres = await self.request(ep.INPUT_SOCKET)
-            inputsockpath = sockres.get("socketPath")
-            inputws = await asyncio.wait_for(
-                websockets.connect(
-                    inputsockpath,
-                    ping_interval=None,
-                    close_timeout=self.timeout_connect,
-                ),
-                timeout=self.timeout_connect,
-            )
-
-            handler_tasks.add(asyncio.create_task(inputws.wait_closed()))
-            if self.ping_interval is not None:
-                handler_tasks.add(
-                    asyncio.create_task(
-                        self.ping_handler(
-                            inputws, self.ping_interval, self.ping_timeout
-                        )
-                    )
-                )
-            self.input_connection = inputws
-
             # set static state and subscribe to state updates
             # avoid partial updates during initial subscription
 
             self.doStateUpdate = False
-            self._system_info, self._software_info = await asyncio.gather(
-                self.get_system_info(), self.get_software_info()
-            )
+            #chros self._system_info, self._software_info = await asyncio.gather(
+            #chros     self.get_system_info(), self.get_software_info()
+            #chros )
             subscribe_coros = {
-                self.subscribe_power_state(self.set_power_state),
-                self.subscribe_current_app(self.set_current_app_state),
-                self.subscribe_muted(self.set_muted_state),
-                self.subscribe_volume(self.set_volume_state),
-                self.subscribe_apps(self.set_apps_state),
-                self.subscribe_inputs(self.set_inputs_state),
-                self.subscribe_sound_output(self.set_sound_output_state),
-                self.subscribe_picture_settings(self.set_picture_settings_state),
+                #chros self.subscribe_power_state(self.set_power_state),
+                #chros self.subscribe_current_app(self.set_current_app_state),
+                #chros self.subscribe_muted(self.set_muted_state),
+                #chros self.subscribe_volume(self.set_volume_state),
+                #chros self.subscribe_apps(self.set_apps_state),
+                #chros self.subscribe_inputs(self.set_inputs_state),
+                #chros self.subscribe_sound_output(self.set_sound_output_state),
+                #chros self.subscribe_picture_settings(self.set_picture_settings_state),
             }
             subscribe_tasks = set()
-            for coro in subscribe_coros:
-                subscribe_tasks.add(asyncio.create_task(coro))
-            await asyncio.wait(subscribe_tasks)
-            for task in subscribe_tasks:
-                try:
-                    task.result()
-                except PyLGTVServiceNotFoundError:
-                    pass
+            if subscribe_coros:
+                for coro in subscribe_coros:
+                    subscribe_tasks.add(asyncio.create_task(coro))
+                await asyncio.wait(subscribe_tasks)
+                for task in subscribe_tasks:
+                    try:
+                        task.result()
+                    except PyLGTVServiceNotFoundError:
+                        pass
             # set placeholder power state if not available
             if not self._power_state:
                 self._power_state = {"state": "Unknown"}
@@ -310,8 +275,8 @@ class WebOsClient:
 
             if ws is not None:
                 closeout.add(asyncio.create_task(ws.close()))
-            if inputws is not None:
-                closeout.add(asyncio.create_task(inputws.close()))
+            if self.input_connection is not None:
+                closeout.add(asyncio.create_task(self.input_connection.close()))
 
             self.connection = None
             self.input_connection = None
@@ -485,54 +450,6 @@ class WebOsClient:
         if self.is_on:
             return self._power_state.get("state") != "Screen Off"
         return False
-
-    def calibration_support_info(self):
-        info = {
-            "lut1d": False,
-            "lut3d_size": None,
-            "custom_tone_mapping": False,
-            "dv_config_type": None,
-        }
-        model_name = self._system_info["modelName"]
-        if model_name.startswith("OLED") and len(model_name) > 7:
-            model = model_name[6]
-            year = int(model_name[7])
-            if year >= 8:
-                info["lut1d"] = True
-                if model == "B":
-                    info["lut3d_size"] = 17
-                else:
-                    info["lut3d_size"] = 33
-            if year == 8:
-                info["dv_config_type"] = 2018
-            elif year == 9:
-                info["custom_tone_mapping"] = True
-                info["dv_config_type"] = 2019
-        elif len(model_name) > 5:
-            size = None
-            try:
-                size = int(model_name[0:2])
-            except ValueError:
-                pass
-            if size:
-                modeltype = model_name[2]
-                modelyear = model_name[3]
-                modelseries = model_name[4]
-                modelnumber = model_name[5]
-
-                if modeltype == "S" and modelyear in ["K", "M"] and modelseries >= 8:
-                    info["lut1d"] = True
-                    if modelseries == 9 and modelnumber == 9:
-                        info["lut3d_size"] = 33
-                    else:
-                        info["lut3d_size"] = 17
-                    if modelyear == "K":
-                        info["dv_config_type"] = 2018
-                    elif modelyear == "M":
-                        info["custom_tone_mapping"] = True
-                        info["dv_config_type"] = 2019
-
-        return info
 
     async def register_state_update_callback(self, callback):
         self.state_update_callbacks.append(callback)
@@ -730,10 +647,43 @@ class WebOsClient:
             raise
 
     async def input_command(self, message):
-        if self.input_connection is None:
-            raise PyLGTVCmdException("Couldn't execute input command.")
+        inputws = None
+        try:
+            # open additional connection needed to send button commands
+            # the url is dynamically generated and returned from the ep.INPUT_SOCKET
+            # endpoint on the main connection
+            if self.input_connection is None:
+                sockres = await self.request(ep.INPUT_SOCKET)
+                inputsockpath = sockres.get("socketPath")
+                inputws = await asyncio.wait_for(
+                    websockets.connect(
+                        inputsockpath,
+                        ping_interval=None,
+                        close_timeout=self.timeout_connect,
+                    ),
+                    timeout=self.timeout_connect,
+                )
 
-        await self.input_connection.send(message)
+                comm='''
+                if self.ping_interval is not None:
+                    handler_tasks.add(
+                        asyncio.create_task(
+                            self.ping_handler(
+                                inputws, self.ping_interval, self.ping_timeout
+                            )
+                        )
+                    )
+                '''
+                self.input_connection = inputws
+
+            if self.input_connection is None:
+                raise PyLGTVCmdException("Couldn't execute input command.")
+
+            await self.input_connection.send(message)
+
+        except Exception as ex:
+            if not self.connect_result.done():
+                self.connect_result.set_exception(ex)
 
     # high level request handling
 
@@ -845,6 +795,7 @@ class WebOsClient:
         """Power off TV."""
 
         # protect against turning tv back on if it is off
+        self._power_state = await self.get_power_state()
         if not self.is_on:
             return
 
@@ -1435,195 +1386,6 @@ class WebOsClient:
 
         return await self.luna_request(uri, params)
 
-    def validateCalibrationData(self, data, shape, dtype):
-        if not isinstance(data, np.ndarray):
-            raise TypeError(f"data must be of type ndarray but is instead {type(data)}")
-        if data.shape != shape:
-            raise ValueError(
-                f"data should have shape {shape} but instead has {data.shape}"
-            )
-        if data.dtype != dtype:
-            raise TypeError(
-                f"numpy dtype should be {dtype} but is instead {data.dtype}"
-            )
-
-    async def calibration_request(self, command, picMode, data):
-        dataenc = base64.b64encode(data.tobytes()).decode()
-
-        payload = {
-            "command": command,
-            "data": dataenc,
-            "dataCount": data.size,
-            "dataOpt": 1,
-            "dataType": CALIBRATION_TYPE_MAP[data.dtype.name],
-            "profileNo": 0,
-            "programID": 1,
-        }
-        if picMode is not None:
-            payload["picMode"] = picMode
-
-        return await self.request(ep.CALIBRATION, payload)
-
-    async def start_calibration(self, picMode, data=DEFAULT_CAL_DATA):
-        self.validateCalibrationData(data, (9,), np.float32)
-        return await self.calibration_request(cal.CAL_START, picMode, data)
-
-    async def end_calibration(self, picMode, data=DEFAULT_CAL_DATA):
-        self.validateCalibrationData(data, (9,), np.float32)
-        return await self.calibration_request(cal.CAL_END, picMode, data)
-
-    async def upload_1d_lut(self, picMode, data=None):
-        info = self.calibration_support_info()
-        if not info["lut1d"]:
-            model = self._system_info["modelName"]
-            raise PyLGTVCmdException(
-                f"1D LUT Upload not supported by tv model {model}."
-            )
-        if data is None:
-            data = await asyncio.get_running_loop().run_in_executor(None, unity_lut_1d)
-        self.validateCalibrationData(data, (3, 1024), np.uint16)
-        return await self.calibration_request(cal.UPLOAD_1D_LUT, picMode, data)
-
-    async def upload_3d_lut(self, command, picMode, data):
-        if command not in [cal.UPLOAD_3D_LUT_BT709, cal.UPLOAD_3D_LUT_BT2020]:
-            raise PyLGTVCmdException(f"Invalid 3D LUT Upload command {command}.")
-        info = self.calibration_support_info()
-        lut3d_size = info["lut3d_size"]
-        if not lut3d_size:
-            model = self._system_info["modelName"]
-            raise PyLGTVCmdException(
-                f"3D LUT Upload not supported by tv model {model}."
-            )
-        if data is None:
-            data = await asyncio.get_running_loop().run_in_executor(
-                None, unity_lut_3d, lut3d_size
-            )
-        lut3d_shape = (lut3d_size, lut3d_size, lut3d_size, 3)
-        self.validateCalibrationData(data, lut3d_shape, np.uint16)
-        return await self.calibration_request(command, picMode, data)
-
-    async def upload_3d_lut_bt709(self, picMode, data=None):
-        return await self.upload_3d_lut(cal.UPLOAD_3D_LUT_BT709, picMode, data)
-
-    async def upload_3d_lut_bt2020(self, picMode, data=None):
-        return await self.upload_3d_lut(cal.UPLOAD_3D_LUT_BT2020, picMode, data)
-
-    async def set_ui_data(self, command, picMode, value):
-        if not (value >= 0 and value <= 100):
-            raise ValueError
-
-        data = np.array(value, dtype=np.uint16)
-        return await self.calibration_request(command, picMode, data)
-
-    async def set_brightness(self, picMode, value):
-        return await self.set_ui_data(cal.BRIGHTNESS_UI_DATA, picMode, value)
-
-    async def set_contrast(self, picMode, value):
-        return await self.set_ui_data(cal.CONTRAST_UI_DATA, picMode, value)
-
-    async def set_oled_light(self, picMode, value):
-        return await self.set_ui_data(cal.BACKLIGHT_UI_DATA, picMode, value)
-
-    async def set_color(self, picMode, value):
-        return await self.set_ui_data(cal.COLOR_UI_DATA, picMode, value)
-
-    async def set_1d_2_2_en(self, picMode, value=0):
-        data = np.array(value, dtype=np.uint16)
-        return await self.calibration_request(
-            cal.ENABLE_GAMMA_2_2_TRANSFORM, picMode, data
-        )
-
-    async def set_1d_0_45_en(self, picMode, value=0):
-        data = np.array(value, dtype=np.uint16)
-        return await self.calibration_request(
-            cal.ENABLE_GAMMA_0_45_TRANSFORM, picMode, data
-        )
-
-    async def set_bt709_3by3_gamut_data(
-        self, picMode, data=np.identity(3, dtype=np.float32)
-    ):
-        self.validateCalibrationData(data, (3, 3), np.float32)
-        return await self.calibration_request(cal.BT709_3BY3_GAMUT_DATA, picMode, data)
-
-    async def set_bt2020_3by3_gamut_data(
-        self, picMode, data=np.identity(3, dtype=np.float32)
-    ):
-        self.validateCalibrationData(data, (3, 3), np.float32)
-        return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, picMode, data)
-
-    async def set_dolby_vision_config_data(
-        self, white_level=700.0, black_level=0.0, gamma=2.2, primaries=BT2020_PRIMARIES
-    ):
-
-        info = self.calibration_support_info()
-        dv_config_type = info["dv_config_type"]
-        if dv_config_type is None:
-            model = self._system_info["modelName"]
-            raise PyLGTVCmdException(
-                f"Dolby Vision Configuration Upload not supported by tv model {model}."
-            )
-
-        config = await asyncio.get_running_loop().run_in_executor(
-            None,
-            functools.partial(
-                create_dolby_vision_config,
-                version=dv_config_type,
-                white_level=white_level,
-                black_level=black_level,
-                gamma=gamma,
-                primaries=primaries,
-            ),
-        )
-
-        data = np.frombuffer(config.encode(), dtype=np.uint8)
-        return await self.calibration_request(
-            command=cal.DOLBY_CFG_DATA, picMode=None, data=data
-        )
-
-    async def set_tonemap_params(
-        self,
-        picMode,
-        luminance=700,
-        mastering_peak_1=1000,
-        rolloff_point_1=70,
-        mastering_peak_2=4000,
-        rolloff_point_2=60,
-        mastering_peak_3=10000,
-        rolloff_point_3=50,
-    ):
-
-        data = np.array(
-            [
-                luminance,
-                mastering_peak_1,
-                rolloff_point_1,
-                mastering_peak_2,
-                rolloff_point_2,
-                mastering_peak_3,
-                rolloff_point_3,
-            ],
-            dtype=np.uint16,
-        )
-
-        return await self.calibration_request(cal.SET_TONEMAP_PARAM, picMode, data)
-
-    async def ddc_reset(self, picMode, reset_1d_lut=True):
-        if not isinstance(reset_1d_lut, bool):
-            raise TypeError(
-                f"reset_1d_lut should be a bool, instead got {reset_1d_lut} of type {type(reset_1d_lut)}."
-            )
-
-        await self.set_1d_2_2_en(picMode)
-        await self.set_1d_0_45_en(picMode)
-        await self.set_bt709_3by3_gamut_data(picMode)
-        await self.set_bt2020_3by3_gamut_data(picMode)
-        await self.upload_3d_lut_bt709(picMode)
-        await self.upload_3d_lut_bt2020(picMode)
-        if reset_1d_lut:
-            await self.upload_1d_lut(picMode)
-
-        return True
-
     async def get_picture_settings(
         self, keys=["contrast", "backlight", "brightness", "color"]
     ):
@@ -1639,43 +1401,3 @@ class WebOsClient:
 
         payload = {"category": "picture", "keys": keys}
         return await self.subscribe(settings, ep.GET_SYSTEM_SETTINGS, payload=payload)
-
-    async def upload_1d_lut_from_file(self, picMode, filename):
-        ext = filename.split(".")[-1].lower()
-        if ext == "cal":
-            lut = await asyncio.get_running_loop().run_in_executor(
-                None, read_cal_file, filename
-            )
-        elif ext == "cube":
-            lut = await asyncio.get_running_loop().run_in_executor(
-                None, read_cube_file, filename
-            )
-        else:
-            raise ValueError(
-                f"Unsupported file format {ext} for 1D LUT.  Supported file formats are cal and cube."
-            )
-
-        return await self.upload_1d_lut(picMode, lut)
-
-    async def upload_3d_lut_from_file(self, command, picMode, filename):
-        ext = filename.split(".")[-1].lower()
-        if ext == "cube":
-            lut = await asyncio.get_running_loop().run_in_executor(
-                None, read_cube_file, filename
-            )
-        else:
-            raise ValueError(
-                f"Unsupported file format {ext} for 3D LUT.  Supported file formats are cube."
-            )
-
-        return await self.upload_3d_lut(command, picMode, lut)
-
-    async def upload_3d_lut_bt709_from_file(self, picMode, filename):
-        return await self.upload_3d_lut_from_file(
-            cal.UPLOAD_3D_LUT_BT709, picMode, filename
-        )
-
-    async def upload_3d_lut_bt2020_from_file(self, picMode, filename):
-        return await self.upload_3d_lut_from_file(
-            cal.UPLOAD_3D_LUT_BT2020, picMode, filename
-        )

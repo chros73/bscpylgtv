@@ -1,7 +1,7 @@
 import argparse
 import asyncio
 
-from aiopylgtv import WebOsClient
+from bscpylgtv import WebOsClient
 
 
 async def runloop(args):
@@ -27,7 +27,7 @@ def convert_arg(arg):
     return arg
 
 
-def aiopylgtvcommand():
+def bscpylgtvcommand():
     parser = argparse.ArgumentParser(description="Send command to LG WebOs TV.")
     parser.add_argument(
         "host", type=str, help="hostname or ip address of the TV to connect to"

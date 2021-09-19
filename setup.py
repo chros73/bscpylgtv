@@ -4,21 +4,21 @@ with open("README.md") as f:
     readme = f.read()
 
 setup(
-    name="aiopylgtv",
-    packages=["aiopylgtv"],
-    install_requires=["websockets>=8.1", "numpy>=1.17.0", "sqlitedict"],
+    name="bscpylgtv",
+    packages=["bscpylgtv"],
+    install_requires=["websockets>=8.1", "sqlitedict"],
     python_requires=">=3.7",
     zip_safe=True,
-    version="0.4.1",
+    version="0.0.1",
     description="Library to control webOS based LG TV devices.",
     long_description=readme,
     long_description_content_type="text/markdown",
-    author="Josh Bendavid",
+    author="chros",
     author_email="joshbendavid@gmail.com",
-    url="https://github.com/bendavid/aiopylgtv",
+    url="https://github.com/bendavid/bscpylgtv",
     keywords=["webos", "tv"],
     classifiers=[],
     entry_points={
-        "console_scripts": ["aiopylgtvcommand=aiopylgtv.utils:aiopylgtvcommand"]
+        "console_scripts": ["bscpylgtvcommand=bscpylgtv.utils:bscpylgtvcommand"]
     },
 )

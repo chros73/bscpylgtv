@@ -1525,11 +1525,21 @@ class WebOsClient:
 
         return await self.luna_request(uri, {})
 
+    async def get_system_settings(self, category="option", keys=["audioGuidance"]):
+        """Get system settings.
+
+        Most of the settings are not exposed via this call, valid settings:
+        /usr/palm/services/com.webos.service.apiadapter/adapters/settings/valid-settings.js
+        """
+
+        payload = {"category": category, "keys": keys}
+        ret = await self.request(ep.GET_SYSTEM_SETTINGS, payload=payload)
+        return ret
+
     async def get_picture_settings(
         self, keys=["contrast", "backlight", "brightness", "color"]
     ):
-        payload = {"category": "picture", "keys": keys}
-        ret = await self.request(ep.GET_SYSTEM_SETTINGS, payload=payload)
+        ret = await self.get_system_settings("picture", keys)
         return ret["settings"]
 
     async def subscribe_picture_settings(

@@ -1392,20 +1392,109 @@ class WebOsClient:
         A possible list of settings and example values are below (not all settings are applicable
         for all modes and/or tv models):
 
-        "gameOptimizationHDMI1": False,
-        "gameOptimizationHDMI2": False,
-        "gameOptimizationHDMI3": False,
-        "gameOptimizationHDMI4": False,
-        "hdmiPcMode": {
-            "hdmi1": False,
-            "hdmi2": False,
-            "hdmi3": False,
-            "hdmi4": False
+        "amazonHotkeyIsActive": true,
+        "appReturn": "",
+        "care365": {
+            "accountName": "",
+            "accountNumber": "",
+            "userAgreementLocation": "",
+            "userAgreementVersion": "",
+            "value": "off"
         },
-        "uhdDeepColorHDMI1": False,
-        "uhdDeepColorHDMI2": False,
-        "uhdDeepColorHDMI3": False,
-        "uhdDeepColorHDMI4": False
+        "colorimetryHDMI1": "auto",
+        "colorimetryHDMI2": "auto",
+        "colorimetryHDMI3": "auto",
+        "colorimetryHDMI4": "auto",
+        "cursorAutoRemover": "on",
+        "dolbyVSVDBVerHDMI1": "v1",
+        "dolbyVSVDBVerHDMI2": "v1",
+        "dolbyVSVDBVerHDMI3": "v1",
+        "dolbyVSVDBVerHDMI4": "v1",
+        "eotfHDMI1": "auto",
+        "eotfHDMI2": "auto",
+        "eotfHDMI3": "auto",
+        "eotfHDMI4": "auto",
+        "epgRowCount": "1",
+        "flickerPatternCtrl": false,
+        "freesyncLCDHDMI1": "off",
+        "freesyncLCDHDMI2": "off",
+        "freesyncLCDHDMI3": "off",
+        "freesyncLCDHDMI4": "off",
+        "freesyncOLEDHDMI1": "off",
+        "freesyncOLEDHDMI2": "off",
+        "freesyncOLEDHDMI3": "off",
+        "freesyncOLEDHDMI4": "off",
+        "freesyncSupport": "off",
+        "freeviewTnCPopup": "off",
+        "gameOptimizationHDMI1": "on",
+        "gameOptimizationHDMI2": "on",
+        "gameOptimizationHDMI3": "on",
+        "gameOptimizationHDMI4": "on",
+        "hdmiPcMode": {
+            "hdmi1": false,
+            "hdmi2": false,
+            "hdmi3": false,
+            "hdmi4": false
+        },
+        "homeEffectVersion": [
+            {
+                "id": "Christmas",
+                "version": 1.0
+            },
+            {
+                "id": "Halloween",
+                "version": 1.0
+            }
+        ],
+        "isFirstCapture": "true",
+        "isfUpdated": "false",
+        "lowLevelAdjustment": 0,
+        "masterLuminanceLevel": "540nit",
+        "masteringColorHDMI1": "auto",
+        "masteringColorHDMI2": "auto",
+        "masteringColorHDMI3": "auto",
+        "masteringColorHDMI4": "auto",
+        "masteringPeakHDMI1": "auto",
+        "masteringPeakHDMI2": "auto",
+        "masteringPeakHDMI3": "auto",
+        "masteringPeakHDMI4": "auto",
+        "maxCLLHDMI1": "auto",
+        "maxCLLHDMI2": "auto",
+        "maxCLLHDMI3": "auto",
+        "maxCLLHDMI4": "auto",
+        "maxFALLHDMI1": "auto",
+        "maxFALLHDMI2": "auto",
+        "maxFALLHDMI3": "auto",
+        "maxFALLHDMI4": "auto",
+        "netflixHotkeyIsActive": true,
+        "quickSettingsMenuList": [
+            "QuickSettings_picture_button",
+            "QuickSettings_soundMode_button",
+            "QuickSettings_soundOut_button",
+            "QuickSettings_timer_button",
+            "QuickSettings_network_button",
+            "QuickSettings_menu_button"
+        ],
+        "screenRemoteAutoShow": "true",
+        "screenRemoteExpanded": "false",
+        "screenRemotePosition": "right",
+        "simplinkAutoPowerOn": "on",
+        "simplinkEnable": "off",
+        "supportAirplay": false,
+        "supportBnoModel": false,
+        "ueiEnable": "off",
+        "uhdDeepColor8kHDMI1": "off",
+        "uhdDeepColor8kHDMI2": "off",
+        "uhdDeepColor8kHDMI3": "off",
+        "uhdDeepColor8kHDMI4": "off",
+        "uhdDeepColorAutoStatusHDMI1": "none",
+        "uhdDeepColorAutoStatusHDMI2": "none",
+        "uhdDeepColorAutoStatusHDMI3": "none",
+        "uhdDeepColorAutoStatusHDMI4": "none",
+        "uhdDeepColorHDMI1": "off",
+        "uhdDeepColorHDMI2": "off",
+        "uhdDeepColorHDMI3": "off",
+        "uhdDeepColorHDMI4": "off"
 
         """
 
@@ -1420,7 +1509,6 @@ class WebOsClient:
 
         Example:
 
-        "com.palm.app.settings.enableHdmiPcLabel": False,
         "tv.model.motionProMode": "OLED Motion",
         "tv.model.motionProMode": "OLED Motion Pro"
 

@@ -41,9 +41,11 @@ bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.softwareupdat
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"inStart\"}"
 # Launch Ez-Adjust Service Menu (code: 0413) (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"ezAdjust\"}"
-# Activate "OLED Motion Pro" on C9
+# Get config values of "tv.model" category (using list)
+bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]"
+# Activate "OLED Motion Pro" on C9 (using JSON)
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED Motion Pro\"}"
-# Turn the TV off (standby) (using JSON)
+# Turn the TV off (standby)
 bscpylgtvcommand 192.168.1.18 power_off
 ```
 

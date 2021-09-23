@@ -37,6 +37,10 @@ bscpylgtvcommand 192.168.1.18 set_other_settings "{\"hdmiPcMode\": {\"hdmi2\": t
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.softwareupdate
 # Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.softwareupdate "{\"mode\": \"user\", \"flagUpdate\": true}"
+# Launch In-Start Service Menu (code: 0413) (using JSON)
+bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"inStart\"}"
+# Launch Ez-Adjust Service Menu (code: 0413) (using JSON)
+bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"ezAdjust\"}"
 # Activate "OLED Motion Pro" on C9
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED Motion Pro\"}"
 # Turn the TV off (standby) (using JSON)

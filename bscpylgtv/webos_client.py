@@ -1504,6 +1504,48 @@ class WebOsClient:
 
         return await self.luna_request(uri, params)
 
+    async def get_configs(self, keys=["tv.model.*"]):
+        """Get config settings.
+
+        A possible list of keys are below (not all settings are applicable for all modes and/or
+        tv models):
+
+        audio.*
+        com.palm.app.settings.*
+        com.palm.app.store-demo.*
+        com.webos.app.home.*
+        com.webos.app.igallery.*
+        com.webos.app.inputcommon.*
+        com.webos.app.quickinputpicker.*
+        com.webos.app.quicksettings.*
+        com.webos.app.systemmusic.*
+        com.webos.app.tips.*
+        com.webos.authenticationMethods.*
+        com.webos.keyaction.*
+        com.webos.service.arccontroller.*
+        com.webos.service.config.*
+        com.webos.service.fepg.*
+        com.webos.service.ime.*
+        com.webos.service.irdbmanager.*
+        com.webos.service.nop.*
+        com.webos.service.scd.*
+        com.webos.service.voiceinput.*
+        com.webos.surfacemanager.*
+        inputMap.hdcp22forHDMI.*
+        system.*
+        tv.config.*
+        tv.conti.*
+        tv.hw.*
+        tv.model.*
+        tv.nyx.*
+        tv.rmm.*
+
+        """
+
+        payload = {"configNames": keys}
+        ret = await self.request(ep.GET_CONFIGS, payload=payload)
+        return ret
+
     async def set_configs(self, settings):
         """Set config settings.
 

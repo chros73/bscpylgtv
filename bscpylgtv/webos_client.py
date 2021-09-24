@@ -1634,10 +1634,12 @@ class WebOsClient:
                 "audioGuidance",
                 "country",
                 "zipcode",
+                "livePlus",
                 "addressInfo",
                 "phlCitySelection",
                 "smartServiceCountryCode3",
-                "syncMode"
+                "syncMode",
+                "storeMode"
         ],
         "time": [
                 "onTimerVolume"
@@ -1650,7 +1652,20 @@ class WebOsClient:
         ],
         "" : [
                 "eulaStatus",
-                "eulaInfoNetwork"
+                "eulaInfoNetwork",
+                "mobileSetupStatus",
+                "localeInfo"
+        ],
+        "other": [
+                "simplinkEnable"
+        ],
+        "sound": [
+                "avSync",
+                "avSyncSpdif",
+                "avSyncBypassInput",
+                "eArcSupport",
+                "soundOutput",
+                "soundOutputDigital"
         ]
 
         """

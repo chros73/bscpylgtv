@@ -1619,6 +1619,40 @@ class WebOsClient:
 
         Most of the settings are not exposed via this call, valid settings:
         /usr/palm/services/com.webos.service.apiadapter/adapters/settings/valid-settings.js
+
+        "twinTv": [
+                "status",
+                "role",
+                "systemMode"
+        ],
+        "network": [
+                "deviceName",
+                "wolwowlOnOff",
+                "bleAdvertisingOnOff"
+        ],
+        "option": [
+                "audioGuidance",
+                "country",
+                "zipcode",
+                "addressInfo",
+                "phlCitySelection",
+                "smartServiceCountryCode3",
+                "syncMode"
+        ],
+        "time": [
+                "onTimerVolume"
+        ],
+        "picture": [
+                "brightness",
+                "backlight",
+                "contrast",
+                "color"
+        ],
+        "" : [
+                "eulaStatus",
+                "eulaInfoNetwork"
+        ]
+
         """
 
         payload = {"category": category, "keys": keys}

@@ -1444,7 +1444,7 @@ class WebOsClient:
         """Set other settings.
 
         A possible list of settings and example values are below (not all settings are applicable
-        for all modes and/or tv models):
+        for all tv models/firmwares):
 
         "amazonHotkeyIsActive": true,
         "appReturn": "",
@@ -1559,8 +1559,7 @@ class WebOsClient:
     async def get_configs(self, keys=["tv.model.*"]):
         """Get config settings.
 
-        A possible list of keys are below (not all settings are applicable for all modes and/or
-        tv models):
+        A possible list of keys are below (not all settings are applicable for all tv models):
 
         audio.*
         com.palm.app.settings.*

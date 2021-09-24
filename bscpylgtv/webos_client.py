@@ -1150,11 +1150,9 @@ class WebOsClient:
         Likely not all modes are valid for all tv models.
         """
 
-        uri = "com.webos.settingsservice/setSystemSettings"
-
         params = {"category": "picture", "settings": {"pictureMode": pic_mode}}
 
-        return await self.luna_request(uri, params)
+        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
     async def set_picture_mode(
         self, pic_mode, tv_input, dynamic_range="sdr", stereoscopic="2d"
@@ -1179,14 +1177,12 @@ class WebOsClient:
         Likely not all inputs and modes are valid for all tv models.
         """
 
-        uri = "com.webos.settingsservice/setSystemSettings"
-
         params = {
             "category": f"picture${tv_input}.x.{stereoscopic}.{dynamic_range}",
             "settings": {"pictureMode": pic_mode},
         }
 
-        return await self.luna_request(uri, params)
+        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
     async def set_current_picture_settings(self, settings):
         """Set picture settings for current picture mode, input, dynamic range and 3d mode.
@@ -1428,25 +1424,21 @@ class WebOsClient:
 
         """
 
-        uri = "com.webos.settingsservice/setSystemSettings"
-
         params = {"category": "picture", "settings": settings}
 
-        return await self.luna_request(uri, params)
+        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
     async def set_picture_settings(
         self, settings, pic_mode, tv_input, stereoscopic="2d"
     ):
         """Set picture settings for specific picture mode, input, and 3d mode."""
 
-        uri = "com.webos.settingsservice/setSystemSettings"
-
         params = {
             "category": f"picture${tv_input}.{pic_mode}.{stereoscopic}.x",
             "settings": settings,
         }
 
-        return await self.luna_request(uri, params)
+        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
     async def set_other_settings(self, settings):
         """Set other settings.
@@ -1560,11 +1552,9 @@ class WebOsClient:
 
         """
 
-        uri = "com.webos.settingsservice/setSystemSettings"
-
         params = {"category": "other", "settings": settings}
 
-        return await self.luna_request(uri, params)
+        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
     async def get_configs(self, keys=["tv.model.*"]):
         """Get config settings.
@@ -1618,16 +1608,12 @@ class WebOsClient:
 
         """
 
-        uri = "com.webos.service.config/setConfigs"
-
         params = {"configs": settings}
 
-        return await self.luna_request(uri, params)
+        return await self.luna_request(ep.LUNA_SET_CONFIGS, params)
 
     async def show_screen_saver(self):
-        uri = "com.webos.service.tvpower/power/turnOnScreenSaver"
-
-        return await self.luna_request(uri, {})
+        return await self.luna_request(ep.LUNA_TURN_ON_SCREEN_SAVER, {})
 
     async def get_system_settings(self, category="option", keys=["audioGuidance"]):
         """Get system settings.

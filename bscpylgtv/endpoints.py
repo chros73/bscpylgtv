@@ -1,3 +1,4 @@
+# webOS TV public SSAP API endpoints
 GET_SERVICES = "api/getServiceList"
 SET_MUTE = "audio/setMute"
 GET_AUDIO_STATUS = "audio/getStatus"
@@ -51,3 +52,8 @@ GET_POWER_STATE = "com.webos.service.tvpower/power/getPowerState"
 TURN_OFF_SCREEN = "com.webos.service.tvpower/power/turnOffScreen"
 TURN_ON_SCREEN = "com.webos.service.tvpower/power/turnOnScreen"
 GET_CONFIGS = "config/getConfigs"
+
+# webOS TV internal Luna API endpoints
+LUNA_SET_CONFIGS = "com.webos.service.config/setConfigs"
+LUNA_SET_SYSTEM_SETTINGS = "com.webos.settingsservice/setSystemSettings"
+LUNA_TURN_ON_SCREEN_SAVER = "com.webos.service.tvpower/power/turnOnScreenSaver"

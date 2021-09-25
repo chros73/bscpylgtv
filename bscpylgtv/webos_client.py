@@ -1142,8 +1142,8 @@ class WebOsClient:
         """Set picture mode for current input, dynamic range and 3d mode.
 
         Known picture modes are: cinema, eco, expert1, expert2, game,
-        normal, photo, sports, technicolor, vivid, hdrEffect,  hdrCinema,
-        hdrCinemaBright, hdrExternal, hdrGame, hdrStandard, hdrTechnicolor,
+        normal, photo, sports, technicolor, filmMaker, vivid, hdrEffect, hdrCinema,
+        hdrCinemaBright, hdrExternal, hdrGame, hdrStandard, hdrTechnicolor, hdrFilmMaker,
         hdrVivid, dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
         dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid, dolbyStandard
 
@@ -1160,8 +1160,8 @@ class WebOsClient:
         """Set picture mode for specific input, dynamic range and 3d mode.
 
         Known picture modes are: cinema, eco, expert1, expert2, game,
-        normal, photo, sports, technicolor, vivid, hdrEffect,  hdrCinema,
-        hdrCinemaBright, hdrExternal, hdrGame, hdrStandard, hdrTechnicolor,
+        normal, photo, sports, technicolor, filmMaker, vivid, hdrEffect,  hdrCinema,
+        hdrCinemaBright, hdrExternal, hdrGame, hdrStandard, hdrTechnicolor, hdrFilmMaker,
         hdrVivid, dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
         dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid, dolbyStandard
 
@@ -1170,7 +1170,8 @@ class WebOsClient:
         hdmi1_pc, hdmi2_pc, hdmi3_pc, hdmi4_pc, ip, movie,
         photo, pictest, rgb, scart, smhl
 
-        Known dynamic range modes are: sdr, hdr, technicolorHdr, dolbyHdr
+        Known dynamic range modes are: sdr, sdrALLM, hdr, hdrALLM,
+        technicolorHdr, technicolorHdrALLM, dolbyHdr, dolbyHdrALLM
 
         Known stereoscopic modes are: 2d, 3d
 
@@ -1189,6 +1190,7 @@ class WebOsClient:
 
         A possible list of settings and example values are below (not all settings are applicable
         for all modes and/or tv models):
+        /etc/palm/defaultSettings.json
 
         "adjustingLuminance": [
             0,
@@ -1445,6 +1447,7 @@ class WebOsClient:
 
         A possible list of settings and example values are below (not all settings are applicable
         for all tv models/firmwares):
+        /etc/palm/defaultSettings.json
 
         "amazonHotkeyIsActive": true,
         "appReturn": "",

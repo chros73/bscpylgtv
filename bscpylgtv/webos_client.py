@@ -1451,6 +1451,8 @@ class WebOsClient:
 
         "amazonHotkeyIsActive": true,
         "appReturn": "",
+        "blackStabilizer": 10,
+        "blueLight": "off",
         "care365": {
             "accountName": "",
             "accountNumber": "",
@@ -1458,21 +1460,26 @@ class WebOsClient:
             "userAgreementVersion": "",
             "value": "off"
         },
+        "colorimetry": "auto",
         "colorimetryHDMI1": "auto",
         "colorimetryHDMI2": "auto",
         "colorimetryHDMI3": "auto",
         "colorimetryHDMI4": "auto",
         "cursorAutoRemover": "on",
-        "dolbyVSVDBVerHDMI1": "v1",
-        "dolbyVSVDBVerHDMI2": "v1",
-        "dolbyVSVDBVerHDMI3": "v1",
-        "dolbyVSVDBVerHDMI4": "v1",
+        "dolbyVSVDBVe": "v2",
+        "dolbyVSVDBVerHDMI1": "v2",
+        "dolbyVSVDBVerHDMI2": "v2",
+        "dolbyVSVDBVerHDMI3": "v2",
+        "dolbyVSVDBVerHDMI4": "v2",
+        "enableQuickGame": "on",
+        "eotf": "auto",
         "eotfHDMI1": "auto",
         "eotfHDMI2": "auto",
         "eotfHDMI3": "auto",
         "eotfHDMI4": "auto",
         "epgRowCount": "1",
         "flickerPatternCtrl": false,
+        "freesync": "off",
         "freesyncLCDHDMI1": "off",
         "freesyncLCDHDMI2": "off",
         "freesyncLCDHDMI3": "off",
@@ -1483,10 +1490,19 @@ class WebOsClient:
         "freesyncOLEDHDMI4": "off",
         "freesyncSupport": "off",
         "freeviewTnCPopup": "off",
+        "gameGenre": "Standard",
+        "gameMode": {
+            "hdmi1": "off",
+            "hdmi2": "off",
+            "hdmi3": "off",
+            "hdmi4": "off"
+        },
+        "gameOptimization": "on",
         "gameOptimizationHDMI1": "on",
         "gameOptimizationHDMI2": "on",
         "gameOptimizationHDMI3": "on",
         "gameOptimizationHDMI4": "on",
+        "gameUIColor": "violet",
         "hdmiPcMode": {
             "hdmi1": false,
             "hdmi2": false,
@@ -1503,31 +1519,140 @@ class WebOsClient:
                 "version": 1.0
             }
         ],
+        "illuminanceThreshold": 0,
+        "inputOptimization": "auto",
         "isFirstCapture": "true",
         "isfUpdated": "false",
         "lowLevelAdjustment": 0,
+        "lgLogoDisplay": "on",
+        "mapping_info": [
+            {
+                "movies": {
+                    "app_id": null,
+                    "isActive": false,
+                    "launch_param": null
+                }
+            },
+            {
+                "netflix": {
+                    "app_id": "netflix",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "amazon": {
+                    "app_id": "amazon",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "ivi": {
+                    "app_id": "ivi",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "disneyplus": {
+                    "app_id": "com.disney.disneyplus-prod",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "lgchannels": {
+                    "app_id": "com.webos.app.lgchannels",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "rakutentv": {
+                    "app_id": "ui30",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "globoplay": {
+                    "app_id": "globoplaywebos",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "okko": {
+                    "app_id": "yota.play",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "kinopoisk": {
+                    "app_id": "com.685631.3411",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "watchaplay": {
+                    "app_id": "com.frograms.watchaplay.webos",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "unext": {
+                    "app_id": "u.next",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "hotstar": {
+                    "app_id": "hotstar",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "new": {
+                    "app_id": null,
+                    "isActive": false,
+                    "launch_param": null
+                }
+            }
+        ],
         "masterLuminanceLevel": "540nit",
+        "masteringColor": "auto",
         "masteringColorHDMI1": "auto",
         "masteringColorHDMI2": "auto",
         "masteringColorHDMI3": "auto",
         "masteringColorHDMI4": "auto",
+        "masteringPeak": "auto",
         "masteringPeakHDMI1": "auto",
         "masteringPeakHDMI2": "auto",
         "masteringPeakHDMI3": "auto",
         "masteringPeakHDMI4": "auto",
+        "maxCLL": "auto",
         "maxCLLHDMI1": "auto",
         "maxCLLHDMI2": "auto",
         "maxCLLHDMI3": "auto",
         "maxCLLHDMI4": "auto",
+        "maxFALL": "auto",
         "maxFALLHDMI1": "auto",
         "maxFALLHDMI2": "auto",
         "maxFALLHDMI3": "auto",
         "maxFALLHDMI4": "auto",
         "netflixHotkeyIsActive": true,
+        "newKey": "on",
         "quickSettingsMenuList": [
             "QuickSettings_picture_button",
             "QuickSettings_soundMode_button",
             "QuickSettings_soundOut_button",
+            "QuickSettings_game_button",
             "QuickSettings_timer_button",
             "QuickSettings_network_button",
             "QuickSettings_menu_button"
@@ -1548,10 +1673,13 @@ class WebOsClient:
         "uhdDeepColorAutoStatusHDMI2": "none",
         "uhdDeepColorAutoStatusHDMI3": "none",
         "uhdDeepColorAutoStatusHDMI4": "none",
+        "uhdDeepColor": "off",
         "uhdDeepColorHDMI1": "off",
         "uhdDeepColorHDMI2": "off",
         "uhdDeepColorHDMI3": "off",
-        "uhdDeepColorHDMI4": "off"
+        "uhdDeepColorHDMI4": "off",
+        "weatherAllowed": false,
+        "whiteStabilizer": 10
 
         """
 
@@ -1638,20 +1766,26 @@ class WebOsClient:
                 "country",
                 "zipcode",
                 "livePlus",
+                "firstTvSignalStatus",
                 "addressInfo",
                 "phlCitySelection",
                 "smartServiceCountryCode3",
                 "syncMode",
-                "storeMode"
+                "storeMode",
+                "localeCountryGroup",
+                "japanCitySelection",
+                "countryBroadcastSystem"
         ],
         "time": [
-                "onTimerVolume"
+                "onTimerVolume",
+                "timeZone"
         ],
         "picture": [
                 "brightness",
                 "backlight",
                 "contrast",
-                "color"
+                "color",
+                "energySaving"
         ],
         "" : [
                 "eulaStatus",
@@ -1660,7 +1794,8 @@ class WebOsClient:
                 "localeInfo"
         ],
         "other": [
-                "simplinkEnable"
+                "simplinkEnable",
+                "ueiEnable"
         ],
         "sound": [
                 "avSync",
@@ -1668,7 +1803,20 @@ class WebOsClient:
                 "avSyncBypassInput",
                 "eArcSupport",
                 "soundOutput",
-                "soundOutputDigital"
+                "soundOutputDigital",
+                "soundMode",
+                "tvSetupConfiguration"
+        ],
+        "lock": [
+                "parentalGuidance",
+                "ziggoRaiting"
+        ],
+        "general": [
+                "alwaysOn",
+                "tvOnScreen",
+                "tvInstallMethod",
+                "powerOffBySCA3SystemChanged",
+                "SCA3SystemCountry"
         ]
 
         """

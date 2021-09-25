@@ -9,7 +9,7 @@ setup(
     install_requires=["websockets>=8.1", "sqlitedict"],
     python_requires=">=3.7",
     zip_safe=True,
-    version="0.0.6",
+    version="0.0.7",
     description="Library to control webOS based LG TV devices.",
     long_description=readme,
     long_description_content_type="text/markdown",

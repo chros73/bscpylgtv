@@ -1466,7 +1466,7 @@ class WebOsClient:
         "colorimetryHDMI3": "auto",
         "colorimetryHDMI4": "auto",
         "cursorAutoRemover": "on",
-        "dolbyVSVDBVe": "v2",
+        "dolbyVSVDBVer": "v2",
         "dolbyVSVDBVerHDMI1": "v2",
         "dolbyVSVDBVerHDMI2": "v2",
         "dolbyVSVDBVerHDMI3": "v2",

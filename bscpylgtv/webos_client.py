@@ -748,6 +748,11 @@ class WebOsClient:
         """Subscribe to changes in available apps."""
         return await self.subscribe(callback, ep.GET_APPS)
 
+    async def get_apps_all(self):
+        """Return all apps, including hidden ones."""
+        res = await self.request(ep.GET_APPS_ALL)
+        return res.get("apps")
+
     async def get_current_app(self):
         """Get the current app id."""
         res = await self.request(ep.GET_CURRENT_APP_INFO)

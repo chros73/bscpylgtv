@@ -1692,6 +1692,195 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
+    async def set_option_settings(self, settings):
+        """Set option settings.
+
+        A possible list of settings and example values are below (not all settings are applicable
+        for all tv models/firmwares):
+        /etc/palm/defaultSettings.json
+
+        "IPControlSecureKey": "",
+        "_3dModeEstreamer": "off",
+        "additionalAudioSelection": "none",
+        "addressInfo": [
+            "not_defined",
+            "not_defined",
+            "not_defined",
+            "not_defined"
+        ],
+        "animationGuide": "on",
+        "appInstallDevice": {
+            "deviceId": "",
+            "driveId": ""
+        },
+        "audioGuidance": "off",
+        "audioGuidancePitch": "medium",
+        "audioGuidanceSpeed": "medium",
+        "audioGuidanceVolume": "medium",
+        "autoComplete": false,
+        "autoSmartServiceCountry": "on",
+        "avatar": "off",
+        "backupPsm": {
+            "backupPsm2d": "hdrStandard",
+            "backupPsm3d": "hdrStandard"
+        },
+        "backupPsmDolby": {
+            "backupPsm2d": "dolbyHdrDark",
+            "backupPsm3d": "dolbyHdrDark"
+        },
+        "baloonHelp": "on",
+        "bannerPosition": "none",
+        "channelplus": "off",
+        "channelplusPopup": "off",
+        "cicNumber": [
+            {
+                "country": "default",
+                "number": "none",
+                "shortName": "default"
+            }
+        ],
+        "country": "other",
+        "countryGroup": "UNDEFINED",
+        "countryRegion": "other",
+        "curDemoFile": "undefined",
+        "dataService": "mheg",
+        "demoFileList": "undefined",
+        "demoMode": "on",
+        "disclosureAccepted": false,
+        "disclosureAcceptedVsn": "N/A",
+        "eStreamerPosition": "all",
+        "emergencyAlert": "on",
+        "enableIpControl": "off",
+        "enableSDDP": "off",
+        "enableToastPopup": "on",
+        "enabling3dSettingsMenu": "off",
+        "estreamerStatus": "off",
+        "firstTvSignalStatus": "undefined",
+        "focusedItemEnlarged": "off",
+        "freeviewMode": "off",
+        "googleAssistantTTS": "on",
+        "hbbTV": "off",
+        "hbbTvDnt": "off",
+        "hddEcoMode": "on",
+        "helpOnSettings": "on",
+        "highContrast": "off",
+        "hybridCast": "off",
+        "ibb": "off",
+        "ibbDnt": "off",
+        "inputDevicesSupportStatus": {
+            "keyboard": true,
+            "motionSensor": true,
+            "pointer": true,
+            "touch": true,
+            "voice": true
+        },
+        "interactivity": "off",
+        "irBlaster": "off",
+        "ismMethod": "normal",
+        "japanCitySelection": "Tokyo",
+        "liveMenuLaunched": false,
+        "livePlus": "off",
+        "localeCountryGroup": "UNDEFINED",
+        "logoLight": "low",
+        "magicNum1": {
+            "id": "",
+            "params": {}
+        },
+        "magicNum2": {
+            "id": "",
+            "params": {}
+        },
+        "magicNum3": {
+            "id": "",
+            "params": {}
+        },
+        "magicNum4": {
+            "id": "",
+            "params": {}
+        },
+        "magicNum5": {
+            "id": "",
+            "params": {}
+        },
+        "magicNum6": {
+            "id": "",
+            "params": {}
+        },
+        "magicNum7": {
+            "id": "",
+            "params": {}
+        },
+        "magicNum8": {
+            "id": "",
+            "params": {}
+        },
+        "magicNum9": {
+            "id": "",
+            "params": {}
+        },
+        "magicNumHelpShow": true,
+        "menuLanguage": "eng",
+        "menuTransparency": "on",
+        "mhegGuide": "off",
+        "miracastOverlayAdRecovery": "off",
+        "miracastOverlayStatus": "off",
+        "modeSelectFlag": "off",
+        "motionRecognition": "off",
+        "multiViewStatus": "off",
+        "ohtv": "on",
+        "orbit": "off",
+        "password_ipcontrol": "828",
+        "phlCitySelection": "0",
+        "pointerAlignment": "off",
+        "pointerShape": "auto",
+        "pointerSize": "medium",
+        "pointerSpeed": "normal",
+        "powerOnLight": "off",
+        "promotionOriginEnd": "undefined",
+        "promotionOriginStart": "undefined",
+        "promotionPeriodEnd": "0",
+        "promotionPeriodStart": "0",
+        "promotionStreamer": "off",
+        "pstreamerUser": "off",
+        "quickStartMode": "off",
+        "screenRotation": "off",
+        "searchAppTTS": "off",
+        "setId": "1",
+        "smartServiceCountryCode2": "other",
+        "smartServiceCountryCode3": "other",
+        "smartSoundDemo": "on",
+        "speakToTv": "off",
+        "standByLight": "on",
+        "storeHDR": "on",
+        "storeLogo": "0",
+        "storeMode": "home",
+        "storeMode2": "on",
+        "storeModeVideo": "off",
+        "subdivisionCodeOfServiceCountry": "",
+        "subtitleLanguageFirst": "eng",
+        "subtitleLanguageSecond": "eng",
+        "supplementaryAudio": "off",
+        "teletextLanguageFirst": "eng",
+        "teletextLanguageSecond": "eng",
+        "turnOnByVoice": "off",
+        "usbBuiltInVideo": "on",
+        "virtualKeyboardLanguage": [
+            "en-US"
+        ],
+        "virtualSetTop": "off",
+        "voiceRecognitionLanguage": "eng",
+        "vsn": "N/A",
+        "wakeUpword": "LGTV",
+        "watchedListCollection": "on",
+        "webOSPromotionVideo": "on",
+        "zipcode": "not_defined"
+
+        """
+
+        params = {"category": "option", "settings": settings}
+
+        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
+
     async def get_configs(self, keys=["tv.model.*"]):
         """Get config settings.
 

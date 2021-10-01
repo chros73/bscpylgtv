@@ -15,8 +15,8 @@ pip install --upgrade .
 ## Examples
 
 ```bash
-# Get list of apps
-bscpylgtvcommand 192.168.1.18 get_apps
+# Get list of apps (including hidden ones as well)
+bscpylgtvcommand 192.168.1.18 get_apps_all
 # Push info button
 bscpylgtvcommand 192.168.1.18 info_button
 # Get values of backlight and contrast of the current picture preset (using list)
@@ -33,6 +33,9 @@ bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"colorGamut\": \"a
 bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"mpegNoiseReduction\": \"off\"}"
 # Turn PC Mode on for HDMI2 (using JSON)
 bscpylgtvcommand 192.168.1.18 set_other_settings "{\"hdmiPcMode\": {\"hdmi2\": true}}"
+# Launch and close screensaver
+bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.screensaver
+bscpylgtvcommand 192.168.1.18 close_app com.webos.app.screensaver
 # Launch hidden software updater on older firmwares
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.softwareupdate
 # Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)
@@ -56,9 +59,9 @@ import asyncio
 from bscpylgtv import WebOsClient
 
 async def runloop():
-    client = await WebOsClient.create('192.168.1.53')
+    client = await WebOsClient.create('192.168.1.18')
     await client.connect()
-    apps = await client.get_apps()
+    apps = await client.get_apps_all()
     for app in apps:
         print(app)
 

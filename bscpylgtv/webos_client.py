@@ -1708,11 +1708,16 @@ class WebOsClient:
             "not_defined",
             "not_defined"
         ],
+        "adjustments": {
+            "blackAndWhite": "off",
+            "colorInversion": "off"
+        },
         "animationGuide": "on",
         "appInstallDevice": {
             "deviceId": "",
             "driveId": ""
         },
+        "appUpdateMode": "manual",
         "audioGuidance": "off",
         "audioGuidancePitch": "medium",
         "audioGuidanceSpeed": "medium",
@@ -1730,6 +1735,7 @@ class WebOsClient:
         },
         "baloonHelp": "on",
         "bannerPosition": "none",
+        "broadcastInfoNoti": "on",
         "channelplus": "off",
         "channelplusPopup": "off",
         "cicNumber": [
@@ -1752,14 +1758,18 @@ class WebOsClient:
         "emergencyAlert": "on",
         "enableIpControl": "off",
         "enableSDDP": "off",
-        "enableToastPopup": "on",
+        "enableToastPopup": "off",
         "enabling3dSettingsMenu": "off",
+        "epgPipMode": "off",
+        "estreamerMinimalMode": "off",
         "estreamerStatus": "off",
         "firstTvSignalStatus": "undefined",
         "focusedItemEnlarged": "off",
         "freeviewMode": "off",
+        "freeviewplay": "off",
         "googleAssistantTTS": "on",
         "hbbTV": "off",
+        "hbbTvDeviceId": "on",
         "hbbTvDnt": "off",
         "hddEcoMode": "on",
         "helpOnSettings": "on",
@@ -1774,6 +1784,7 @@ class WebOsClient:
             "touch": true,
             "voice": true
         },
+        "interactive-service": "off",
         "interactivity": "off",
         "irBlaster": "off",
         "ismMethod": "normal",
@@ -1784,39 +1795,50 @@ class WebOsClient:
         "logoLight": "low",
         "magicNum1": {
             "id": "",
+            "override": false,
             "params": {}
         },
         "magicNum2": {
             "id": "",
+            "override": false,
             "params": {}
         },
         "magicNum3": {
             "id": "",
+            "override": false,
             "params": {}
         },
         "magicNum4": {
             "id": "",
+            "override": false,
             "params": {}
         },
         "magicNum5": {
             "id": "",
+            "override": false,
             "params": {}
         },
         "magicNum6": {
             "id": "",
+            "override": false,
             "params": {}
         },
         "magicNum7": {
             "id": "",
+            "override": false,
             "params": {}
         },
         "magicNum8": {
             "id": "",
+            "override": false,
             "params": {}
         },
         "magicNum9": {
-            "id": "",
-            "params": {}
+            "id": "com.webos.app.self-diagnosis",
+            "override": true,
+            "params": {
+                "from": "magicNum"
+            }
         },
         "magicNumHelpShow": true,
         "menuLanguage": "eng",
@@ -1826,6 +1848,7 @@ class WebOsClient:
         "miracastOverlayStatus": "off",
         "modeSelectFlag": "off",
         "motionRecognition": "off",
+        "multiChannelAudio": "on",
         "multiViewStatus": "off",
         "ohtv": "on",
         "orbit": "off",
@@ -1845,7 +1868,7 @@ class WebOsClient:
         "quickStartMode": "off",
         "screenRotation": "off",
         "searchAppTTS": "off",
-        "setId": "1",
+        "setId": 1,
         "smartServiceCountryCode2": "other",
         "smartServiceCountryCode3": "other",
         "smartSoundDemo": "on",
@@ -1860,6 +1883,8 @@ class WebOsClient:
         "subtitleLanguageFirst": "eng",
         "subtitleLanguageSecond": "eng",
         "supplementaryAudio": "off",
+        "syncMode": "off",
+        "syncModeTvCondition": "none",
         "teletextLanguageFirst": "eng",
         "teletextLanguageSecond": "eng",
         "turnOnByVoice": "off",

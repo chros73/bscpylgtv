@@ -6,7 +6,7 @@ from bscpylgtv import WebOsClient
 
 
 async def runloop(args):
-    client = await WebOsClient.create(args.host, timeout_connect=2, ping_interval=None)
+    client = await WebOsClient.create(args.host, timeout_connect=2, ping_interval=None, client_key=args.key)
     await client.connect()
     print(await getattr(client, args.command)(*args.parameters))
     await client.disconnect()
@@ -34,6 +34,9 @@ def convert_arg(arg):
 
 def bscpylgtvcommand():
     parser = argparse.ArgumentParser(description="Send command to LG WebOs TV.")
+    parser.add_argument(
+        "-k", "--key", type=str, help="optional client key"
+    )
     parser.add_argument(
         "host", type=str, help="hostname or ip address of the TV to connect to"
     )

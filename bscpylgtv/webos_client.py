@@ -16,7 +16,6 @@ from .handshake import REGISTRATION_MESSAGE
 
 logger = logging.getLogger(__name__)
 
-
 KEY_FILE_NAME = ".aiopylgtv.sqlite"
 USER_HOME = "HOME"
 
@@ -114,6 +113,15 @@ class WebOsClient:
             return os.path.join(os.getenv(USER_HOME), KEY_FILE_NAME)
 
         return os.path.join(os.getcwd(), KEY_FILE_NAME)
+
+    def list_client_keys(key_file_path):
+        """Display all saved client keys per ip."""
+
+        logger.debug("load keyfile from %s", key_file_path)
+
+        with SqliteDict(key_file_path) as conf:
+            for ip, key in conf.iteritems():
+                print(ip, key)
 
     def read_client_key(self):
         """Try to load the client key for the current ip."""

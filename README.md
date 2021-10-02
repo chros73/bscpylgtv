@@ -52,6 +52,18 @@ bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED M
 bscpylgtvcommand 192.168.1.18 power_off
 ```
 
+## Optional command line switches
+
+```bash
+# -k <client_key> : specifying a client key
+bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 info_button
+# -p <path_to_key_file> : specifying path to key file
+bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 info_button
+# -l : get list of all saved client keys per ip (otionally from a specified key file)
+bscpylgtvcommand -l
+bscpylgtvcommand -l -p "D:\config\.aiopylgtv.sqlite"
+```
+
 ## Basic Scripting Example
 
 ```python

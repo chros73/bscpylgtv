@@ -19,6 +19,8 @@ pip install --upgrade .
 bscpylgtvcommand 192.168.1.18 get_apps_all
 # Push info button
 bscpylgtvcommand 192.168.1.18 info_button
+# Switch to HDMI2 input
+bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Get values of backlight and contrast of the current picture preset (using list)
 bscpylgtvcommand 192.168.1.18 get_picture_settings "[\"backlight\", \"contrast\"]"
 # Swtich to SDR ISF Expert Dark picture preset

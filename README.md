@@ -73,11 +73,48 @@ import asyncio
 from bscpylgtv import WebOsClient
 
 async def runloop():
-    client = await WebOsClient.create('192.168.1.18')
+    client = await WebOsClient.create('192.168.1.18', timeout_connect=2, ping_interval=None, skipStateInfo=True)
     await client.connect()
     apps = await client.get_apps_all()
     for app in apps:
         print(app)
+
+    await client.disconnect()
+
+asyncio.get_event_loop().run_until_complete(runloop())
+```
+
+## Subscribed State Updates Example
+
+```python
+import asyncio
+from bscpylgtv import WebOsClient
+
+async def on_state_change():
+    print("State changed:")
+    print(client.apps)
+    print(client.inputs)
+    print(client.power_state)
+    print(client.current_appId)
+    print(client.channels)
+    print(client.current_channel)
+    print(client.channel_info)
+    print(client.muted)
+    print(client.volume)
+    print(client.sound_output)
+    print(client.picture_settings)
+    print(client.system_info)
+    print(client.software_info)
+
+async def runloop():
+    global client
+    client = await WebOsClient.create('192.168.1.18')
+    await client.register_state_update_callback(on_state_change)
+    await client.connect()
+
+    ret = await client.volume_up()
+    print(ret)
+    await asyncio.sleep(30)
 
     await client.disconnect()
 

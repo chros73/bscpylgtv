@@ -52,6 +52,7 @@ class WebOsClient:
         ping_timeout=20,
         client_key=None,
         volume_step_delay_ms=None,
+        skipStateInfo=False,
     ):
         """Initialize the client."""
         self.ip = ip
@@ -63,10 +64,12 @@ class WebOsClient:
         self.timeout_connect = timeout_connect
         self.ping_interval = ping_interval
         self.ping_timeout = ping_timeout
+        self.skipStateInfo = skipStateInfo
         self.connect_task = None
         self.connect_result = None
         self.connection = None
         self.input_connection = None
+        self.handler_tasks = set()
         self.callbacks = {}
         self.futures = {}
         self._power_state = {}
@@ -182,7 +185,6 @@ class WebOsClient:
 
     async def connect_handler(self, res):
 
-        handler_tasks = set()
         ws = None
         try:
             ws = await asyncio.wait_for(
@@ -216,38 +218,39 @@ class WebOsClient:
             self.callbacks = {}
             self.futures = {}
 
-            handler_tasks.add(
+            self.handler_tasks.add(
                 asyncio.create_task(
                     self.consumer_handler(ws, self.callbacks, self.futures)
                 )
             )
             if self.ping_interval is not None:
-                handler_tasks.add(
+                self.handler_tasks.add(
                     asyncio.create_task(
                         self.ping_handler(ws, self.ping_interval, self.ping_timeout)
                     )
                 )
             self.connection = ws
 
-            # set static state and subscribe to state updates
-            # avoid partial updates during initial subscription
+            if not self.skipStateInfo:
+                # set static state and subscribe to state updates
+                # avoid partial updates during initial subscription
 
-            self.doStateUpdate = False
-            #chros self._system_info, self._software_info = await asyncio.gather(
-            #chros     self.get_system_info(), self.get_software_info()
-            #chros )
-            subscribe_coros = {
-                #chros self.subscribe_power_state(self.set_power_state),
-                #chros self.subscribe_current_app(self.set_current_app_state),
-                #chros self.subscribe_muted(self.set_muted_state),
-                #chros self.subscribe_volume(self.set_volume_state),
-                #chros self.subscribe_apps(self.set_apps_state),
-                #chros self.subscribe_inputs(self.set_inputs_state),
-                #chros self.subscribe_sound_output(self.set_sound_output_state),
-                #chros self.subscribe_picture_settings(self.set_picture_settings_state),
-            }
-            subscribe_tasks = set()
-            if subscribe_coros:
+                self.doStateUpdate = False
+                self._system_info, self._software_info = await asyncio.gather(
+                    self.get_system_info(), self.get_software_info()
+                )
+                subscribe_coros = {
+                    self.subscribe_power_state(self.set_power_state),
+                    self.subscribe_current_app(self.set_current_app_state),
+                    self.subscribe_muted(self.set_muted_state),
+                    self.subscribe_volume(self.set_volume_state),
+                    self.subscribe_apps(self.set_apps_state),
+                    self.subscribe_inputs(self.set_inputs_state),
+                    self.subscribe_sound_output(self.set_sound_output_state),
+                    self.subscribe_picture_settings(self.set_picture_settings_state),
+                }
+
+                subscribe_tasks = set()
                 for coro in subscribe_coros:
                     subscribe_tasks.add(asyncio.create_task(coro))
                 await asyncio.wait(subscribe_tasks)
@@ -256,6 +259,7 @@ class WebOsClient:
                         task.result()
                     except PyLGTVServiceNotFoundError:
                         pass
+
             # set placeholder power state if not available
             if not self._power_state:
                 self._power_state = {"state": "Unknown"}
@@ -265,13 +269,13 @@ class WebOsClient:
 
             res.set_result(True)
 
-            await asyncio.wait(handler_tasks, return_when=asyncio.FIRST_COMPLETED)
+            await asyncio.wait(self.handler_tasks, return_when=asyncio.FIRST_COMPLETED)
 
         except Exception as ex:
             if not res.done():
                 res.set_exception(ex)
         finally:
-            for task in handler_tasks:
+            for task in self.handler_tasks:
                 if not task.done():
                     task.cancel()
 
@@ -279,7 +283,7 @@ class WebOsClient:
                 future.cancel()
 
             closeout = set()
-            closeout.update(handler_tasks)
+            closeout.update(self.handler_tasks)
 
             if ws is not None:
                 closeout.add(asyncio.create_task(ws.close()))
@@ -672,16 +676,13 @@ class WebOsClient:
                     timeout=self.timeout_connect,
                 )
 
-                comm='''
+                #chros self.handler_tasks.add(asyncio.create_task(inputws.wait_closed()))
                 if self.ping_interval is not None:
-                    handler_tasks.add(
+                    self.handler_tasks.add(
                         asyncio.create_task(
-                            self.ping_handler(
-                                inputws, self.ping_interval, self.ping_timeout
-                            )
+                            self.ping_handler(inputws, self.ping_interval, self.ping_timeout)
                         )
                     )
-                '''
                 self.input_connection = inputws
 
             if self.input_connection is None:

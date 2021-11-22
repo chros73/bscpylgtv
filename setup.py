@@ -6,10 +6,10 @@ with open("README.md") as f:
 setup(
     name="bscpylgtv",
     packages=["bscpylgtv"],
-    install_requires=["websockets>=8.1", "sqlitedict"],
+    install_requires=["websockets>=8.1", "numpy>=1.17.0", "sqlitedict"],
     python_requires=">=3.7",
     zip_safe=True,
-    version="0.1.1",
+    version="0.2.0",
     description="Library to control webOS based LG TV devices.",
     long_description=readme,
     long_description_content_type="text/markdown",

@@ -59,8 +59,9 @@ bscpylgtvcommand 192.168.1.18 power_off
 ```bash
 # -g : get system information (required by some of the calibration commands)
 bscpylgtvcommand -g 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
+# -d : disabling key file
 # -k <client_key> : specifying a client key
-bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 info_button
+bscpylgtvcommand -d -k ef6858b2133d68854612831e3df8e495 192.168.1.18 info_button
 # -p <path_to_key_file> : specifying path to key file
 bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 info_button
 # -l : get list of all saved client keys per ip (otionally from a specified key file)

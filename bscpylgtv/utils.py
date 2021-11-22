@@ -13,7 +13,7 @@ def list_client_keys(path_key_file):
 async def runloop(args):
     client = await WebOsClient.create(args.host, timeout_connect=2, ping_interval=None,
         getSystemInfo=args.get_system_info, skipStateInfo=True,
-        client_key=args.key, key_file_path=args.path_key_file)
+        client_key=args.key, key_file_path=args.path_key_file, disable_key_file=args.disable_key_file)
     await client.connect()
     print(await getattr(client, args.command)(*args.parameters))
     await client.disconnect()
@@ -59,6 +59,12 @@ def bscpylgtvcommand():
         parser = argparse.ArgumentParser(add_help=False)
         parser.add_argument(
             "-k", "--key", type=str, help="optional client key"
+        )
+        parser.add_argument(
+            "-d", "--disable_key_file",
+            dest="disable_key_file",
+            action="store_true",
+            help="optional disabling key file"
         )
         parser.add_argument(
             "-g", "--get_system_info",

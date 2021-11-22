@@ -64,10 +64,12 @@ class WebOsClient:
         volume_step_delay_ms=None,
         getSystemInfo=True,
         skipStateInfo=False,
+        disable_key_file=False,
     ):
         """Initialize the client."""
         self.ip = ip
         self.port = 3000
+        self._disable_key_file = disable_key_file
         self.key_file_path = key_file_path
         self.client_key = client_key
         self.web_socket = None
@@ -114,6 +116,9 @@ class WebOsClient:
 
     async def async_init(self):
         """Load client key from config file if in use."""
+        if self._disable_key_file:
+            return
+
         if self.client_key is None:
             self.client_key = await asyncio.get_running_loop().run_in_executor(
                 None, self.read_client_key
@@ -220,9 +225,10 @@ class WebOsClient:
                 response = json.loads(raw_response)
                 if response["type"] == "registered":
                     self.client_key = response["payload"]["client-key"]
-                    await asyncio.get_running_loop().run_in_executor(
-                        None, self.write_client_key
-                    )
+                    if not self._disable_key_file:
+                        await asyncio.get_running_loop().run_in_executor(
+                            None, self.write_client_key
+                        )
 
             if not self.client_key:
                 raise PyLGTVPairException("Unable to pair")

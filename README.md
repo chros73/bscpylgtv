@@ -1,15 +1,18 @@
 # bscpylgtv
 Library to control webOS based LG TV devices. Enhanced and faster version of
- [aiopylgtv](https://github.com/bendavid/aiopylgtv), optimized for command
- line usage (it looks for the same `.aiopylgtv.sqlite` key config file).
+ [aiopylgtv](https://github.com/bendavid/aiopylgtv), it can be installed without calibration functionality,
+ optimized for command line usage (it looks for the same `.aiopylgtv.sqlite` key config file).
 
 ## Requirements
 - Python >= 3.7
 
 ## Install from Source
-Run the following command inside this folder
+Run the following command inside this folder:
 ```bash
+# Install lite package without calibration functionality
 pip install --upgrade .
+# Instal full package with calibration functionality
+pip install --upgrade .[with_calibration]
 ```
 
 ## Examples

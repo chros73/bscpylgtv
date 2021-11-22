@@ -1,9 +1,16 @@
-import numpy as np
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 from .constants import BT2020_PRIMARIES, DV_CONFIG_FILENAMES
+from .exceptions import PyLGTVCmdException
 
 
 def unity_lut_1d():
+    if np is None:
+        raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
     lutmono = np.linspace(0.0, 32767.0, 1024, dtype=np.float64)
     lut = np.stack([lutmono] * 3, axis=0)
     lut = np.rint(lut).astype(np.uint16)
@@ -11,6 +18,9 @@ def unity_lut_1d():
 
 
 def unity_lut_3d(n=33):
+    if np is None:
+        raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
     spacing = complex(0, n)
     endpoint = 4096.0
     lut = np.mgrid[0.0:endpoint:spacing, 0.0:endpoint:spacing, 0.0:endpoint:spacing]
@@ -22,6 +32,9 @@ def unity_lut_3d(n=33):
 
 
 def read_cube_file(filename):  # noqa: C901
+    if np is None:
+        raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
     nheader = 0
     lut_1d_size = None
     lut_3d_size = None
@@ -119,6 +132,9 @@ def read_cube_file(filename):  # noqa: C901
 
 
 def read_cal_file(filename):
+    if np is None:
+        raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
     with open(filename, "r") as f:
         caldata = f.readlines()
 
@@ -153,6 +169,8 @@ def read_cal_file(filename):
 
 
 def lms2rgb_matrix(primaries=BT2020_PRIMARIES):
+    if np is None:
+        raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
 
     xy = np.array(primaries, dtype=np.float64)
 
@@ -192,6 +210,9 @@ def create_dolby_vision_config(
     gamma=2.2,
     primaries=BT2020_PRIMARIES,
 ):
+
+    if np is None:
+        raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
 
     if not (white_level >= 100.0 and white_level <= 999.0):
         raise ValueError(

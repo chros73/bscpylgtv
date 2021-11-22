@@ -7,7 +7,11 @@ import logging
 import os
 from datetime import timedelta
 
-import numpy as np
+try:
+    import numpy as np
+except ImportError:
+    np = None
+
 import websockets
 from sqlitedict import SqliteDict
 
@@ -15,6 +19,7 @@ from . import buttons as btn
 from . import cal_commands as cal
 from . import endpoints as ep
 from .constants import BT2020_PRIMARIES, CALIBRATION_TYPE_MAP, DEFAULT_CAL_DATA
+from .exceptions import PyLGTVPairException, PyLGTVCmdException, PyLGTVCmdError, PyLGTVServiceNotFoundError
 from .handshake import REGISTRATION_MESSAGE
 from .lut_tools import (
     create_dolby_vision_config,
@@ -30,26 +35,6 @@ KEY_FILE_NAME = ".aiopylgtv.sqlite"
 USER_HOME = "HOME"
 
 SOUND_OUTPUTS_TO_DELAY_CONSECUTIVE_VOLUME_STEPS = {"external_arc"}
-
-
-class PyLGTVPairException(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
-class PyLGTVCmdException(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
-class PyLGTVCmdError(PyLGTVCmdException):
-    def __init__(self, message):
-        self.message = message
-
-
-class PyLGTVServiceNotFoundError(PyLGTVCmdError):
-    def __init__(self, message):
-        self.message = message
 
 
 class WebOsClient:
@@ -2146,6 +2131,9 @@ class WebOsClient:
         return info
 
     def validateCalibrationData(self, data, shape, dtype):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         if not isinstance(data, np.ndarray):
             raise TypeError(f"data must be of type ndarray but is instead {type(data)}")
         if data.shape != shape:
@@ -2175,14 +2163,23 @@ class WebOsClient:
         return await self.request(ep.CALIBRATION, payload)
 
     async def start_calibration(self, picMode, data=DEFAULT_CAL_DATA):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         self.validateCalibrationData(data, (9,), np.float32)
         return await self.calibration_request(cal.CAL_START, picMode, data)
 
     async def end_calibration(self, picMode, data=DEFAULT_CAL_DATA):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         self.validateCalibrationData(data, (9,), np.float32)
         return await self.calibration_request(cal.CAL_END, picMode, data)
 
     async def upload_1d_lut(self, picMode, data=None):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         info = self.calibration_support_info()
         if not info["lut1d"]:
             model = self._system_info["modelName"]
@@ -2195,6 +2192,9 @@ class WebOsClient:
         return await self.calibration_request(cal.UPLOAD_1D_LUT, picMode, data)
 
     async def upload_1d_lut_from_file(self, picMode, filename):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         ext = filename.split(".")[-1].lower()
         if ext == "cal":
             lut = await asyncio.get_running_loop().run_in_executor(
@@ -2212,6 +2212,9 @@ class WebOsClient:
         return await self.upload_1d_lut(picMode, lut)
 
     async def upload_3d_lut(self, command, picMode, data):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         if command not in [cal.UPLOAD_3D_LUT_BT709, cal.UPLOAD_3D_LUT_BT2020]:
             raise PyLGTVCmdException(f"Invalid 3D LUT Upload command {command}.")
         info = self.calibration_support_info()
@@ -2236,6 +2239,9 @@ class WebOsClient:
         return await self.upload_3d_lut(cal.UPLOAD_3D_LUT_BT2020, picMode, data)
 
     async def upload_3d_lut_from_file(self, command, picMode, filename):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         ext = filename.split(".")[-1].lower()
         if ext == "cube":
             lut = await asyncio.get_running_loop().run_in_executor(
@@ -2259,6 +2265,9 @@ class WebOsClient:
         )
 
     async def set_ui_data(self, command, picMode, value):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         if not (value >= 0 and value <= 100):
             raise ValueError
 
@@ -2278,32 +2287,48 @@ class WebOsClient:
         return await self.set_ui_data(cal.COLOR_UI_DATA, picMode, value)
 
     async def set_1d_2_2_en(self, picMode, value=0):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         data = np.array(value, dtype=np.uint16)
         return await self.calibration_request(
             cal.ENABLE_GAMMA_2_2_TRANSFORM, picMode, data
         )
 
     async def set_1d_0_45_en(self, picMode, value=0):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         data = np.array(value, dtype=np.uint16)
         return await self.calibration_request(
             cal.ENABLE_GAMMA_0_45_TRANSFORM, picMode, data
         )
 
-    async def set_bt709_3by3_gamut_data(
-        self, picMode, data=np.identity(3, dtype=np.float32)
-    ):
-        self.validateCalibrationData(data, (3, 3), np.float32)
-        return await self.calibration_request(cal.BT709_3BY3_GAMUT_DATA, picMode, data)
-
-    async def set_bt2020_3by3_gamut_data(
-        self, picMode, data=np.identity(3, dtype=np.float32)
-    ):
-        self.validateCalibrationData(data, (3, 3), np.float32)
-        return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, picMode, data)
-
+    if np:
+        async def set_bt709_3by3_gamut_data(
+            self, picMode, data=np.identity(3, dtype=np.float32)
+        ):
+            if np is None:
+                raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+    
+            self.validateCalibrationData(data, (3, 3), np.float32)
+            return await self.calibration_request(cal.BT709_3BY3_GAMUT_DATA, picMode, data)
+    
+        async def set_bt2020_3by3_gamut_data(
+            self, picMode, data=np.identity(3, dtype=np.float32)
+        ):
+            if np is None:
+                raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+    
+            self.validateCalibrationData(data, (3, 3), np.float32)
+            return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, picMode, data)
+    
     async def set_dolby_vision_config_data(
         self, white_level=700.0, black_level=0.0, gamma=2.2, primaries=BT2020_PRIMARIES
     ):
+
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
 
         info = self.calibration_support_info()
         dv_config_type = info["dv_config_type"]
@@ -2342,6 +2367,9 @@ class WebOsClient:
         rolloff_point_3=50,
     ):
 
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         data = np.array(
             [
                 luminance,
@@ -2358,6 +2386,9 @@ class WebOsClient:
         return await self.calibration_request(cal.SET_TONEMAP_PARAM, picMode, data)
 
     async def ddc_reset(self, picMode, reset_1d_lut=True):
+        if np is None:
+            raise PyLGTVCmdException("Package numpy is required by calibration functionality.")
+
         if not isinstance(reset_1d_lut, bool):
             raise TypeError(
                 f"reset_1d_lut should be a bool, instead got {reset_1d_lut} of type {type(reset_1d_lut)}."

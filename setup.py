@@ -3,10 +3,15 @@ from setuptools import setup
 with open("README.md") as f:
     readme = f.read()
 
+extras = {
+   "with_calibration": ["numpy>=1.17.0"]
+}
+
 setup(
     name="bscpylgtv",
     packages=["bscpylgtv"],
-    install_requires=["websockets>=8.1", "numpy>=1.17.0", "sqlitedict"],
+    install_requires=["websockets>=8.1", "sqlitedict"],
+    extras_require=extras,
     python_requires=">=3.7",
     zip_safe=True,
     version="0.2.0",

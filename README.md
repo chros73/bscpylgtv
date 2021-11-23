@@ -6,12 +6,20 @@ Library to control webOS based LG TV devices. Enhanced and faster version of
 ## Requirements
 - Python >= 3.7
 
+## Install from package
+```bash
+# Install lite package without calibration functionality
+pip install bscpylgtv
+# Instal full package with calibration functionality (requires numpy package)
+pip install bscpylgtv[with_calibration]
+```
+
 ## Install from Source
 Run the following command inside this folder:
 ```bash
 # Install lite package without calibration functionality
 pip install --upgrade .
-# Instal full package with calibration functionality
+# Instal full package with calibration functionality (requires numpy package)
 pip install --upgrade .[with_calibration]
 ```
 

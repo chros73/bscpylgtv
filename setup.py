@@ -10,7 +10,7 @@ extras = {
 setup(
     name="bscpylgtv",
     packages=["bscpylgtv"],
-    install_requires=["websockets>=8.1", "sqlitedict"],
+    install_requires=["websockets==8.1", "sqlitedict"],
     extras_require=extras,
     python_requires=">=3.7",
     zip_safe=True,

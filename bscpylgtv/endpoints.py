@@ -52,6 +52,8 @@ CHANGE_SOUND_OUTPUT = "com.webos.service.apiadapter/audio/changeSoundOutput"
 GET_POWER_STATE = "com.webos.service.tvpower/power/getPowerState"
 TURN_OFF_SCREEN = "com.webos.service.tvpower/power/turnOffScreen"
 TURN_ON_SCREEN = "com.webos.service.tvpower/power/turnOnScreen"
+TURN_OFF_SCREEN_WO4 = "com.webos.service.tv.power/turnOffScreen"
+TURN_ON_SCREEN_WO4 = "com.webos.service.tv.power/turnOnScreen"
 GET_CONFIGS = "config/getConfigs"
 
 # webOS TV internal Luna API endpoints

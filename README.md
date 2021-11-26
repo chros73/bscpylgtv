@@ -49,6 +49,9 @@ bscpylgtvcommand 192.168.1.18 set_other_settings "{\"hdmiPcMode\": {\"hdmi2\": t
 # Launch and close screensaver
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.screensaver
 bscpylgtvcommand 192.168.1.18 close_app com.webos.app.screensaver
+# Turn off/on screen (use turn_screen_off_wo4 and turn_screen_on_wo4 commands for WebOS v4.x)
+bscpylgtvcommand 192.168.1.18 turn_screen_off
+bscpylgtvcommand 192.168.1.18 turn_screen_on
 # Launch hidden software updater on older firmwares
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.softwareupdate
 # Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)

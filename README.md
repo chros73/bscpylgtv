@@ -96,7 +96,7 @@ import asyncio
 from bscpylgtv import WebOsClient
 
 async def runloop():
-    client = await WebOsClient.create('192.168.1.18', timeout_connect=2, ping_interval=None, skipStateInfo=True)
+    client = await WebOsClient.create('192.168.1.18', ping_interval=None, getSystemInfo=False, skipStateInfo=True)
     await client.connect()
     apps = await client.get_apps_all()
     for app in apps:
@@ -220,7 +220,7 @@ import asyncio
 from bscpylgtv import WebOsClient
 
 async def runloop():
-    client = await WebOsClient.create('192.168.1.18', timeout_connect=2, skipStateInfo=True)
+    client = await WebOsClient.create('192.168.1.18', skipStateInfo=True)
     await client.connect()
 
     await client.set_input("HDMI_2")

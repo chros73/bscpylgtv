@@ -683,7 +683,6 @@ class WebOsClient:
                     timeout=self.timeout_connect,
                 )
 
-                #chros self.handler_tasks.add(asyncio.create_task(inputws.wait_closed()))
                 if self.ping_interval is not None:
                     self.handler_tasks.add(
                         asyncio.create_task(

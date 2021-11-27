@@ -144,6 +144,8 @@ async def runloop():
 asyncio.get_event_loop().run_until_complete(runloop())
 ```
 
+More useful examples can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/docs/scripts) directory.
+
 ## Calibration functionality
 WARNING: Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement.
 All of the currently implemented functions SHOULD be safe, but no guarantees.

@@ -52,6 +52,12 @@ bscpylgtvcommand 192.168.1.18 close_app com.webos.app.screensaver
 # Turn off/on screen (use turn_screen_off_wo4 and turn_screen_on_wo4 commands for WebOS v4.x)
 bscpylgtvcommand 192.168.1.18 turn_screen_off
 bscpylgtvcommand 192.168.1.18 turn_screen_on
+# Launch installation app hidden menu (Hotel Mode, Password change, USB Cloning, Set ID setup, IP Control)
+bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.installation
+# Display 3x MUTE button hidden menu (AVReset, Customer Support, etc)
+bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.tvhotkey "{\"activateType\": \"mute-hidden-action\"}"
+# Display 7x GREEN button hidden Freesync info
+bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.tvhotkey "{\"activateType\": \"freesync-info\"}"
 # Launch hidden software updater on older firmwares
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.softwareupdate
 # Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)

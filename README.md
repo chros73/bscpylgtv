@@ -52,6 +52,8 @@ bscpylgtvcommand 192.168.1.18 close_app com.webos.app.screensaver
 # Turn off/on screen (use turn_screen_off_wo4 and turn_screen_on_wo4 commands for WebOS v4.x)
 bscpylgtvcommand 192.168.1.18 turn_screen_off
 bscpylgtvcommand 192.168.1.18 turn_screen_on
+# Display current picture mode settings
+bscpylgtvcommand 192.168.1.18 launch_app_with_params com.palm.app.settings "{\"target\": \"PictureMode\"}"
 # Launch installation app hidden menu (Hotel Mode, Password change, USB Cloning, Set ID setup, IP Control)
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.installation
 # Display 3x MUTE button hidden menu (AVReset, Customer Support, etc)
@@ -144,7 +146,7 @@ async def runloop():
 asyncio.get_event_loop().run_until_complete(runloop())
 ```
 
-More useful examples can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/docs/scripts) directory.
+More useful examples can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/tree/master/docs/scripts) directory.
 
 ## Calibration functionality
 WARNING: Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement.

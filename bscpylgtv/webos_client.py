@@ -3,7 +3,6 @@ import base64
 import copy
 import functools
 import json
-import logging
 import os
 from datetime import timedelta
 
@@ -13,12 +12,13 @@ except ImportError:
     np = None
 
 import websockets
-from sqlitedict import SqliteDict
 
 from . import buttons as btn
 from . import endpoints as ep
 from .exceptions import PyLGTVPairException, PyLGTVCmdException, PyLGTVCmdError, PyLGTVServiceNotFoundError
 from .handshake import REGISTRATION_MESSAGE
+from .storage_proto import StorageProto
+from .storage_sqlitedict import StorageSqliteDict
 
 if np:
     from . import cal_commands as cal
@@ -30,11 +30,6 @@ if np:
         unity_lut_1d,
         unity_lut_3d,
     )
-
-logger = logging.getLogger(__name__)
-
-KEY_FILE_NAME = ".aiopylgtv.sqlite"
-USER_HOME = "HOME"
 
 SOUND_OUTPUTS_TO_DELAY_CONSECUTIVE_VOLUME_STEPS = {"external_arc"}
 
@@ -51,12 +46,11 @@ class WebOsClient:
         volume_step_delay_ms=None,
         getSystemInfo=True,
         skipStateInfo=False,
-        disable_key_file=False,
+        storage: StorageProto=None,
     ):
         """Initialize the client."""
         self.ip = ip
         self.port = 3000
-        self._disable_key_file = disable_key_file
         self.key_file_path = key_file_path
         self.client_key = client_key
         self.web_socket = None
@@ -66,6 +60,7 @@ class WebOsClient:
         self.ping_timeout = ping_timeout
         self.getSystemInfo = getSystemInfo
         self.skipStateInfo = skipStateInfo
+        self.storage = storage
         self.connect_task = None
         self.connect_result = None
         self.connection = None
@@ -102,62 +97,17 @@ class WebOsClient:
         return client
 
     async def async_init(self):
-        """Load client key from config file if in use."""
-        if self._disable_key_file:
-            return
-
+        """Load client key from storage if it's required."""
         if self.client_key is None:
-            self.client_key = await asyncio.get_running_loop().run_in_executor(
-                None, self.read_client_key
-            )
+            if self.storage is None:
+                self.storage = await StorageSqliteDict.create(self.key_file_path)
+            elif not isinstance(self.storage, StorageProto):
+                raise PyLGTVCmdException("Storage is not a StorageProto class.")
 
-    @staticmethod
-    def _get_key_file_path():
-        """Return the key file path."""
-        if os.getenv(USER_HOME) is not None and os.access(
-            os.getenv(USER_HOME), os.W_OK
-        ):
-            return os.path.join(os.getenv(USER_HOME), KEY_FILE_NAME)
+            self.client_key = await self.storage.get_key(self.ip)
 
-        return os.path.join(os.getcwd(), KEY_FILE_NAME)
-
-    def list_client_keys(key_file_path):
-        """Display all saved client keys per ip."""
-
-        logger.debug("load keyfile from %s", key_file_path)
-
-        with SqliteDict(key_file_path) as conf:
-            for ip, key in conf.iteritems():
-                print(ip, key)
-
-    def read_client_key(self):
-        """Try to load the client key for the current ip."""
-
-        if self.key_file_path:
-            key_file_path = self.key_file_path
-        else:
-            key_file_path = self._get_key_file_path()
-
-        logger.debug("load keyfile from %s", key_file_path)
-
-        with SqliteDict(key_file_path) as conf:
-            return conf.get(self.ip)
-
-    def write_client_key(self):
-        """Save the current client key."""
-        if self.client_key is None:
-            return
-
-        if self.key_file_path:
-            key_file_path = self.key_file_path
-        else:
-            key_file_path = self._get_key_file_path()
-
-        logger.debug("save keyfile to %s", key_file_path)
-
-        with SqliteDict(key_file_path) as conf:
-            conf[self.ip] = self.client_key
-            conf.commit()
+    async def get_storage(self):
+        return self.storage
 
     async def connect(self):
         if not self.is_connected():
@@ -212,10 +162,7 @@ class WebOsClient:
                 response = json.loads(raw_response)
                 if response["type"] == "registered":
                     self.client_key = response["payload"]["client-key"]
-                    if not self._disable_key_file:
-                        await asyncio.get_running_loop().run_in_executor(
-                            None, self.write_client_key
-                        )
+                    await self.storage.set_key(self.ip, self.client_key)
 
             if not self.client_key:
                 raise PyLGTVPairException("Unable to pair")
@@ -302,6 +249,7 @@ class WebOsClient:
 
             self.doStateUpdate = False
 
+            self.storage = None
             self._power_state = {}
             self._current_appId = None
             self._muted = None

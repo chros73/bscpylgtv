@@ -4,7 +4,7 @@ Library to control webOS based LG TV devices. Enhanced and faster version of
  optimized for command line usage (it looks for the same `.aiopylgtv.sqlite` key config file).
 
 ## Requirements
-- Python >= 3.7
+- Python >= 3.8
 
 ## Install from package
 ```bash
@@ -81,9 +81,8 @@ bscpylgtvcommand 192.168.1.18 power_off
 ```bash
 # -g : get system information (required by some of the calibration commands)
 bscpylgtvcommand -g 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
-# -d : disabling key file
 # -k <client_key> : specifying a client key
-bscpylgtvcommand -d -k ef6858b2133d68854612831e3df8e495 192.168.1.18 info_button
+bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 info_button
 # -p <path_to_key_file> : specifying path to key file
 bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 info_button
 # -l : get list of all saved client keys per ip (otionally from a specified key file)
@@ -140,6 +139,26 @@ async def runloop():
     ret = await client.volume_up()
     print(ret)
     await asyncio.sleep(30)
+
+    await client.disconnect()
+
+asyncio.get_event_loop().run_until_complete(runloop())
+```
+
+## Using external storage class via scripting
+
+Replacing built-in `StorageSqliteDict` key storage with custom `StorageMy` class that implements [methods](https://github.com/chros73/bscpylgtv/tree/master/bscpylgtv/storage_proto.py) of `StorageProto` class:
+```python
+import asyncio
+from bscpylgtv import WebOsClient
+from storage_my import StorageMy
+
+async def runloop():
+    storage = await StorageMy.create("file_path")
+    client = await WebOsClient.create('192.168.1.18', ping_interval=None, getSystemInfo=False, skipStateInfo=True, storage=storage)
+    await client.connect()
+    info = await client.get_software_info()
+    print(info)
 
     await client.disconnect()
 

@@ -1,13 +1,12 @@
 import asyncio
 import os
-from bscpylgtv import WebOsClient
-from dict_functions import DictFunctions
+from bscpylgtv import StorageSqliteDict, WebOsClient
 from lg_constants import DB_PATH, DB_TABLE_COOKIE, LG_IP
 
 async def runloop():
     cookieName = os.path.basename(__file__)
-    dict = await DictFunctions.create(DB_PATH, DB_TABLE_COOKIE)
-    cookie = await dict.read_key(cookieName)
+    storage = await StorageSqliteDict.create(DB_PATH, DB_TABLE_COOKIE)
+    cookie = await storage.get_key(cookieName)
 
     client = await WebOsClient.create(LG_IP, ping_interval=None, getSystemInfo=False, skipStateInfo=True, key_file_path=DB_PATH)
     await client.connect()
@@ -24,11 +23,11 @@ async def runloop():
         await client.number_button(1)
         await client.number_button(1)
 
-        await dict.write_key(cookieName, 1)
+        await storage.set_key(cookieName, 1)
     else:
         await client.close_app('com.palm.app.settings')
 
-        await dict.write_key(cookieName, 0)
+        await storage.set_key(cookieName, 0)
 
     await client.disconnect()
 

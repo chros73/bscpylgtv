@@ -1,5 +1,5 @@
 from .exceptions import PyLGTVCmdException, PyLGTVPairException
-from .webos_client import WebOsClient
+from .webos_client import StorageSqliteDict, WebOsClient
 
 try:
     from .lut_tools import (
@@ -18,6 +18,7 @@ except ImportError:
 __all__ = [
     "PyLGTVCmdException",
     "PyLGTVPairException",
+    "StorageSqliteDict",
     "WebOsClient",
 ]
 

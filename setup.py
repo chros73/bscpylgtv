@@ -12,7 +12,7 @@ setup(
     packages=["bscpylgtv"],
     install_requires=["websockets==8.1", "sqlitedict"],
     extras_require=extras,
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     zip_safe=True,
     version="0.2.2",
     description="Library to control webOS based LG TV devices.",

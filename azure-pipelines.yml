@@ -4,10 +4,10 @@ strategy:
   matrix:
     ## We can enable different Python versions when
     ## there are unit tests.
-    # Python38:
-    #   python.version: '3.8'
-    Python37:
-      python.version: '3.7'
+    # Python37:
+    #   python.version: '3.7'
+    Python38:
+      python.version: '3.8'
 
 steps:
 - task: UsePythonVersion@0

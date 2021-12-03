@@ -545,7 +545,10 @@ class WebOsClient:
             await self.do_state_update_callbacks()
 
     async def set_picture_settings_state(self, picture_settings):
-        self._picture_settings = picture_settings
+        if isinstance(self._picture_settings, dict) and isinstance(picture_settings, dict):
+            self._picture_settings.update(picture_settings)
+        else:
+            self._picture_settings = picture_settings
 
         if self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()

@@ -79,8 +79,9 @@ bscpylgtvcommand 192.168.1.18 power_off
 ## Optional command line switches
 
 ```bash
-# -g : get system information (required by some of the calibration commands)
-bscpylgtvcommand -g 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
+# -s "[\"<state1>\", "\<state2>\"]" : set states ("system_info" static state is required by some of the calibration commands)
+bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
+bscpylgtvcommand -s "[\"system_info\"]" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
 # -k <client_key> : specifying a client key
 bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 info_button
 # -p <path_to_key_file> : specifying path to key file
@@ -97,7 +98,7 @@ import asyncio
 from bscpylgtv import WebOsClient
 
 async def runloop():
-    client = await WebOsClient.create('192.168.1.18', ping_interval=None, getSystemInfo=False, skipStateInfo=True)
+    client = await WebOsClient.create('192.168.1.18', ping_interval=None, states=[])
     await client.connect()
     apps = await client.get_apps_all()
     for app in apps:
@@ -105,7 +106,7 @@ async def runloop():
 
     await client.disconnect()
 
-asyncio.get_event_loop().run_until_complete(runloop())
+asyncio.run(runloop())
 ```
 
 ## Subscribed State Updates Example
@@ -142,7 +143,7 @@ async def runloop():
 
     await client.disconnect()
 
-asyncio.get_event_loop().run_until_complete(runloop())
+asyncio.run(runloop())
 ```
 
 ## Using external storage class via scripting
@@ -155,14 +156,14 @@ from storage_my import StorageMy
 
 async def runloop():
     storage = await StorageMy.create("file_path")
-    client = await WebOsClient.create('192.168.1.18', ping_interval=None, getSystemInfo=False, skipStateInfo=True, storage=storage)
+    client = await WebOsClient.create('192.168.1.18', ping_interval=None, states=[], storage=storage)
     await client.connect()
     info = await client.get_software_info()
     print(info)
 
     await client.disconnect()
 
-asyncio.get_event_loop().run_until_complete(runloop())
+asyncio.run(runloop())
 ```
 
 More useful examples can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/tree/master/docs/scripts) directory.
@@ -226,13 +227,13 @@ bscpylgtvcommand 192.168.1.18 set_oled_light expert1 33
 # Set contrast to 85
 bscpylgtvcommand 192.168.1.18 set_contrast expert1 85
 # Do a DDC reset including uploading unity 1DLUT
-bscpylgtvcommand -g 192.168.1.18 ddc_reset expert1 true
+bscpylgtvcommand 192.168.1.18 ddc_reset expert1 true -s
 # Upload custom 1DLUT from file
-bscpylgtvcommand -g 192.168.1.18 upload_1d_lut_from_file expert1 "test.cal"
+bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file expert1 "test.cal" -s
 # Upload custom 3DLUT from file into BT709 slot
-bscpylgtvcommand -g 192.168.1.18 upload_3d_lut_bt709_from_file expert1 "test3d-1.cube"
+bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt709_from_file expert1 "test3d-1.cube" -s
 # Upload custom 3DLUT from file into bt2020 slot
-bscpylgtvcommand -g 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
+bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration expert1
 ```
@@ -243,7 +244,7 @@ import asyncio
 from bscpylgtv import WebOsClient
 
 async def runloop():
-    client = await WebOsClient.create('192.168.1.18', skipStateInfo=True)
+    client = await WebOsClient.create('192.168.1.18', states=["system_info"])
     await client.connect()
 
     await client.set_input("HDMI_2")
@@ -258,7 +259,7 @@ async def runloop():
 
     await client.disconnect()
 
-asyncio.get_event_loop().run_until_complete(runloop())
+asyncio.run(runloop())
 ```
 
 ## Development of `bscpylgtv`

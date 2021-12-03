@@ -8,7 +8,7 @@ async def runloop():
     storage = await StorageSqliteDict.create(DB_PATH, DB_TABLE_COOKIE)
     cookie = await storage.get_key(cookieName)
 
-    client = await WebOsClient.create(LG_IP, ping_interval=None, getSystemInfo=False, skipStateInfo=True, key_file_path=DB_PATH)
+    client = await WebOsClient.create(LG_IP, ping_interval=None, states=[], key_file_path=DB_PATH)
     await client.connect()
 
     if cookie != 1:
@@ -33,4 +33,4 @@ async def runloop():
 
     await client.disconnect()
 
-asyncio.get_event_loop().run_until_complete(runloop())
+asyncio.run(runloop())

@@ -35,6 +35,8 @@ SOUND_OUTPUTS_TO_DELAY_CONSECUTIVE_VOLUME_STEPS = {"external_arc"}
 
 
 class WebOsClient:
+    STATIC_STATES = {"system_info", "software_info"}
+
     def __init__(
         self,
         ip,
@@ -44,8 +46,8 @@ class WebOsClient:
         ping_timeout=20,
         client_key=None,
         volume_step_delay_ms=None,
-        getSystemInfo=True,
-        skipStateInfo=False,
+        states=["system_info", "software_info", "power", "current_app", "muted",
+                "volume", "apps", "inputs", "sound_output", "picture_settings"],
         storage: StorageProto=None,
     ):
         """Initialize the client."""
@@ -58,8 +60,6 @@ class WebOsClient:
         self.timeout_connect = timeout_connect
         self.ping_interval = ping_interval
         self.ping_timeout = ping_timeout
-        self.getSystemInfo = getSystemInfo
-        self.skipStateInfo = skipStateInfo
         self.storage = storage
         self.connect_task = None
         self.connect_result = None
@@ -89,6 +89,7 @@ class WebOsClient:
             if volume_step_delay_ms is not None
             else None
         )
+        self.states = (set(states) if isinstance(states, list) else set())
 
     @classmethod
     async def create(cls, *args, **kwargs):
@@ -184,35 +185,46 @@ class WebOsClient:
             self.connection = ws
 
             self.doStateUpdate = False
-            if self.getSystemInfo:
-                # set static state
-                [self._system_info] = await asyncio.gather(self.get_system_info())
+            if self.states:
+                # set static states
+                staticStates = self.states.intersection(self.STATIC_STATES)
+                if staticStates:
+                    # [self._system_info] = await asyncio.gather(self.get_system_info())
+                    # [self._software_info] = await asyncio.gather(self.get_software_info())
+                    for stateElem in staticStates:
+                        stateResult = await asyncio.gather(getattr(self, f'get_{stateElem}')())
+                        setattr(self, f'_{stateElem}', (stateResult or [None])[0])
+                        self.states.remove(stateElem)
 
-            if not self.skipStateInfo:
-                # set static state and subscribe to state updates
-                # avoid partial updates during initial subscription
-                [self._software_info] = await asyncio.gather(self.get_software_info())
+                # subscribe to state updates, avoid partial updates during initial subscription
+                subscribe_coros = set()
+                #subscribe_coros = {
+                #    self.subscribe_power(self.set_power_state),
+                #    self.subscribe_current_app(self.set_current_app_state),
+                #    self.subscribe_muted(self.set_muted_state),
+                #    self.subscribe_volume(self.set_volume_state),
+                #    self.subscribe_apps(self.set_apps_state),
+                #    self.subscribe_inputs(self.set_inputs_state),
+                #    self.subscribe_sound_output(self.set_sound_output_state),
+                #    self.subscribe_picture_settings(self.set_picture_settings_state),
+                #}
+                if self.states:
+                    for stateElem in self.states:
+                        subscriber = f'subscribe_{stateElem}'
+                        setter = f'set_{stateElem}_state'
+                        if callable(getattr(self, subscriber, None)) and callable(getattr(self, setter, None)):
+                            subscribe_coros.add(getattr(self, subscriber)(getattr(self, setter)))
 
-                subscribe_coros = {
-                    self.subscribe_power_state(self.set_power_state),
-                    self.subscribe_current_app(self.set_current_app_state),
-                    self.subscribe_muted(self.set_muted_state),
-                    self.subscribe_volume(self.set_volume_state),
-                    self.subscribe_apps(self.set_apps_state),
-                    self.subscribe_inputs(self.set_inputs_state),
-                    self.subscribe_sound_output(self.set_sound_output_state),
-                    self.subscribe_picture_settings(self.set_picture_settings_state),
-                }
-
-                subscribe_tasks = set()
-                for coro in subscribe_coros:
-                    subscribe_tasks.add(asyncio.create_task(coro))
-                await asyncio.wait(subscribe_tasks)
-                for task in subscribe_tasks:
-                    try:
-                        task.result()
-                    except PyLGTVServiceNotFoundError:
-                        pass
+                if subscribe_coros:
+                    subscribe_tasks = set()
+                    for coro in subscribe_coros:
+                        subscribe_tasks.add(asyncio.create_task(coro))
+                    await asyncio.wait(subscribe_tasks)
+                    for task in subscribe_tasks:
+                        try:
+                            task.result()
+                        except PyLGTVServiceNotFoundError:
+                            pass
 
             # set placeholder power state if not available
             if not self._power_state:
@@ -697,7 +709,7 @@ class WebOsClient:
         """Get current power state."""
         return await self.request(ep.GET_POWER_STATE)
 
-    async def subscribe_power_state(self, callback):
+    async def subscribe_power(self, callback):
         """Subscribe to current power state."""
         return await self.subscribe(callback, ep.GET_POWER_STATE)
 

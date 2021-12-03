@@ -11,8 +11,7 @@ async def list_keys(path_key_file):
     await storage.list_keys()
 
 async def runloop(args):
-    client = await WebOsClient.create(args.host, timeout_connect=2, ping_interval=None,
-        getSystemInfo=args.get_system_info, skipStateInfo=True,
+    client = await WebOsClient.create(args.host, ping_interval=None, states=args.states,
         client_key=args.key, key_file_path=args.path_key_file)
     await client.connect()
     print(await getattr(client, args.command)(*args.parameters))
@@ -61,10 +60,12 @@ def bscpylgtvcommand():
             "-k", "--key", type=str, help="optional client key"
         )
         parser.add_argument(
-            "-g", "--get_system_info",
-            dest="get_system_info",
-            action="store_true",
-            help="optional getting system info (required by some of the calibration commands)"
+            "-s", "--set_states",
+            dest="states",
+            type=convert_arg,
+            nargs="?",
+            const='["system_info"]',
+            help='optional setting states ("system_info" static state is required by some of the calibration commands)'
         )
         parser.add_argument(
             "host", type=str, help="hostname or ip address of the TV to connect to"

@@ -451,7 +451,7 @@ class WebOsClient:
             await asyncio.gather(*callbacks)
 
     async def set_power_state(self, payload):
-        self._power_state = payload
+        self._power_state = {"state": payload.get("state", "Unknown")}
 
         if self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()
@@ -778,7 +778,8 @@ class WebOsClient:
         """Power off TV."""
 
         # protect against turning tv back on if it is off
-        self._power_state = await self.get_power_state()
+        power_state = await self.get_power_state()
+        self._power_state = {"state": power_state.get("state", "Unknown")}
         if not self.is_on:
             return
 

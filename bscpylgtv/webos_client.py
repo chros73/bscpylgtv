@@ -277,7 +277,7 @@ class WebOsClient:
             self._picture_settings = None
 
             for callback in self.state_update_callbacks:
-                closeout.add(callback())
+                closeout.add(callback(self))
 
             if closeout:
                 closeout_task = asyncio.create_task(asyncio.wait(closeout))
@@ -433,7 +433,7 @@ class WebOsClient:
     async def register_state_update_callback(self, callback):
         self.state_update_callbacks.append(callback)
         if self.doStateUpdate:
-            await callback()
+            await callback(self)
 
     def unregister_state_update_callback(self, callback):
         if callback in self.state_update_callbacks:
@@ -445,7 +445,7 @@ class WebOsClient:
     async def do_state_update_callbacks(self):
         callbacks = set()
         for callback in self.state_update_callbacks:
-            callbacks.add(callback())
+            callbacks.add(callback(self))
 
         if callbacks:
             await asyncio.gather(*callbacks)

@@ -115,7 +115,7 @@ asyncio.run(runloop())
 import asyncio
 from bscpylgtv import WebOsClient
 
-async def on_state_change():
+async def on_state_change(client):
     print("State changed:")
     print(client.apps)
     print(client.inputs)
@@ -132,7 +132,6 @@ async def on_state_change():
     print(client.software_info)
 
 async def runloop():
-    global client
     client = await WebOsClient.create('192.168.1.18')
     await client.register_state_update_callback(on_state_change)
     await client.connect()

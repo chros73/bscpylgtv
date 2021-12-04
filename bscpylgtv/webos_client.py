@@ -186,29 +186,21 @@ class WebOsClient:
 
             self.doStateUpdate = False
             if self.states:
-                # set static states
+                # set static states, possible values: ["system_info", "software_info"]
                 staticStates = self.states.intersection(self.STATIC_STATES)
                 if staticStates:
-                    # [self._system_info] = await asyncio.gather(self.get_system_info())
-                    # [self._software_info] = await asyncio.gather(self.get_software_info())
+                    # e.g.: [self._system_info] = await asyncio.gather(self.get_system_info())
                     for stateElem in staticStates:
                         stateResult = await asyncio.gather(getattr(self, f'get_{stateElem}')())
                         setattr(self, f'_{stateElem}', (stateResult or [None])[0])
                         self.states.remove(stateElem)
 
                 # subscribe to state updates, avoid partial updates during initial subscription
+                # possible values: ["power", "current_app", "muted", "volume", "apps", "inputs",
+                #                   "sound_output", "picture_settings"]
                 subscribe_coros = set()
-                #subscribe_coros = {
-                #    self.subscribe_power(self.set_power_state),
-                #    self.subscribe_current_app(self.set_current_app_state),
-                #    self.subscribe_muted(self.set_muted_state),
-                #    self.subscribe_volume(self.set_volume_state),
-                #    self.subscribe_apps(self.set_apps_state),
-                #    self.subscribe_inputs(self.set_inputs_state),
-                #    self.subscribe_sound_output(self.set_sound_output_state),
-                #    self.subscribe_picture_settings(self.set_picture_settings_state),
-                #}
                 if self.states:
+                    # e.g.: subscribe_coros.add(self.subscribe_power(self.set_power_state))
                     for stateElem in self.states:
                         subscriber = f'subscribe_{stateElem}'
                         setter = f'set_{stateElem}_state'

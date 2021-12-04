@@ -223,7 +223,7 @@ class WebOsClient:
                     for task in subscribe_tasks:
                         try:
                             task.result()
-                        except PyLGTVServiceNotFoundError:
+                        except (PyLGTVCmdError, PyLGTVServiceNotFoundError):
                             pass
 
             # set placeholder power state if not available

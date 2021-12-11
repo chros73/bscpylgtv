@@ -90,6 +90,8 @@ bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 info_button
 # -l : get list of all saved client keys per ip (otionally from a specified key file)
 bscpylgtvcommand -l
 bscpylgtvcommand -l -p "D:\config\.aiopylgtv.sqlite"
+# -v : display version number
+bscpylgtvcommand -v
 ```
 
 ## Basic Scripting Example

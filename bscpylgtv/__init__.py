@@ -1,3 +1,4 @@
+from ._version import __version__, __version_info__
 from .exceptions import PyLGTVCmdException, PyLGTVPairException
 from .webos_client import StorageSqliteDict, WebOsClient
 
@@ -16,6 +17,8 @@ except ImportError:
 
 
 __all__ = [
+    "__version__"
+    "__version_info__"
     "PyLGTVCmdException",
     "PyLGTVPairException",
     "StorageSqliteDict",

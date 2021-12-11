@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import json
 
+from ._version import __version__
 from bscpylgtv import WebOsClient
 
 
@@ -40,6 +41,11 @@ def convert_arg(arg):
 
 def bscpylgtvcommand():
     parser = argparse.ArgumentParser(description="Send command to LG WebOs TV.")
+    parser.add_argument(
+        "-v", "--version",
+        action="version",
+        version=f'%(prog)s {__version__}'
+    )
     parser.add_argument(
         "-l", "--list_client_keys",
         dest="list_client_keys",

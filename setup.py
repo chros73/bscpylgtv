@@ -1,5 +1,9 @@
 from setuptools import setup
 
+about = {}
+with open("bscpylgtv/_version.py") as f:
+    exec(f.read(), about)
+
 with open("README.md") as f:
     readme = f.read()
 
@@ -14,7 +18,7 @@ setup(
     extras_require=extras,
     python_requires=">=3.8",
     zip_safe=True,
-    version="0.2.3",
+    version=about["__version__"],
     description="Library to control webOS based LG TV devices.",
     long_description=readme,
     long_description_content_type="text/markdown",

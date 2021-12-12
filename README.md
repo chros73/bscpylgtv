@@ -29,7 +29,7 @@ pip install --upgrade .[with_calibration]
 # Get list of apps (including hidden ones as well)
 bscpylgtvcommand 192.168.1.18 get_apps_all
 # Push info button
-bscpylgtvcommand 192.168.1.18 info_button
+bscpylgtvcommand 192.168.1.18 button INFO
 # Switch to HDMI2 input
 bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Get values of backlight and contrast of the current picture preset (using list)
@@ -84,9 +84,9 @@ bscpylgtvcommand 192.168.1.18 power_off
 bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
 bscpylgtvcommand -s "[\"system_info\"]" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
 # -k <client_key> : specifying a client key
-bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 info_button
+bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 button INFO
 # -p <path_to_key_file> : specifying path to key file
-bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 info_button
+bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 button INFO
 # -l : get list of all saved client keys per ip (otionally from a specified key file)
 bscpylgtvcommand -l
 bscpylgtvcommand -l -p "D:\config\.aiopylgtv.sqlite"

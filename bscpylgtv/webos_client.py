@@ -657,8 +657,13 @@ class WebOsClient:
 
     # high level request handling
 
-    async def button(self, name):
+    async def button(self, name, checkValid=True):
         """Send button press command."""
+
+        if checkValid and name not in btn.BUTTONS:
+            raise ValueError(
+                f"button {name} is not valid, use checkValid=False to try a new one"
+            )
 
         message = f"type:button\nname:{name}\n\n"
         await self.input_command(message)
@@ -999,102 +1004,6 @@ class WebOsClient:
     async def close_web(self):
         """Close web app."""
         return await self.request(ep.CLOSE_WEB_APP)
-
-    # Emulated button presses
-    async def left_button(self):
-        """left button press."""
-        await self.button(btn.LEFT)
-
-    async def right_button(self):
-        """right button press."""
-        await self.button(btn.RIGHT)
-
-    async def down_button(self):
-        """down button press."""
-        await self.button(btn.DOWN)
-
-    async def up_button(self):
-        """up button press."""
-        await self.button(btn.UP)
-
-    async def home_button(self):
-        """home button press."""
-        await self.button(btn.HOME)
-
-    async def back_button(self):
-        """back button press."""
-        await self.button(btn.BACK)
-
-    async def ok_button(self):
-        """ok button press."""
-        await self.button(btn.ENTER)
-
-    async def dash_button(self):
-        """dash button press."""
-        await self.button(btn.DASH)
-
-    async def info_button(self):
-        """info button press."""
-        await self.button(btn.INFO)
-
-    async def asterisk_button(self):
-        """asterisk button press."""
-        await self.button(btn.ASTERISK)
-
-    async def cc_button(self):
-        """cc button press."""
-        await self.button(btn.CC)
-
-    async def exit_button(self):
-        """exit button press."""
-        await self.button(btn.EXIT)
-
-    async def mute_button(self):
-        """mute button press."""
-        await self.button(btn.MUTE)
-
-    async def red_button(self):
-        """red button press."""
-        await self.button(btn.RED)
-
-    async def green_button(self):
-        """green button press."""
-        await self.button(btn.GREEN)
-
-    async def blue_button(self):
-        """blue button press."""
-        await self.button(btn.BLUE)
-
-    async def volume_up_button(self):
-        """volume up button press."""
-        await self.button(btn.VOLUMEUP)
-
-    async def volume_down_button(self):
-        """volume down button press."""
-        await self.button(btn.VOLUMEDOWN)
-
-    async def channel_up_button(self):
-        """channel up button press."""
-        await self.button(btn.CHANNELUP)
-
-    async def channel_down_button(self):
-        """channel down button press."""
-        await self.button(btn.CHANNELDOWN)
-
-    async def play_button(self):
-        """play button press."""
-        await self.button(btn.PLAY)
-
-    async def pause_button(self):
-        """pause button press."""
-        await self.button(btn.PAUSE)
-
-    async def number_button(self, num):
-        """numeric button press."""
-        if not (num >= 0 and num <= 9):
-            raise ValueError
-
-        await self.button(f"""{num}""")
 
     async def luna_request(self, uri, params):
         """luna api call."""

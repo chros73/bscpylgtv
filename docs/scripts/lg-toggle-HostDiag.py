@@ -16,12 +16,12 @@ async def runloop():
 
         await asyncio.sleep(2)
 
-        await client.right_button()
-        await client.number_button(1)
-        await client.number_button(1)
-        await client.number_button(1)
-        await client.number_button(1)
-        await client.number_button(1)
+        await client.button("RIGHT")
+        await client.button("1")
+        await client.button("1")
+        await client.button("1")
+        await client.button("1")
+        await client.button("1")
 
         await storage.set_key(cookieName, 1)
     else:

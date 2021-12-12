@@ -18,11 +18,11 @@ if exist %cname% (
 	REM launch app and create cookie
 	%mcmd% launch_app_with_params com.palm.app.settings "{\"target\": \"channel\"}"
 	timeout 2
-	%mcmd% right_button
-	%mcmd% number_button 1
-	%mcmd% number_button 1
-	%mcmd% number_button 1
-	%mcmd% number_button 1
-	%mcmd% number_button 1
+	%mcmd% button RIGHT
+	%mcmd% button "\"1\""
+	%mcmd% button "\"1\""
+	%mcmd% button "\"1\""
+	%mcmd% button "\"1\""
+	%mcmd% button "\"1\""
 	echo 1 > %cname%
 )

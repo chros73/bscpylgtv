@@ -12,8 +12,8 @@ async def list_keys(path_key_file):
     await storage.list_keys()
 
 async def runloop(args):
-    client = await WebOsClient.create(args.host, ping_interval=None, states=args.states,
-        client_key=args.key, key_file_path=args.path_key_file)
+    client = await WebOsClient.create(args.host, ping_interval=None, get_hello_info=args.get_hello_info,
+        states=args.states, client_key=args.key, key_file_path=args.path_key_file)
     await client.connect()
     print(await getattr(client, args.command)(*args.parameters))
     await client.disconnect()
@@ -64,6 +64,12 @@ def bscpylgtvcommand():
         parser = argparse.ArgumentParser(add_help=False)
         parser.add_argument(
             "-k", "--key", type=str, help="optional client key"
+        )
+        parser.add_argument(
+            "-o", "--get_hello_info",
+            dest="get_hello_info",
+            action="store_true",
+            help="optional getting hello info (e.g. to get unique deviceUUID)"
         )
         parser.add_argument(
             "-s", "--set_states",

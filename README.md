@@ -83,6 +83,8 @@ bscpylgtvcommand 192.168.1.18 power_off
 #    values: ["system_info", "software_info", "power", "current_app", "muted", "volume", "apps", "inputs", "sound_output", "picture_settings"]
 bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
 bscpylgtvcommand -s "[\"system_info\"]" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
+# -o : getting hello info (e.g. to get unique deviceUUID)
+bscpylgtvcommand -o 192.168.1.18 get_hello_info
 # -k <client_key> : specifying a client key
 bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 button INFO
 # -p <path_to_key_file> : specifying path to key file
@@ -133,9 +135,10 @@ async def on_state_change(client):
     print(client.picture_settings)
     print(client.system_info)
     print(client.software_info)
+    print(client.hello_info)
 
 async def runloop():
-    client = await WebOsClient.create('192.168.1.18')
+    client = await WebOsClient.create('192.168.1.18', get_hello_info=True)
     await client.register_state_update_callback(on_state_change)
     await client.connect()
 

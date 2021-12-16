@@ -46,6 +46,7 @@ class WebOsClient:
         ping_timeout=20,
         client_key=None,
         volume_step_delay_ms=None,
+        get_hello_info=False,
         states=["system_info", "software_info", "power", "current_app", "muted",
                 "volume", "apps", "inputs", "sound_output", "picture_settings"],
         storage: StorageProto=None,
@@ -60,6 +61,7 @@ class WebOsClient:
         self.timeout_connect = timeout_connect
         self.ping_interval = ping_interval
         self.ping_timeout = ping_timeout
+        self.get_hello_info = get_hello_info
         self.storage = storage
         self.connect_task = None
         self.connect_result = None
@@ -79,6 +81,7 @@ class WebOsClient:
         self._extinputs = {}
         self._system_info = None
         self._software_info = None
+        self._hello_info = None
         self._sound_output = None
         self._picture_settings = None
         self.state_update_callbacks = []
@@ -151,6 +154,19 @@ class WebOsClient:
                 ),
                 timeout=self.timeout_connect,
             )
+
+            if self.get_hello_info:
+                # send hello
+                await ws.send(json.dumps({"id": "hello", "type": "hello"}))
+                raw_response = await ws.recv()
+                response = json.loads(raw_response)
+
+                if response["type"] == "hello":
+                    self._hello_info = response["payload"]
+                else:
+                    raise PyLGTVPairException("Unable to say hello")
+
+            # send registration
             await ws.send(json.dumps(self.registration_msg()))
             raw_response = await ws.recv()
             response = json.loads(raw_response)
@@ -265,6 +281,7 @@ class WebOsClient:
             self._extinputs = {}
             self._system_info = None
             self._software_info = None
+            self._hello_info = None
             self._sound_output = None
             self._picture_settings = None
 
@@ -393,6 +410,10 @@ class WebOsClient:
     @property
     def software_info(self):
         return self._software_info
+
+    @property
+    def hello_info(self):
+        return self._hello_info
 
     @property
     def sound_output(self):
@@ -770,6 +791,10 @@ class WebOsClient:
     async def get_system_info(self):
         """Return the system information."""
         return await self.request(ep.GET_SYSTEM_INFO)
+
+    async def get_hello_info(self):
+        """Return hello information."""
+        return self._hello_info
 
     async def power_off(self):
         """Power off TV."""

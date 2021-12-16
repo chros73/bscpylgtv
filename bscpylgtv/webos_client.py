@@ -310,6 +310,7 @@ class WebOsClient:
             asyncio.TimeoutError,
             asyncio.CancelledError,
             websockets.exceptions.ConnectionClosedError,
+            websockets.exceptions.ConnectionClosedOK,
         ):
             pass
 

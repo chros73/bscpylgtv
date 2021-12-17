@@ -310,6 +310,7 @@ class WebOsClient:
             asyncio.TimeoutError,
             asyncio.CancelledError,
             websockets.exceptions.ConnectionClosedError,
+            websockets.exceptions.ConnectionClosedOK,
         ):
             pass
 
@@ -347,7 +348,11 @@ class WebOsClient:
                     elif future is not None and not future.done():
                         self.futures[uid].set_result(msg)
 
-        except (websockets.exceptions.ConnectionClosedError, asyncio.CancelledError):
+        except (
+            asyncio.CancelledError,
+            websockets.exceptions.ConnectionClosedError,
+            websockets.exceptions.ConnectionClosedOK,
+        ):
             pass
         finally:
             for task in callback_tasks.values():

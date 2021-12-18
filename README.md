@@ -49,7 +49,7 @@ bscpylgtvcommand 192.168.1.18 set_other_settings "{\"hdmiPcMode\": {\"hdmi2\": t
 # Launch and close screensaver
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.screensaver
 bscpylgtvcommand 192.168.1.18 close_app com.webos.app.screensaver
-# Turn off/on screen (use turn_screen_off_wo4 and turn_screen_on_wo4 commands for WebOS v4.x)
+# Turn screen off/on: turn_screen_off [webos_version] (e.g. for WebOS v4.x: turn_screen_off 4)
 bscpylgtvcommand 192.168.1.18 turn_screen_off
 bscpylgtvcommand 192.168.1.18 turn_screen_on
 # Display current picture mode settings

@@ -818,23 +818,27 @@ class WebOsClient:
         """Play media."""
         return await self.request(ep.POWER_ON)
 
-    async def turn_screen_off_wo4(self):
-        """Turn TV Screen off for WebOS v4.x.
-        standbyMode values: 'active' or 'passive', passive cannot turn screen back on, need to pull TV plug.
+    async def turn_screen_off(self, webos_ver=""):
+        """Turn TV Screen off. standbyMode values: 'active' or 'passive',
+        passive cannot turn screen back on, need to pull TV plug.
         """
-        return await self.request(ep.TURN_OFF_SCREEN_WO4, {"standbyMode": "active"})
+        epName = f"TURN_OFF_SCREEN_WO{webos_ver}" if webos_ver else "TURN_OFF_SCREEN"
 
-    async def turn_screen_on_wo4(self):
-        """Turn TV Screen on for WebOS v4.x."""
-        return await self.request(ep.TURN_ON_SCREEN_WO4, {"standbyMode": "active"})
+        if not hasattr(ep, epName):
+            raise ValueError(f"there's no {epName} endpoint")
 
-    async def turn_screen_off(self):
-        """Turn TV Screen off."""
-        return await self.request(ep.TURN_OFF_SCREEN, {"standbyMode": "active"})
+        return await self.request(getattr(ep, epName), {"standbyMode": "active"})
 
-    async def turn_screen_on(self):
-        """Turn TV Screen on."""
-        return await self.request(ep.TURN_ON_SCREEN, {"standbyMode": "active"})
+    async def turn_screen_on(self, webos_ver=""):
+        """Turn TV Screen on. standbyMode values: 'active' or 'passive',
+        passive cannot turn screen back on, need to pull TV plug.
+        """
+        epName = f"TURN_ON_SCREEN_WO{webos_ver}" if webos_ver else "TURN_ON_SCREEN"
+
+        if not hasattr(ep, epName):
+            raise ValueError(f"there's no {epName} endpoint")
+
+        return await self.request(getattr(ep, epName), {"standbyMode": "active"})
 
     # 3D Mode
     async def turn_3d_on(self):

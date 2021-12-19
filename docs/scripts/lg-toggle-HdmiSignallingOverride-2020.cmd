@@ -19,12 +19,12 @@ if exist %cname% (
 	%mcmd% launch_app_with_params com.palm.app.settings "{\"target\": \"picture\"}"
 	timeout 4
 	%mcmd% button RIGHT
-	%mcmd% button "\"1\""
-	%mcmd% button "\"1\""
-	%mcmd% button "\"1\""
-	%mcmd% button "\"3\""
-	%mcmd% button "\"1\""
-	%mcmd% button "\"1\""
-	%mcmd% button "\"1\""
+	%mcmd% button 1
+	%mcmd% button 1
+	%mcmd% button 1
+	%mcmd% button 3
+	%mcmd% button 1
+	%mcmd% button 1
+	%mcmd% button 1
 	echo 1 > %cname%
 )

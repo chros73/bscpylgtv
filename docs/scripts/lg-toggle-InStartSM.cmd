@@ -18,9 +18,9 @@ if exist %cname% (
 	REM launch app and create cookie
 	%mcmd% launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"inStart\"}"
 	timeout 2
-	%mcmd% button "\"0\""
-	%mcmd% button "\"4\""
-	%mcmd% button "\"1\""
-	%mcmd% button "\"3\""
+	%mcmd% button 0
+	%mcmd% button 4
+	%mcmd% button 1
+	%mcmd% button 3
 	echo 1 > %cname%
 )

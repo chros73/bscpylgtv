@@ -1,43 +1,51 @@
 BUTTONS=(
     "LEFT",
     "RIGHT",
-    "DOWN",
     "UP",
-    "HOME",
-    "BACK",
-    "ENTER",
-    "DASH",
-    "INFO",
-    "ASTERISK",
-    "CC",
-    "EXIT",
-    "MUTE",
+    "DOWN",
     "RED",
     "GREEN",
+    "YELLOW",
     "BLUE",
-    "VOLUMEUP",
-    "VOLUMEDOWN",
     "CHANNELUP",
     "CHANNELDOWN",
+    "VOLUMEUP",
+    "VOLUMEDOWN",
     "PLAY",
     "PAUSE",
     "STOP",
     "REWIND",
     "FASTFORWARD",
-    "MENU",
-    "GUIDE",
+    "ASTERISK",
+    "BACK",
+    "EXIT",
+    "ENTER",
     "AMAZON",
     "NETFLIX",
-    "MAGNIFIER_ZOOM",
-    "LIVE_ZOOM",
     "3D_MODE",
-    "ASPECT_RATIO",
-    "LIST",
-    "RECENT",
+    "AD",                   # Audio Description toggle
+    "ASPECT_RATIO",         # Quick Settings Menu - Aspect Ratio
+    "CC",                   # Closed Captions
+    "DASH",                 # Live TV
+    "GUIDE",
+    "HOME",                 # Home Dashboard
+    "INFO",                 # Info button
+    "INPUT_HUB",            # Home Dashboard
+    "LIST",                 # Live TV
+    "LIVE_ZOOM",            # Live Zoom
+    "MAGNIFIER_ZOOM",       # Focus Zoom
+    "MENU",                 # Quick Settings Menu
+    "MUTE",
+    "MYAPPS",               # Home Dashboard
+    "POWER",                # Power button
+    "PROGRAM",              # TV Guide
+    "QMENU",                # Quick Settings Menu
+    "RECENT",               # Home Dashboard - Recent Apps
     "RECORD",
-    "SAP",
-    "SCREEN_REMOTE",
-    "POWER",
+    "SAP",                  # Multi Audio Setting
+    "SCREEN_REMOTE",        # Screen Remote
+    "TELETEXT",
+    "TEXTOPTION",
     "0",
     "1",
     "2",

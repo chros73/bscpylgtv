@@ -686,7 +686,7 @@ class WebOsClient:
     async def button(self, name, checkValid=True):
         """Send button press command."""
 
-        if checkValid and name not in btn.BUTTONS:
+        if checkValid and str(name) not in btn.BUTTONS:
             raise ValueError(
                 f"button {name} is not valid, use checkValid=False to try a new one"
             )

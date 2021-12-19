@@ -19,10 +19,10 @@ if exist %cname% (
 	%mcmd% launch_app_with_params com.palm.app.settings "{\"target\": \"channel\"}"
 	timeout 2
 	%mcmd% button RIGHT
-	%mcmd% button "\"1\""
-	%mcmd% button "\"1\""
-	%mcmd% button "\"1\""
-	%mcmd% button "\"1\""
-	%mcmd% button "\"1\""
+	%mcmd% button 1
+	%mcmd% button 1
+	%mcmd% button 1
+	%mcmd% button 1
+	%mcmd% button 1
 	echo 1 > %cname%
 )

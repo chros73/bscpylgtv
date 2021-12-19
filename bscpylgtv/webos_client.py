@@ -1067,6 +1067,10 @@ class WebOsClient:
 
         return await self.request(ep.CLOSE_ALERT, payload={"alertId": alertId})
 
+    async def input_button(self):
+        """Input button."""
+        return await self.luna_request(ep.LUNA_SHOW_INPUT_PICKER, {})
+
     async def set_current_picture_mode(self, pic_mode):
         """Set picture mode for current input, dynamic range and 3d mode.
 

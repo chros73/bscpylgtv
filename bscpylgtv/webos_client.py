@@ -266,7 +266,7 @@ class WebOsClient:
 
             self.connection = None
             self.input_connection = None
-
+            self.handler_tasks = set()
             self.doStateUpdate = False
 
             self.storage = None

@@ -183,13 +183,13 @@ class WebOsClient:
 
             self.handler_tasks.add(
                 asyncio.create_task(
-                    self.consumer_handler(ws, self.callbacks, self.futures)
+                    self.consumer_handler(ws)
                 )
             )
             if self.ping_interval is not None:
                 self.handler_tasks.add(
                     asyncio.create_task(
-                        self.ping_handler(ws, self.ping_interval, self.ping_timeout)
+                        self.ping_handler(ws)
                     )
                 )
             self.connection = ws
@@ -296,15 +296,15 @@ class WebOsClient:
             self._sound_output = None
             self._picture_settings = None
 
-    async def ping_handler(self, ws, interval, timeout):
+    async def ping_handler(self, ws):
         try:
             while True:
-                await asyncio.sleep(interval)
+                await asyncio.sleep(self.ping_interval)
                 # In the "Suspend" state the tv can keep a connection alive, but will not respond to pings
                 if self._power_state.get("state") != "Suspend":
                     ping_waiter = await ws.ping()
-                    if timeout is not None:
-                        await asyncio.wait_for(ping_waiter, timeout=timeout)
+                    if self.ping_timeout is not None:
+                        await asyncio.wait_for(ping_waiter, timeout=self.ping_timeout)
         except (
             asyncio.TimeoutError,
             asyncio.CancelledError,
@@ -324,14 +324,13 @@ class WebOsClient:
         except asyncio.CancelledError:
             pass
 
-    async def consumer_handler(self, ws, callbacks={}, futures={}):
-
+    async def consumer_handler(self, ws):
         callback_queues = {}
         callback_tasks = {}
 
         try:
             async for raw_msg in ws:
-                if callbacks or futures:
+                if self.callbacks or self.futures:
                     msg = json.loads(raw_msg)
                     uid = msg.get("id")
                     callback = self.callbacks.get(uid)
@@ -512,7 +511,6 @@ class WebOsClient:
 
     async def set_current_channel_state(self, channel):
         """Set current channel state variable.  This function also handles the channel info subscription, since that call may fail if channel information is not available when it's called."""
-
         self._current_channel = channel
 
         if self._channel_info is None:
@@ -666,7 +664,7 @@ class WebOsClient:
                 if self.ping_interval is not None:
                     self.handler_tasks.add(
                         asyncio.create_task(
-                            self.ping_handler(inputws, self.ping_interval, self.ping_timeout)
+                            self.ping_handler(inputws)
                         )
                     )
                 self.input_connection = inputws
@@ -684,7 +682,6 @@ class WebOsClient:
 
     async def button(self, name, checkValid=True):
         """Send button press command."""
-
         if checkValid and str(name) not in btn.BUTTONS:
             raise ValueError(
                 f"button {name} is not valid, use checkValid=False to try a new one"
@@ -695,19 +692,16 @@ class WebOsClient:
 
     async def move(self, dx, dy, down=0):
         """Send cursor move command."""
-
         message = f"type:move\ndx:{dx}\ndy:{dy}\ndown:{down}\n\n"
         await self.input_command(message)
 
     async def click(self):
         """Send cursor click command."""
-
         message = f"type:click\n\n"
         await self.input_command(message)
 
     async def scroll(self, dx, dy):
         """Send scroll command."""
-
         message = f"type:scroll\ndx:{dx}\ndy:{dy}\n\n"
         await self.input_command(message)
 
@@ -760,7 +754,6 @@ class WebOsClient:
 
     async def subscribe_current_app(self, callback):
         """Subscribe to changes in the current app id."""
-
         async def current_app(payload):
             await callback(payload.get("appId"))
 
@@ -856,7 +849,6 @@ class WebOsClient:
 
     async def subscribe_inputs(self, callback):
         """Subscribe to changes in available inputs."""
-
         async def inputs(payload):
             await callback(payload.get("devices"))
 
@@ -882,7 +874,6 @@ class WebOsClient:
 
     async def subscribe_muted(self, callback):
         """Subscribe to changes in the current mute status."""
-
         async def muted(payload):
             await callback(payload.get("mute"))
 
@@ -899,7 +890,6 @@ class WebOsClient:
 
     async def subscribe_volume(self, callback):
         """Subscribe to changes in the current volume."""
-
         async def volume(payload):
             await callback(payload.get("volumeStatus", payload).get("volume"))
 
@@ -947,7 +937,6 @@ class WebOsClient:
 
     async def subscribe_channels(self, callback):
         """Subscribe to list of tv channels."""
-
         async def channels(payload):
             await callback(payload.get("channelList"))
 
@@ -980,7 +969,6 @@ class WebOsClient:
 
     async def subscribe_sound_output(self, callback):
         """Subscribe to changes in current audio output."""
-
         async def sound_output(payload):
             await callback(payload.get("soundOutput"))
 

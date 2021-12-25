@@ -196,22 +196,23 @@ class WebOsClient:
 
             self.doStateUpdate = False
             if self.states:
+                selectedStates = self.states
                 # set static states, possible values: ["system_info", "software_info"]
-                staticStates = self.states.intersection(self.STATIC_STATES)
+                staticStates = selectedStates.intersection(self.STATIC_STATES)
                 if staticStates:
                     # e.g.: [self._system_info] = await asyncio.gather(self.get_system_info())
                     for stateElem in staticStates:
                         stateResult = await asyncio.gather(getattr(self, f'get_{stateElem}')())
                         setattr(self, f'_{stateElem}', (stateResult or [None])[0])
-                        self.states.remove(stateElem)
+                        selectedStates.remove(stateElem)
 
                 # subscribe to state updates, avoid partial updates during initial subscription
                 # possible values: ["power", "current_app", "muted", "volume", "apps", "inputs",
                 #                   "sound_output", "picture_settings"]
                 subscribe_coros = set()
-                if self.states:
+                if selectedStates:
                     # e.g.: subscribe_coros.add(self.subscribe_power(self.set_power_state))
-                    for stateElem in self.states:
+                    for stateElem in selectedStates:
                         subscriber = f'subscribe_{stateElem}'
                         setter = f'set_{stateElem}_state'
                         if callable(getattr(self, subscriber, None)) and callable(getattr(self, setter, None)):

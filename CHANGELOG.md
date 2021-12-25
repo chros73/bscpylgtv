@@ -1,5 +1,15 @@
 # Change Log
 
+## [v0.2.9](https://github.com/chros73/bscpylgtv/tree/v0.2.9) (2021-12-25)
+**Implemented enhancements:**
+
+- Disconnect client when TV is off
+
+**Fixed bugs:**
+
+- Fix client reconnect (Closes [#2](https://github.com/chros73/bscpylgtv/pull/2))
+- Fix other properties as well during disconnecting (e.g. storage, states)
+
 ## [v0.2.8](https://github.com/chros73/bscpylgtv/tree/v0.2.8) (2021-12-23)
 **Implemented enhancements:**
 

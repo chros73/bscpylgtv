@@ -115,9 +115,7 @@ class WebOsClient:
     async def connect(self):
         if not self.is_connected():
             self.connect_result = asyncio.Future()
-            self.connect_task = asyncio.create_task(
-                self.connect_handler(self.connect_result)
-            )
+            self.connect_task = asyncio.create_task(self.connect_handler(self.connect_result))
         return await self.connect_result
 
     async def disconnect(self):
@@ -168,12 +166,10 @@ class WebOsClient:
             raw_response = await ws.recv()
             response = json.loads(raw_response)
 
-            if (
-                response["type"] == "response"
-                and response["payload"]["pairingType"] == "PROMPT"
-            ):
+            if (response["type"] == "response" and response["payload"]["pairingType"] == "PROMPT"):
                 raw_response = await ws.recv()
                 response = json.loads(raw_response)
+
                 if response["type"] == "registered":
                     self.client_key = response["payload"]["client-key"]
                     await self.storage.set_key(self.ip, self.client_key)
@@ -181,20 +177,13 @@ class WebOsClient:
             if not self.client_key:
                 raise PyLGTVPairException("Unable to pair")
 
-            self.handler_tasks.add(
-                asyncio.create_task(
-                    self.consumer_handler(ws)
-                )
-            )
+            self.handler_tasks.add(asyncio.create_task(self.consumer_handler(ws)))
+
             if self.ping_interval is not None:
-                self.handler_tasks.add(
-                    asyncio.create_task(
-                        self.ping_handler(ws)
-                    )
-                )
+                self.handler_tasks.add(asyncio.create_task(self.ping_handler(ws)))
+
             self.connection = ws
 
-            self.doStateUpdate = False
             if self.states:
                 selectedStates = self.states
                 # set static states, possible values: ["system_info", "software_info"]
@@ -215,14 +204,18 @@ class WebOsClient:
                     for stateElem in selectedStates:
                         subscriber = f'subscribe_{stateElem}'
                         setter = f'set_{stateElem}_state'
+
                         if callable(getattr(self, subscriber, None)) and callable(getattr(self, setter, None)):
                             subscribe_coros.add(getattr(self, subscriber)(getattr(self, setter)))
 
                 if subscribe_coros:
                     subscribe_tasks = set()
+
                     for coro in subscribe_coros:
                         subscribe_tasks.add(asyncio.create_task(coro))
+
                     await asyncio.wait(subscribe_tasks)
+
                     for task in subscribe_tasks:
                         try:
                             task.result()
@@ -232,7 +225,9 @@ class WebOsClient:
             # set placeholder power state if not available
             if not self._power_state:
                 self._power_state = {"state": "Unknown"}
+
             self.doStateUpdate = True
+
             if self.state_update_callbacks:
                 await self.do_state_update_callbacks()
 
@@ -256,6 +251,7 @@ class WebOsClient:
 
             if ws is not None:
                 closeout.add(asyncio.create_task(ws.close()))
+
             if self.input_connection is not None:
                 closeout.add(asyncio.create_task(self.input_connection.close()))
 
@@ -274,9 +270,9 @@ class WebOsClient:
             ws = None
             self.connection = None
             self.input_connection = None
-            self.handler_tasks = set()
             self.connect_task = None
             self.connect_result = None
+            self.handler_tasks = set()
             self.callbacks = {}
             self.futures = {}
             self.state_update_callbacks = []
@@ -336,6 +332,7 @@ class WebOsClient:
                     uid = msg.get("id")
                     callback = self.callbacks.get(uid)
                     future = self.futures.get(uid)
+
                     if callback is not None:
                         if uid not in callback_tasks:
                             queue = asyncio.Queue()
@@ -597,19 +594,23 @@ class WebOsClient:
         if uid is None:
             uid = self.command_count
             self.command_count += 1
+
         res = asyncio.Future()
         self.futures[uid] = res
+
         try:
             await self.command(cmd_type, uri, payload, uid)
         except (asyncio.CancelledError, PyLGTVCmdException):
             del self.futures[uid]
             raise
+
         try:
             response = await res
         except asyncio.CancelledError:
             if uid in self.futures:
                 del self.futures[uid]
             raise
+
         del self.futures[uid]
 
         payload = response.get("payload")
@@ -636,6 +637,7 @@ class WebOsClient:
         uid = self.command_count
         self.command_count += 1
         self.callbacks[uid] = callback
+
         try:
             return await self.request(
                 uri, payload=payload, cmd_type="subscribe", uid=uid
@@ -800,6 +802,7 @@ class WebOsClient:
         # protect against turning tv back on if it is off
         power_state = await self.get_power_state()
         self._power_state = {"state": power_state.get("state", "Unknown")}
+
         if not self.is_on:
             return
 

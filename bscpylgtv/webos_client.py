@@ -139,6 +139,7 @@ class WebOsClient:
         return handshake
 
     async def connect_handler(self, res):
+        ws = None
         try:
             ws = await asyncio.wait_for(
                 websockets.connect(
@@ -179,7 +180,7 @@ class WebOsClient:
 
             self.handler_tasks.add(asyncio.create_task(self.consumer_handler(ws)))
 
-            if self.ping_interval is not None:
+            if self.ping_interval is not None and self.ping_timeout is not None:
                 self.handler_tasks.add(asyncio.create_task(self.ping_handler(ws)))
 
             self.connection = ws
@@ -267,7 +268,6 @@ class WebOsClient:
                     except asyncio.CancelledError:
                         pass
 
-            ws = None
             self.connection = None
             self.input_connection = None
             self.connect_task = None
@@ -297,11 +297,9 @@ class WebOsClient:
         try:
             while True:
                 await asyncio.sleep(self.ping_interval)
-                # In the "Suspend" state the tv can keep a connection alive, but will not respond to pings
-                if self._power_state.get("state") != "Suspend":
+                if self.is_on:
                     ping_waiter = await ws.ping()
-                    if self.ping_timeout is not None:
-                        await asyncio.wait_for(ping_waiter, timeout=self.ping_timeout)
+                    await asyncio.wait_for(ping_waiter, timeout=self.ping_timeout)
         except (
             asyncio.TimeoutError,
             asyncio.CancelledError,
@@ -467,7 +465,9 @@ class WebOsClient:
     async def set_power_state(self, payload):
         self._power_state = {"state": payload.get("state", "Unknown")}
 
-        if self.state_update_callbacks and self.doStateUpdate:
+        if not self.is_on:
+            await self.disconnect()
+        elif self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()
 
     async def set_current_app_state(self, appId):
@@ -664,12 +664,9 @@ class WebOsClient:
                     timeout=self.timeout_connect,
                 )
 
-                if self.ping_interval is not None:
-                    self.handler_tasks.add(
-                        asyncio.create_task(
-                            self.ping_handler(inputws)
-                        )
-                    )
+                if self.ping_interval is not None and self.ping_timeout is not None:
+                    self.handler_tasks.add(asyncio.create_task(self.ping_handler(inputws)))
+
                 self.input_connection = inputws
 
             if self.input_connection is None:

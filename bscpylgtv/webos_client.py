@@ -56,7 +56,6 @@ class WebOsClient:
         self.port = 3000
         self.key_file_path = key_file_path
         self.client_key = client_key
-        self.web_socket = None
         self.command_count = 0
         self.timeout_connect = timeout_connect
         self.ping_interval = ping_interval
@@ -142,8 +141,6 @@ class WebOsClient:
         return handshake
 
     async def connect_handler(self, res):
-
-        ws = None
         try:
             ws = await asyncio.wait_for(
                 websockets.connect(
@@ -183,9 +180,6 @@ class WebOsClient:
 
             if not self.client_key:
                 raise PyLGTVPairException("Unable to pair")
-
-            self.callbacks = {}
-            self.futures = {}
 
             self.handler_tasks.add(
                 asyncio.create_task(
@@ -264,12 +258,29 @@ class WebOsClient:
             if self.input_connection is not None:
                 closeout.add(asyncio.create_task(self.input_connection.close()))
 
+            for callback in self.state_update_callbacks:
+                closeout.add(callback(self))
+
+            if closeout:
+                closeout_task = asyncio.create_task(asyncio.wait(closeout))
+
+                while not closeout_task.done():
+                    try:
+                        await asyncio.shield(closeout_task)
+                    except asyncio.CancelledError:
+                        pass
+
+            ws = None
             self.connection = None
             self.input_connection = None
             self.handler_tasks = set()
+            self.connect_task = None
+            self.connect_result = None
+            self.callbacks = {}
+            self.futures = {}
+            self.state_update_callbacks = []
             self.doStateUpdate = False
 
-            self.storage = None
             self._power_state = {}
             self._current_appId = None
             self._muted = None
@@ -284,18 +295,6 @@ class WebOsClient:
             self._hello_info = None
             self._sound_output = None
             self._picture_settings = None
-
-            for callback in self.state_update_callbacks:
-                closeout.add(callback(self))
-
-            if closeout:
-                closeout_task = asyncio.create_task(asyncio.wait(closeout))
-
-                while not closeout_task.done():
-                    try:
-                        await asyncio.shield(closeout_task)
-                    except asyncio.CancelledError:
-                        pass
 
     async def ping_handler(self, ws, interval, timeout):
         try:

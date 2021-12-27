@@ -24,7 +24,7 @@ pip install --upgrade .[with_calibration]
 ```
 
 ## Examples
-
+Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory.
 ```bash
 # Get list of apps (including hidden ones as well)
 bscpylgtvcommand 192.168.1.18 get_apps_all

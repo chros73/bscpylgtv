@@ -1059,8 +1059,8 @@ class WebOsClient:
         """Input button."""
         return await self.luna_request(ep.LUNA_SHOW_INPUT_PICKER, {})
 
-    async def set_current_picture_mode(self, pic_mode):
-        """Set picture mode for current input, dynamic range and 3d mode (OLED C1).
+    async def set_current_picture_mode(self, pic_mode, category="picture"):
+        """Set picture mode for current category, input, dynamic range and 3d mode (OLED C1).
 
         Known picture modes are: cinema, eco, expert1, expert2, game,
         normal, photo, sports, filmMaker, vivid, hdrCinema,
@@ -1068,17 +1068,19 @@ class WebOsClient:
         hdrVivid, dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
         dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid, dolbyStandard
 
+        Known categories are: picture, aiPicture
+
         Likely not all modes are valid for all tv models.
         """
 
-        params = {"category": "picture", "settings": {"pictureMode": pic_mode}}
+        params = {"category": category, "settings": {"pictureMode": pic_mode}}
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
     async def set_picture_mode(
-        self, pic_mode, tv_input, dynamic_range="sdr", stereoscopic="2d"
+        self, pic_mode, tv_input, dynamic_range="sdr", stereoscopic="2d", category="picture"
     ):
-        """Set picture mode for specific input, dynamic range and 3d mode (OLED C1).
+        """Set picture mode for specific category, input, dynamic range and 3d mode (OLED C1).
 
         Known picture modes are: cinema, eco, expert1, expert2, game,
         normal, photo, sports, filmMaker, vivid,  hdrCinema,
@@ -1096,22 +1098,34 @@ class WebOsClient:
 
         Known stereoscopic modes are: 2d, 3d
 
+        Known categories are: picture, aiPicture
+
         Likely not all inputs and modes are valid for all tv models.
         """
 
         params = {
-            "category": f"picture${tv_input}.x.{stereoscopic}.{dynamic_range}",
+            "category": f"{category}${tv_input}.x.{stereoscopic}.{dynamic_range}",
             "settings": {"pictureMode": pic_mode},
         }
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
-    async def set_current_picture_settings(self, settings):
-        """Set picture settings for current picture mode, input, dynamic range and 3d mode.
+    async def set_current_picture_settings(self, settings, category="picture"):
+        """Set picture settings for current category, picture mode, input, dynamic range and 3d mode.
 
         A possible list of settings and OLED C1 example values are below
         (not all settings are applicable for all modes and/or tv models):
         /etc/palm/defaultSettings.json
+
+        Category: aiPicture
+        -------------------
+
+        "ai_Brightness": "off",
+        "ai_Genre": "off",
+        "ai_Picture": "off"
+
+        Category: picture
+        -----------------
 
         "adjustingLuminance": [
             0,
@@ -1346,17 +1360,17 @@ class WebOsClient:
 
         """
 
-        params = {"category": "picture", "settings": settings}
+        params = {"category": category, "settings": settings}
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
     async def set_picture_settings(
-        self, settings, pic_mode, tv_input, stereoscopic="2d"
+        self, settings, pic_mode, tv_input, stereoscopic="2d", category="picture"
     ):
-        """Set picture settings for specific picture mode, input, and 3d mode."""
+        """Set picture settings for specific category, picture mode, input, and 3d mode."""
 
         params = {
-            "category": f"picture${tv_input}.{pic_mode}.{stereoscopic}.x",
+            "category": f"{category}${tv_input}.{pic_mode}.{stereoscopic}.x",
             "settings": settings,
         }
 

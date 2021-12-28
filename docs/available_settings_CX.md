@@ -26,6 +26,13 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
 2d, 3d
 ```
 
+#### `aiPicture` category - default settings: `hdmi1` input - `expert2` preset (used by `set_current_picture_settings` method)
+```json
+    "ai_Brightness": "off",
+    "ai_Genre": "off",
+    "ai_Picture": "off"
+```
+
 #### `picture` category - default settings: `hdmi1` input - `expert2` preset (used by `set_current_picture_settings` method)
 ```json
     "adjustingLuminance": [

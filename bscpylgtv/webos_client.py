@@ -1059,6 +1059,22 @@ class WebOsClient:
         """Input button."""
         return await self.luna_request(ep.LUNA_SHOW_INPUT_PICKER, {})
 
+    async def set_device_info(self, input, icon, label):
+        """Set device info. It can be used to switch between PC and non-PC modes.
+
+        Inputs: "HDMI_1", "HDMI_2", "HDMI_3", "HDMI_4"
+        Icons:  "HDMI_1", "HDMI_2", "HDMI_3", "HDMI_4", "satellite", "settopbox",
+                "dvd", "bluray", "hometheater", "gameconsole",
+                "streamingbox", "camera", "mobile", "pc"
+        Labels: "HDMI 1", "HDMI 2", "HDMI 3", "HDMI 4", "Satellite", "Set-Top Box",
+                "DVD Player", "Blu-ray Player", "Home Theatre", "Game Console",
+                "Streaming Box", "Generic Camera", "Mobile Device", "PC"
+        """
+
+        params = {"id": input, "icon": f"{icon}.png", "label": label}
+
+        return await self.luna_request(ep.LUNA_SET_DEVICE_INFO, params)
+
     async def set_current_picture_mode(self, pic_mode, category="picture"):
         """Set picture mode for current category, input, dynamic range and 3d mode (OLED C1).
 

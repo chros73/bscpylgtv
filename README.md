@@ -44,8 +44,9 @@ bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"hdrDynamicToneMap
 bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"colorGamut\": \"auto\"}"
 # Set mpegNoiseReduction off in the current picture preset (using JSON)
 bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"mpegNoiseReduction\": \"off\"}"
-# Turn PC Mode on for HDMI2 (using JSON)
-bscpylgtvcommand 192.168.1.18 set_other_settings "{\"hdmiPcMode\": {\"hdmi2\": true}}"
+# Turn PC Mode on/off for HDMI2
+bscpylgtvcommand 192.168.1.18 set_device_info HDMI_2 pc PC
+bscpylgtvcommand 192.168.1.18 set_device_info HDMI_2 hometheater "Home Theatre"
 # Launch and close screensaver
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.screensaver
 bscpylgtvcommand 192.168.1.18 close_app com.webos.app.screensaver

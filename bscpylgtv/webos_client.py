@@ -365,6 +365,13 @@ class WebOsClient:
                     except asyncio.CancelledError:
                         pass
 
+    def __output_result(self, res, jsonOutput=False, sortKeys=True, indent=4):
+        """Output result as it is (e.g. dictionary) or JSON string."""
+        if jsonOutput:
+            return json.dumps(res, sort_keys=sortKeys, indent=indent)
+        else:
+            return res
+
     # manage state
     @property
     def power_state(self):
@@ -733,19 +740,19 @@ class WebOsClient:
         return await self.subscribe(callback, ep.GET_POWER_STATE)
 
     # Apps
-    async def get_apps(self):
+    async def get_apps(self, jsonOutput=False):
         """Return all apps."""
         res = await self.request(ep.GET_APPS)
-        return res.get("launchPoints")
+        return self.__output_result(res.get("launchPoints"), jsonOutput)
 
     async def subscribe_apps(self, callback):
         """Subscribe to changes in available apps."""
         return await self.subscribe(callback, ep.GET_APPS)
 
-    async def get_apps_all(self):
+    async def get_apps_all(self, jsonOutput=False):
         """Return all apps, including hidden ones."""
         res = await self.request(ep.GET_APPS_ALL)
-        return res.get("apps")
+        return self.__output_result(res.get("apps"), jsonOutput)
 
     async def get_current_app(self):
         """Get the current app id."""
@@ -776,22 +783,23 @@ class WebOsClient:
         return await self.request(ep.LAUNCHER_CLOSE, {"id": app})
 
     # Services
-    async def get_services(self):
+    async def get_services(self, jsonOutput=False):
         """Get all services."""
         res = await self.request(ep.GET_SERVICES)
-        return res.get("services")
+        return self.__output_result(res.get("services"), jsonOutput)
 
-    async def get_software_info(self):
+    async def get_software_info(self, jsonOutput=False):
         """Return the current software status."""
-        return await self.request(ep.GET_SOFTWARE_INFO)
+        res = await self.request(ep.GET_SOFTWARE_INFO)
+        return self.__output_result(res, jsonOutput)
 
     async def get_system_info(self):
         """Return the system information."""
         return await self.request(ep.GET_SYSTEM_INFO)
 
-    async def get_hello_info(self):
+    async def get_hello_info(self, jsonOutput=False):
         """Return hello information."""
-        return self._hello_info
+        return self.__output_result(self._hello_info, jsonOutput)
 
     async def power_off(self):
         """Power off TV."""
@@ -808,7 +816,7 @@ class WebOsClient:
         await self.command("request", ep.POWER_OFF)
 
     async def power_on(self):
-        """Play media."""
+        """Power on TV."""
         return await self.request(ep.POWER_ON)
 
     async def turn_screen_off(self, webos_ver=""):
@@ -843,10 +851,10 @@ class WebOsClient:
         return await self.request(ep.SET_3D_OFF)
 
     # Inputs
-    async def get_inputs(self):
+    async def get_inputs(self, jsonOutput=False):
         """Get all inputs."""
         res = await self.request(ep.GET_INPUTS)
-        return res.get("devices")
+        return self.__output_result(res.get("devices"), jsonOutput)
 
     async def subscribe_inputs(self, callback):
         """Subscribe to changes in available inputs."""
@@ -931,10 +939,10 @@ class WebOsClient:
         """Channel down."""
         return await self.request(ep.TV_CHANNEL_DOWN)
 
-    async def get_channels(self):
+    async def get_channels(self, jsonOutput=False):
         """Get list of tv channels."""
         res = await self.request(ep.GET_TV_CHANNELS)
-        return res.get("channelList")
+        return self.__output_result(res.get("channelList"), jsonOutput)
 
     async def subscribe_channels(self, callback):
         """Subscribe to list of tv channels."""
@@ -951,9 +959,10 @@ class WebOsClient:
         """Subscribe to changes in the current tv channel."""
         return await self.subscribe(callback, ep.GET_CURRENT_CHANNEL)
 
-    async def get_channel_info(self):
+    async def get_channel_info(self, jsonOutput=False):
         """Get the current channel info."""
-        return await self.request(ep.GET_CHANNEL_INFO)
+        res = await self.request(ep.GET_CHANNEL_INFO)
+        return self.__output_result(res, jsonOutput)
 
     async def subscribe_channel_info(self, callback):
         """Subscribe to current channel info."""
@@ -1853,7 +1862,7 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
-    async def get_configs(self, keys=["tv.model.*"]):
+    async def get_configs(self, keys=["tv.model.*"], jsonOutput=False):
         """Get config settings.
 
         A possible list of keys of OLED C1 are below (not all settings are applicable for all tv models):
@@ -1930,8 +1939,8 @@ class WebOsClient:
         """
 
         payload = {"configNames": keys}
-        ret = await self.request(ep.GET_CONFIGS, payload=payload)
-        return ret
+        res = await self.request(ep.GET_CONFIGS, payload=payload)
+        return self.__output_result(res, jsonOutput)
 
     async def set_configs(self, settings):
         """Set config settings.
@@ -1950,7 +1959,7 @@ class WebOsClient:
     async def show_screen_saver(self):
         return await self.luna_request(ep.LUNA_TURN_ON_SCREEN_SAVER, {})
 
-    async def get_system_settings(self, category="option", keys=["audioGuidance"]):
+    async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.
 
         Most of the settings are not exposed via this call, OLED C1 valid settings:
@@ -2027,14 +2036,14 @@ class WebOsClient:
         """
 
         payload = {"category": category, "keys": keys}
-        ret = await self.request(ep.GET_SYSTEM_SETTINGS, payload=payload)
-        return ret
+        res = await self.request(ep.GET_SYSTEM_SETTINGS, payload=payload)
+        return self.__output_result(res, jsonOutput)
 
     async def get_picture_settings(
-        self, keys=["contrast", "backlight", "brightness", "color"]
+        self, keys=["contrast", "backlight", "brightness", "color"], jsonOutput=False
     ):
-        ret = await self.get_system_settings("picture", keys)
-        return ret["settings"]
+        res = await self.get_system_settings("picture", keys)
+        return self.__output_result(res["settings"], jsonOutput)
 
     async def subscribe_picture_settings(
         self, callback, keys=["contrast", "backlight", "brightness", "color"]

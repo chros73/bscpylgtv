@@ -27,13 +27,13 @@ pip install --upgrade .[with_calibration]
 Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory.
 ```bash
 # Get list of apps (including hidden ones as well)
-bscpylgtvcommand 192.168.1.18 get_apps_all
+bscpylgtvcommand 192.168.1.18 get_apps_all true
 # Push info button
 bscpylgtvcommand 192.168.1.18 button INFO
 # Switch to HDMI2 input
 bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Get values of backlight and contrast of the current picture preset (using list)
-bscpylgtvcommand 192.168.1.18 get_picture_settings "[\"backlight\", \"contrast\"]"
+bscpylgtvcommand 192.168.1.18 get_picture_settings "[\"backlight\", \"contrast\"]" true
 # Swtich to SDR ISF Expert Dark picture preset
 bscpylgtvcommand 192.168.1.18 set_current_picture_mode expert2
 # Set values of backlight and contrast of the current picture preset (using JSON)
@@ -70,7 +70,7 @@ bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{
 # Launch Ez-Adjust Service Menu (code: 0413) (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"ezAdjust\"}"
 # Get config values of "tv.model" category (using list)
-bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]"
+bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]" true
 # Activate "OLED Motion Pro" on C9 (using JSON)
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED Motion Pro\"}"
 # Turn the TV off (standby)
@@ -85,7 +85,7 @@ bscpylgtvcommand 192.168.1.18 power_off
 bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
 bscpylgtvcommand -s "[\"system_info\"]" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
 # -o : getting hello info (e.g. to get unique deviceUUID)
-bscpylgtvcommand -o 192.168.1.18 get_hello_info
+bscpylgtvcommand -o 192.168.1.18 get_hello_info true
 # -k <client_key> : specifying a client key
 bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 button INFO
 # -p <path_to_key_file> : specifying path to key file

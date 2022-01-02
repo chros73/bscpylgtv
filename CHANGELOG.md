@@ -1,5 +1,13 @@
 # Change Log
 
+## [v0.3.0](https://github.com/chros73/bscpylgtv/tree/v0.3.0) (2022-01-02)
+**Implemented enhancements:**
+
+- Add support for turning PC mode on/off properly
+- Add support for aiPicture category of picture settings for CX and newer models
+- Allow JSON output for couple of methods
+- Add available settings to docs
+
 ## [v0.2.9](https://github.com/chros73/bscpylgtv/tree/v0.2.9) (2021-12-25)
 **Implemented enhancements:**
 

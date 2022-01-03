@@ -60,7 +60,7 @@ class WebOsClient:
         self.timeout_connect = timeout_connect
         self.ping_interval = ping_interval
         self.ping_timeout = ping_timeout
-        self.get_hello_info = get_hello_info
+        self.getHelloInfo = get_hello_info
         self.storage = storage
         self.connect_task = None
         self.connect_result = None
@@ -151,7 +151,7 @@ class WebOsClient:
                 timeout=self.timeout_connect,
             )
 
-            if self.get_hello_info:
+            if self.getHelloInfo:
                 # send hello
                 await ws.send(json.dumps({"id": "hello", "type": "hello"}))
                 raw_response = await ws.recv()
@@ -793,9 +793,10 @@ class WebOsClient:
         res = await self.request(ep.GET_SOFTWARE_INFO)
         return self.__output_result(res, jsonOutput)
 
-    async def get_system_info(self):
+    async def get_system_info(self, jsonOutput=False):
         """Return the system information."""
-        return await self.request(ep.GET_SYSTEM_INFO)
+        res = await self.request(ep.GET_SYSTEM_INFO)
+        return self.__output_result(res, jsonOutput)
 
     async def get_hello_info(self, jsonOutput=False):
         """Return hello information."""

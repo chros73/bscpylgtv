@@ -1,5 +1,10 @@
 # Change Log
 
+## [v0.3.1](https://github.com/chros73/bscpylgtv/tree/v0.3.1) (2022-01-03)
+**Fixed bugs:**
+
+- Fix getting hello info
+
 ## [v0.3.0](https://github.com/chros73/bscpylgtv/tree/v0.3.0) (2022-01-02)
 **Implemented enhancements:**
 

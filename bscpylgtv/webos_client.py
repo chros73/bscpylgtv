@@ -1086,13 +1086,13 @@ class WebOsClient:
         return await self.luna_request(ep.LUNA_SET_DEVICE_INFO, params)
 
     async def set_current_picture_mode(self, pic_mode, category="picture"):
-        """Set picture mode for current category, input, dynamic range and 3d mode (OLED C1).
+        """Set picture mode for current category, input, dynamic range and 3d mode (OLED C2).
 
-        Known picture modes are: cinema, eco, expert1, expert2, game,
-        normal, photo, sports, filmMaker, vivid, hdrCinema,
-        hdrCinemaBright, hdrExternal, hdrGame, hdrStandard, hdrFilmMaker,
-        hdrVivid, dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
-        dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid, dolbyStandard
+        Known picture modes are: cinema, eco, expert1, expert2, filmMaker,
+        game, normal, photo, sports, vivid, hdrCinema, hdrCinemaBright,
+        hdrExternal, hdrFilmMaker, hdrGame, hdrStandard, hdrVivid,
+        dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
+        dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid
 
         Known categories are: picture, aiPicture
 
@@ -1106,18 +1106,18 @@ class WebOsClient:
     async def set_picture_mode(
         self, pic_mode, tv_input, dynamic_range="sdr", stereoscopic="2d", category="picture"
     ):
-        """Set picture mode for specific category, input, dynamic range and 3d mode (OLED C1).
+        """Set picture mode for specific category, input, dynamic range and 3d mode (OLED C2).
 
-        Known picture modes are: cinema, eco, expert1, expert2, game,
-        normal, photo, sports, filmMaker, vivid,  hdrCinema,
-        hdrCinemaBright, hdrExternal, hdrGame, hdrStandard, hdrFilmMaker,
-        hdrVivid, dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
-        dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid, dolbyStandard
+        Known picture modes are: cinema, eco, expert1, expert2, filmMaker,
+        game, normal, photo, sports, vivid, hdrCinema, hdrCinemaBright,
+        hdrExternal, hdrFilmMaker, hdrGame, hdrStandard, hdrVivid,
+        dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
+        dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid
 
-        Known inputs are: atv, av1, av2, camera, comp1, comp2, comp3,
-        default, dtv, gallery, hdmi1, hdmi2, hdmi3, hdmi4,
-        hdmi1_pc, hdmi2_pc, hdmi3_pc, hdmi4_pc, ip, movie,
-        photo, pictest, rgb, scart, smhl
+        Known inputs are: atv, av1, av2, browser, camera, comp1, comp2,
+        comp3, default, dtv, gallery, hdmi1, hdmi1_pc, hdmi2, hdmi2_pc,
+        hdmi3, hdmi3_pc, hdmi4, hdmi4_pc, ip, movie, photo, pictest,
+        rgb, scart, smhl
 
         Known dynamic range modes are: sdr, sdrALLM, hdr, hdrALLM,
         technicolorHdr, technicolorHdrALLM, dolbyHdr, dolbyHdrALLM
@@ -1139,7 +1139,7 @@ class WebOsClient:
     async def set_current_picture_settings(self, settings, category="picture"):
         """Set picture settings for current category, picture mode, input, dynamic range and 3d mode.
 
-        A possible list of settings and OLED C1 example values are below
+        A possible list of settings and OLED C2 example values are below
         (not all settings are applicable for all modes and/or tv models):
         /etc/palm/defaultSettings.json
 
@@ -1148,7 +1148,8 @@ class WebOsClient:
 
         "ai_Brightness": "off",
         "ai_Genre": "off",
-        "ai_Picture": "off"
+        "ai_Picture": "off",
+        "isAiPictureActing": false
 
         Category: picture
         -----------------
@@ -1237,7 +1238,7 @@ class WebOsClient:
         "hSharpness": "10",
         "hSize": "0",
         "hdrDynamicToneMapping": "on",
-        "localDimming": "medium",
+        "localDimming": "low",
         "motionEyeCare": "off",
         "motionPro": "off",
         "motionProOLED": "off",
@@ -1405,7 +1406,7 @@ class WebOsClient:
     async def set_other_settings(self, settings):
         """Set other settings.
 
-        A possible list of settings and OLED C1 example values are below
+        A possible list of settings and OLED C2 example values are below
         (not all settings are applicable for all tv models/firmwares):
         /etc/palm/defaultSettings.json
 
@@ -1426,6 +1427,7 @@ class WebOsClient:
         "colorimetryHDMI3": "auto",
         "colorimetryHDMI4": "auto",
         "cursorAutoRemover": "on",
+        "darkMode": "off",
         "dolbyVSVDBVer": "v2",
         "dolbyVSVDBVerHDMI1": "v2",
         "dolbyVSVDBVerHDMI2": "v2",
@@ -1438,6 +1440,7 @@ class WebOsClient:
         "eotfHDMI3": "auto",
         "eotfHDMI4": "auto",
         "epgRowCount": "1",
+        "fitLogUsbDump": "off",
         "flickerPatternCtrl": false,
         "freesync": "off",
         "freesyncLCDHDMI1": "off",
@@ -1462,6 +1465,8 @@ class WebOsClient:
         "gameOptimizationHDMI2": "on",
         "gameOptimizationHDMI3": "on",
         "gameOptimizationHDMI4": "on",
+        "gameScreenPosition": "middle",
+        "gameScreenRatio": "16:9",
         "gameUIColor": "violet",
         "hdmiPcMode": {
             "hdmi1": false,
@@ -1578,6 +1583,20 @@ class WebOsClient:
                 }
             },
             {
+                "fptplay": {
+                    "app_id": "com.fpt.fptplay",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "shahid": {
+                    "app_id": "net.mbc.shahid-lgapp",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
                 "new": {
                     "app_id": null,
                     "isActive": false,
@@ -1608,12 +1627,15 @@ class WebOsClient:
         "maxFALLHDMI4": "auto",
         "netflixHotkeyIsActive": true,
         "newKey": "on",
+        "oledCareMode": "off",
+        "oledCareRecommendation": "off",
         "quickSettingsMenuList": [
             "QuickSettings_picture_button",
             "QuickSettings_soundMode_button",
             "QuickSettings_soundOut_button",
             "QuickSettings_game_button",
-            "QuickSettings_timer_button",
+            "QuickSettings_multiview_button",
+            "QuickSettings_ocp_button",
             "QuickSettings_network_button",
             "QuickSettings_menu_button"
         ],
@@ -1650,7 +1672,7 @@ class WebOsClient:
     async def set_option_settings(self, settings):
         """Set option settings.
 
-        A possible list of settings and OLED C1 example values are below
+        A possible list of settings and OLED C2 example values are below
         (not all settings are applicable for all tv models/firmwares):
         /etc/palm/defaultSettings.json
 
@@ -1691,6 +1713,7 @@ class WebOsClient:
         "baloonHelp": "on",
         "bannerPosition": "none",
         "broadcastInfoNoti": "on",
+        "cameraResourcePermission": [],
         "channelplus": "off",
         "channelplusPopup": "off",
         "cicNumber": [
@@ -1711,6 +1734,8 @@ class WebOsClient:
         "displayMusicWidget": true,
         "eStreamerPosition": "all",
         "emergencyAlert": "on",
+        "emergencyInformationAtsc30": "on",
+        "emergencyInformationLanguageAtsc30": "eng",
         "enableIpControl": "off",
         "enableSDDP": "off",
         "enableToastPopup": "off",
@@ -1744,6 +1769,11 @@ class WebOsClient:
         "irBlaster": "off",
         "ismMethod": "normal",
         "japanCitySelection": "Tokyo",
+        "lifeOnScreenEnergySaving": "auto",
+        "lifeOnScreenNotification": true,
+        "lifeOnScreenOnTimer": [],
+        "lifeOnScreenUsingMotionSensor": false,
+        "lineView": "on",
         "liveMenuLaunched": false,
         "livePlus": "off",
         "localeCountryGroup": "UNDEFINED",
@@ -1803,6 +1833,8 @@ class WebOsClient:
         "miracastOverlayStatus": "off",
         "modeSelectFlag": "off",
         "motionRecognition": "off",
+        "motionSensorSensitivity": "medium",
+        "motionSensorSensitivityForAOD": "medium",
         "multiChannelAudio": "on",
         "multiViewStatus": "off",
         "ohtv": "on",
@@ -1822,6 +1854,7 @@ class WebOsClient:
         "pstreamerUser": "off",
         "quickStartMode": "off",
         "screenOff": "off",
+        "screenOffTime": "5",
         "screenRotation": "off",
         "searchAppTTS": "off",
         "setId": 1,
@@ -1855,6 +1888,7 @@ class WebOsClient:
         "wakeUpword": "LGTV",
         "watchedListCollection": "on",
         "webOSPromotionVideo": "on",
+        "yourMomentsVersion": "0",
         "zipcode": "not_defined"
 
         """
@@ -1866,10 +1900,11 @@ class WebOsClient:
     async def get_configs(self, keys=["tv.model.*"], jsonOutput=False):
         """Get config settings.
 
-        A possible list of keys of OLED C1 are below (not all settings are applicable for all tv models):
+        A possible list of keys of OLED C2 are below (not all settings are applicable for all tv models):
         /etc/configd/layers
 
         airplay.*
+        amazon.*
         audio.*
         broadcast.*
         com.palm.app.firstuse.*
@@ -1882,8 +1917,6 @@ class WebOsClient:
         com.webos.app.igallery.*
         com.webos.app.inputcommon.*
         com.webos.app.mediadiscovery.*
-        com.webos.app.photovideo.*
-        com.webos.app.quickinputpicker.*
         com.webos.app.quicksettings.*
         com.webos.app.systemmusic.*
         com.webos.app.tips.*
@@ -1891,9 +1924,12 @@ class WebOsClient:
         com.webos.authenticationMethods.*
         com.webos.keyaction.*
         com.webos.memorymanager.*
+        com.webos.service.alwayready.*
         com.webos.service.airplay.*
         com.webos.service.arccontroller.*
         com.webos.service.attachedstoragemanager.*
+        com.webos.service.bthidmanager.*
+        com.webos.service.camera.*
         com.webos.service.cbox.*
         com.webos.service.datamigrator.*
         com.webos.service.config.*
@@ -1904,6 +1940,7 @@ class WebOsClient:
         com.webos.service.iepg.*
         com.webos.service.ime.*
         com.webos.service.irdbmanager.*
+        com.webos.service.jsserver.*
         com.webos.service.livepick.*
         com.webos.service.miracast.*
         com.webos.service.miracasttx.*
@@ -1921,14 +1958,15 @@ class WebOsClient:
         com.webos.service.tvpower.*
         com.webos.service.utp.*
         com.webos.service.voiceinput.*
-        com.webos.service.voiceinput.*
         com.webos.service.wampluggable.hbbtv.*
         com.webos.surfacemanager.*
         dvr.*
         extinput-service.*
+        gip.*
         inputMap.*
         mediaCapability.*
         miracast.*
+        multiview.*
         system.*
         tv.config.*
         tv.conti.*
@@ -1963,7 +2001,7 @@ class WebOsClient:
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.
 
-        Most of the settings are not exposed via this call, OLED C1 valid settings:
+        Most of the settings are not exposed via this call, OLED C2 valid settings:
         /usr/palm/services/com.webos.service.apiadapter/adapters/settings/valid-settings.js
 
         "twinTv": [
@@ -1989,7 +2027,8 @@ class WebOsClient:
                 "storeMode",
                 "localeCountryGroup",
                 "japanCitySelection",
-                "countryBroadcastSystem"
+                "countryBroadcastSystem",
+                "yourMomentsVersion"
         ],
         "time": [
                 "onTimerVolume",
@@ -2031,7 +2070,9 @@ class WebOsClient:
                 "tvOnScreen",
                 "tvInstallMethod",
                 "powerOffBySCA3SystemChanged",
-                "SCA3SystemCountry"
+                "SCA3SystemCountry",
+                "homeAutoLaunch",
+                "lifeOnScreenMode"
         ]
 
         """

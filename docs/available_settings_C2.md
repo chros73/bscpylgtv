@@ -1,10 +1,10 @@
-### OLED C1 (2021) webOS v6.1.0
+### OLED C2 (2022) webOS v7.1.0
 Available settings per category that can be used with various methods.
 
 #### Inputs
 ```
-atv, av1, av2, camera, comp1, comp2, comp3, default, dtv, gallery,
-hdmi1, hdmi2, hdmi3, hdmi4, hdmi1_pc, hdmi2_pc, hdmi3_pc, hdmi4_pc,
+atv, av1, av2, browser, camera, comp1, comp2, comp3, default, dtv, gallery,
+hdmi1, hdmi1_pc, hdmi2, hdmi2_pc, hdmi3, hdmi3_pc, hdmi4, hdmi4_pc,
 ip, movie, photo, pictest, rgb, scart, smhl
 ```
 
@@ -12,7 +12,7 @@ ip, movie, photo, pictest, rgb, scart, smhl
 ```
 cinema, eco, expert1, expert2, filmMaker, game, normal, photo, sports, vivid,
 hdrCinema, hdrCinemaBright, hdrExternal, hdrFilmMaker, hdrGame, hdrStandard, hdrVivid,
-dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon, dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid, dolbyStandard
+dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon, dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid
 ```
 
 #### Dynamic range modes
@@ -30,7 +30,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
 ```json
     "ai_Brightness": "off",
     "ai_Genre": "off",
-    "ai_Picture": "off"
+    "ai_Picture": "off",
+    "isAiPictureActing": false
 ```
 
 #### `picture` category - default settings: `hdmi1` input - `expert2` preset (used by `set_current_picture_settings` method)
@@ -119,7 +120,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "hSharpness": "10",
     "hSize": "0",
     "hdrDynamicToneMapping": "on",
-    "localDimming": "medium",
+    "localDimming": "low",
     "motionEyeCare": "off",
     "motionPro": "off",
     "motionProOLED": "off",
@@ -306,6 +307,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "baloonHelp": "on",
     "bannerPosition": "none",
     "broadcastInfoNoti": "on",
+    "cameraResourcePermission": [],
     "channelplus": "off",
     "channelplusPopup": "off",
     "cicNumber": [
@@ -326,6 +328,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "displayMusicWidget": true,
     "eStreamerPosition": "all",
     "emergencyAlert": "on",
+    "emergencyInformationAtsc30": "on",
+    "emergencyInformationLanguageAtsc30": "eng",
     "enableIpControl": "off",
     "enableSDDP": "off",
     "enableToastPopup": "off",
@@ -359,6 +363,11 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "irBlaster": "off",
     "ismMethod": "normal",
     "japanCitySelection": "Tokyo",
+    "lifeOnScreenEnergySaving": "auto",
+    "lifeOnScreenNotification": true,
+    "lifeOnScreenOnTimer": [],
+    "lifeOnScreenUsingMotionSensor": false,
+    "lineView": "on",
     "liveMenuLaunched": false,
     "livePlus": "off",
     "localeCountryGroup": "UNDEFINED",
@@ -418,6 +427,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "miracastOverlayStatus": "off",
     "modeSelectFlag": "off",
     "motionRecognition": "off",
+    "motionSensorSensitivity": "medium",
+    "motionSensorSensitivityForAOD": "medium",
     "multiChannelAudio": "on",
     "multiViewStatus": "off",
     "ohtv": "on",
@@ -437,6 +448,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "pstreamerUser": "off",
     "quickStartMode": "off",
     "screenOff": "off",
+    "screenOffTime": "5",
     "screenRotation": "off",
     "searchAppTTS": "off",
     "setId": 1,
@@ -470,6 +482,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "wakeUpword": "LGTV",
     "watchedListCollection": "on",
     "webOSPromotionVideo": "on",
+    "yourMomentsVersion": "0",
     "zipcode": "not_defined"
 ```
 
@@ -492,6 +505,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "colorimetryHDMI3": "auto",
     "colorimetryHDMI4": "auto",
     "cursorAutoRemover": "on",
+    "darkMode": "off",
     "dolbyVSVDBVer": "v2",
     "dolbyVSVDBVerHDMI1": "v2",
     "dolbyVSVDBVerHDMI2": "v2",
@@ -504,6 +518,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "eotfHDMI3": "auto",
     "eotfHDMI4": "auto",
     "epgRowCount": "1",
+    "fitLogUsbDump": "off",
     "flickerPatternCtrl": false,
     "freesync": "off",
     "freesyncLCDHDMI1": "off",
@@ -528,6 +543,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "gameOptimizationHDMI2": "on",
     "gameOptimizationHDMI3": "on",
     "gameOptimizationHDMI4": "on",
+    "gameScreenPosition": "middle",
+    "gameScreenRatio": "16:9",
     "gameUIColor": "violet",
     "hdmiPcMode": {
         "hdmi1": false,
@@ -644,6 +661,20 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             }
         },
         {
+            "fptplay": {
+                "app_id": "com.fpt.fptplay",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "shahid": {
+                "app_id": "net.mbc.shahid-lgapp",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
             "new": {
                 "app_id": null,
                 "isActive": false,
@@ -674,12 +705,15 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "maxFALLHDMI4": "auto",
     "netflixHotkeyIsActive": true,
     "newKey": "on",
+    "oledCareMode": "off",
+    "oledCareRecommendation": "off",
     "quickSettingsMenuList": [
         "QuickSettings_picture_button",
         "QuickSettings_soundMode_button",
         "QuickSettings_soundOut_button",
         "QuickSettings_game_button",
-        "QuickSettings_timer_button",
+        "QuickSettings_multiview_button",
+        "QuickSettings_ocp_button",
         "QuickSettings_network_button",
         "QuickSettings_menu_button"
     ],
@@ -733,7 +767,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "storeMode",
             "localeCountryGroup",
             "japanCitySelection",
-            "countryBroadcastSystem"
+            "countryBroadcastSystem",
+            "yourMomentsVersion"
     ],
     "time": [
             "onTimerVolume",
@@ -775,13 +810,16 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "tvOnScreen",
             "tvInstallMethod",
             "powerOffBySCA3SystemChanged",
-            "SCA3SystemCountry"
+            "SCA3SystemCountry",
+            "homeAutoLaunch",
+            "lifeOnScreenMode"
     ]
 ```
 
 #### `config` keys (used by `get_configs` and `set_configs` methods)
 ```
 airplay.*
+amazon.*
 audio.*
 broadcast.*
 com.palm.app.firstuse.*
@@ -794,8 +832,6 @@ com.webos.app.home.*
 com.webos.app.igallery.*
 com.webos.app.inputcommon.*
 com.webos.app.mediadiscovery.*
-com.webos.app.photovideo.*
-com.webos.app.quickinputpicker.*
 com.webos.app.quicksettings.*
 com.webos.app.systemmusic.*
 com.webos.app.tips.*
@@ -803,9 +839,12 @@ com.webos.applicationManager.*
 com.webos.authenticationMethods.*
 com.webos.keyaction.*
 com.webos.memorymanager.*
+com.webos.service.alwayready.*
 com.webos.service.airplay.*
 com.webos.service.arccontroller.*
 com.webos.service.attachedstoragemanager.*
+com.webos.service.bthidmanager.*
+com.webos.service.camera.*
 com.webos.service.cbox.*
 com.webos.service.datamigrator.*
 com.webos.service.config.*
@@ -816,6 +855,7 @@ com.webos.service.hybridtv.*
 com.webos.service.iepg.*
 com.webos.service.ime.*
 com.webos.service.irdbmanager.*
+com.webos.service.jsserver.*
 com.webos.service.livepick.*
 com.webos.service.miracast.*
 com.webos.service.miracasttx.*
@@ -837,9 +877,11 @@ com.webos.service.wampluggable.hbbtv.*
 com.webos.surfacemanager.*
 dvr.*
 extinput-service.*
+gip.*
 inputMap.*
 mediaCapability.*
 miracast.*
+multiview.*
 system.*
 tv.config.*
 tv.conti.*
@@ -848,4 +890,5 @@ tv.model.*
 tv.nyx.*
 tv.rmm.*
 ```
+
 

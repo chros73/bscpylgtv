@@ -1988,6 +1988,7 @@ class WebOsClient:
 
         "tv.model.motionProMode": "OLED Motion",
         "tv.model.motionProMode": "OLED Motion Pro"
+        "tv.conti.supportUsedTime": true
 
         """
 

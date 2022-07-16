@@ -23,6 +23,9 @@ pip install --upgrade .
 pip install --upgrade .[with_calibration]
 ```
 
+## Windows binary
+Portable Windows binaries can be found under [releases](https://github.com/chros73/bscpylgtv/releases).
+
 ## Examples
 Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory.
 ```bash
@@ -44,6 +47,10 @@ bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"hdrDynamicToneMap
 bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"colorGamut\": \"auto\"}"
 # Set mpegNoiseReduction off in the current picture preset (using JSON)
 bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"mpegNoiseReduction\": \"off\"}"
+# Turn AI Picture Pro on in the current picture preset (using JSON)
+bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"ai_Picture\": \"on\"}" aiPicture
+# Setting EOTF in HDMI Signal Override menu, values: auto, sdrGamma, hdrGamma, st2084, hlg (using JSON)
+bscpylgtvcommand 192.168.1.18 set_other_settings "{\"eotf\": \"hlg\"}"
 # Turn PC Mode on/off for HDMI2
 bscpylgtvcommand 192.168.1.18 set_device_info HDMI_2 pc PC
 bscpylgtvcommand 192.168.1.18 set_device_info HDMI_2 hometheater "Home Theatre"
@@ -73,6 +80,8 @@ bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{
 bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]" true
 # Activate "OLED Motion Pro" on C9 (using JSON)
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED Motion Pro\"}"
+# Display Total Power On Time under TV Information on EU models where it's hidden (using JSON)
+bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.conti.supportUsedTime\": true}"
 # Turn the TV off (standby)
 bscpylgtvcommand 192.168.1.18 power_off
 ```
@@ -266,6 +275,18 @@ async def runloop():
     await client.disconnect()
 
 asyncio.run(runloop())
+```
+
+Upload custom EOTF params for HDR10 Cinema preset:
+```bash
+# Switch to HDMI2 input
+bscpylgtvcommand 192.168.1.18 set_input HDMI_2
+# Start calibration mode
+bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema
+# Upload custom EOTF params for HDR10 Cinema preset
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 930 1000 75 4000 60 10000 50
+# End calibration mode
+bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema
 ```
 
 ## Development of `bscpylgtv`

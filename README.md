@@ -291,6 +291,8 @@ bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema
 
 ## Development of `bscpylgtv`
 
+A collection of useful commands and scripts are available under [docs/utils](https://github.com/chros73/bscpylgtv/tree/master/docs/utils) directory to add support for new firmwares in the future and make PRs easier to do.
+
 We use [`pre-commit`](https://pre-commit.com) to keep a consistent code style, so ``pip install pre_commit`` and run
 ```bash
 pre-commit install

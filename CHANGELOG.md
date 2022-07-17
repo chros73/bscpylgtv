@@ -1,5 +1,14 @@
 # Change Log
 
+## [v0.3.2](https://github.com/chros73/bscpylgtv/tree/v0.3.2) (2022-07-17)
+**Implemented enhancements:**
+
+- Add available settings for 2022 models
+- Add new buttons
+- Add `reboot_soft` method
+- Update readme with more examples
+- Add commands and scripts to add support for new firmwares
+
 ## [v0.3.1](https://github.com/chros73/bscpylgtv/tree/v0.3.1) (2022-01-03)
 **Fixed bugs:**
 

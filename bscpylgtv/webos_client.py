@@ -1999,8 +1999,13 @@ class WebOsClient:
     async def show_screen_saver(self):
         return await self.luna_request(ep.LUNA_TURN_ON_SCREEN_SAVER, {})
 
-    async def reboot_soft(self):
-        return await self.luna_request(ep.LUNA_REBOOT_TV, {"reason": "reset"})
+    async def reboot_soft(self, webos_ver=""):
+        epName = f"LUNA_REBOOT_TV_WO{webos_ver}" if webos_ver else "LUNA_REBOOT_TV"
+
+        if not hasattr(ep, epName):
+            raise ValueError(f"there's no {epName} endpoint")
+
+        return await self.luna_request(getattr(ep, epName), {"reason": "reset"})
 
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.

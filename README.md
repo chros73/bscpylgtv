@@ -184,49 +184,48 @@ asyncio.run(runloop())
 More useful examples can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/tree/master/docs/scripts) directory.
 
 ## Calibration functionality
-WARNING: Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement.
-All of the currently implemented functions SHOULD be safe, but no guarantees.
+**WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe, but no guarantees.*
 
-On supported models, calibration functionality and upload to internal LUTs is supported.  The supported input formats for LUTs are IRIDAS .cube format for both 1D and 3D LUTs, and ArgyllCMS .cal files for 1D LUTs.
+On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (for >=2019 models) and generating Dolby Vision config is supported.
+The supported input formats for LUTs are IRIDAS `.cube` format for both 1D and 3D LUTs, and ArgyllCMS `.cal` files for 1D LUTs. Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
 
-Not yet supported:
--Dolby Vision config upload
--Custom tone mapping for 2019 models (functionality does not exist on 2018 models)
+Supported models (more models can be added via PR once they confirmed working well):
+```
+LG 2023-25 Alpha 9 Gx: OLED Zx Gx Cx
+LG 2023-25 Alpha 7 Gx: OLED Bx
+LG 2022 Alpha 9 G5: OLED Z2 G2 C2
+LG 2022 Alpha 7 G5: OLED B2
+LG 2021 Alpha 9 G4: OLED R1 Z1 G1 C1
+LG 2021 Alpha 7 G4: OLED B1
+LG 2020 Alpha 9 G3: OLED RX ZX WX GX CX
+LG 2020 Alpha 7 G3: OLED BX
+LG 2019 Alpha 9 G2: OLED R9 Z9 W9 W9S E9 C9 NanoCell SM99
+LG 2019 Alpha 7 G2: OLED B9
+LG 2019 Alpha 7 G2: NanoCell (8000 & higher model numbers)
+LG 2018 Alpha 9 G1: OLED C8 E8 G8 W8
+LG 2018 Alpha 7 G1: OLED B8
+LG 2018 Alpha 7 G1: Super UHD LED (8000 & higher model numbers)
+```
 
-Supported models:
-LG 2019 Alpha 9 G2 OLED R9 Z9 W9 W9S E9 C9 NanoCell SM99
-LG 2019 Alpha 7 G2 NanoCell (8000 & higher model numbers)
-LG 2018 Alpha 7 Super UHD LED (8000 & higher model numbers)
-LG 2018 Alpha 7 OLED B8
-LG 2018 Alpha 9 OLED C8 E8 G8 W8
+n.b. this has only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models, so fixes may be needed still for the others.
 
-Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
-
-n.b. this has only been extensively tested for the 2018 Alpha 9 case, so fixes may be needed still for the others.
-
-WARNING:  When running the ddc_reset or uploading LUT data on 2018 models the only way to restore the factory
-LUTs and behaviour for a given input mode is to do a factory reset of the TV.
-ddc_reset uploads unity 1d and 3d luts and resets oled light/brightness/contrast/color/ to default values (80/50/85/50).
-When running the ddc_reset or uploading any 1D LUT data, service menu white balance settings are ignored, and gamma,
-colorspace, and white balance settings in the user menu are greyed out and inaccessible.
+*WARNING:* When running the `ddc_reset` or uploading LUT data on 2018 models the only way to restore the factory LUTs and behaviour for a given input mode is to do a factory reset of the TV. From 2019 models  picture preset reset results the same until calibration mode is activated again for the same preset.
+`ddc_reset` uploads unity 1d and 3d luts and resets oled light/brightness/contrast/color/ to default values (80/50/85/50).
+When running the `ddc_reset` or uploading any 1D LUT data, service menu white balance settings are ignored, and gamma, colorspace, and white balance settings in the user menu are greyed out and inaccessible. From 2019 models white balance 2pt low values can be set.
 
 Calibration data is specific to each picture mode, and picture modes are independent for SDR, HDR10+HLG, and Dolby Vision.
-Picture modes from each of the three groups are only accessible when the TV is in the appropriate mode.  Ie to upload
-calibration data for HDR10 picture modes, one has to send the TV an HDR10 signal or play an HDR10 file, and similarly
-for Dolby Vision.
+Picture modes from each of the three groups are only accessible when the TV is in the appropriate mode. Ie to upload calibration data for HDR10 picture modes, one has to send the TV an HDR10 signal or play an HDR10 file, and similarly for Dolby Vision.
 
-For SDR and HDR10 modes there are two 3D LUTs which will be automatically selected depending on the colorspace flags of the signal
-or content.  In principle almost all SDR content should be bt709 and HDR10 content should be bt2020 but there could be
-nonstandard cases where this is not true.
-
-For Dolby Vision the bt709 3d LUT seems to be active and the only one used.
+For SDR and HDR10 modes there are two 3D LUTs which will be automatically selected depending on the colorspace flags of the signal or content. In principle almost all SDR content should be bt709 and HDR10 content should be bt2020 but there could be nonstandard cases where this is not true. For Dolby Vision the bt709 3d LUT seems to be active and the only one used.
 
 Known supported picMode strings are:
-SDR: cinema, expert1, expert2, game, technicolorExpert
-HDR10(+HLG): hdr_technicolorExpert, hdr_cinema, hdr_game
+```
+SDR: cinema, expert1, expert2, game, technicolorExpert, filmMaker
+HDR10(+HLG): hdr_cinema, hdr_game, hdr_technicolorExpert, hdr_filmMaker
 DV: dolby_cinema_dark, dolby_cinema_bright, dolby_game
+```
 
-Calibration commands can only be run while in calibration mode (controlled by "start_calibration" and "end_calibration").
+Calibration commands can only be run while in calibration mode (controlled by `start_calibration` and `end_calibration`).
 
 While in calibration mode for HDR10 tone mapping is bypassed.
 There may be other not fully known/understood changes in the image processing pipeline while in calibration mode.
@@ -268,8 +267,8 @@ async def runloop():
     await client.set_contrast(picMode="expert1", value=85)
     await client.ddc_reset(picMode="expert1", reset_1d_lut=True)
     await client.upload_1d_lut_from_file(picMode="expert1", filename="test.cal")
-    await client.upload_3d_lut_bt709_from_file(picMode="expert1", filename="test3d.cube")
-    await client.upload_3d_lut_bt2020_from_file(picMode="expert1", filename="test3d.cube")
+    await client.upload_3d_lut_bt709_from_file(picMode="expert1", filename="test3d-1.cube")
+    await client.upload_3d_lut_bt2020_from_file(picMode="expert1", filename="test3d-2.cube")
     await client.end_calibration(picMode="expert1")
 
     await client.disconnect()
@@ -277,14 +276,12 @@ async def runloop():
 asyncio.run(runloop())
 ```
 
-Upload custom EOTF params for HDR10 Cinema preset:
+Uploading custom EOTF params for HDR10 Cinema preset (>=2019 models):
 ```bash
-# Switch to HDMI2 input
-bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Start calibration mode
 bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema
 # Upload custom EOTF params for HDR10 Cinema preset
-bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 930 1000 75 4000 60 10000 50
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema
 ```

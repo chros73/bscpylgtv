@@ -68,9 +68,9 @@ bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.installation
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.tvhotkey "{\"activateType\": \"mute-hidden-action\"}"
 # Display 7x GREEN button hidden Freesync info
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.tvhotkey "{\"activateType\": \"freesync-info\"}"
-# Launch hidden software updater on older firmwares
+# NOTE: this does not work anymore on some models since end of 2021. Launch hidden software updater on older firmwares
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.softwareupdate
-# Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)
+# NOTE: this does not work anymore on some models since end of 2021. Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.softwareupdate "{\"mode\": \"user\", \"flagUpdate\": true}"
 # Launch In-Start Service Menu (code: 0413) (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"inStart\"}"
@@ -186,7 +186,7 @@ More useful examples can be found in [docs/scripts](https://github.com/chros73/b
 ## Calibration functionality
 **WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe, but no guarantees.*
 
-On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (for >=2019 models) and generating Dolby Vision config is supported.
+On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (for >=2019 models) and generating Dolby Vision config file is supported.
 The supported input formats for LUTs are IRIDAS `.cube` format for both 1D and 3D LUTs, and ArgyllCMS `.cal` files for 1D LUTs. Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
 
 Supported models (more models can be added via PR once they confirmed working well):
@@ -284,6 +284,19 @@ bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema
 bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema
+```
+
+Generating Dolby Vision config file for USB upload (config of 2018 models is different from the rest of the models):
+
+- picture modes: 1 - DoVi Cinema Home, 2 - DoVi Cinema, 4 - DoVi Game
+- primaries (in this order): xr, yr, xg, yg, xb, yb
+```bash
+# Generating DoVi config for one preset (DoVi Cinema)
+bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
+# Generating DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) based on one set of data
+bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" true -s
+# Generating DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) by specifying them separately
+bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"picture_mode\": 1, \"white_level\": 710, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 4, \"white_level\": 680, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
 ```
 
 ## Development of `bscpylgtv`

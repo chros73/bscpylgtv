@@ -16,7 +16,10 @@ if np:
 
     #  xr, yr, xg, yg, xb, yb, xw, yw
     BT2020_PRIMARIES = (0.708, 0.292, 0.170, 0.797, 0.131, 0.046, 0.3127, 0.3290)
-    DV_CONFIG_FILENAMES = {
-        2018: "DolbyVision_UserDisplayConfiguration.txt",
-        2019: "DolbyVision_UserDisplayConfiguration_2019.txt",
-    }
+
+    # DoVi picture modes: 1 - DoVi Cinema Home, 2 - DoVi Cinema, 4 - DoVi Game
+    DV_PICTURE_MODES = (1, 2, 4)
+    DV_BLACK_LEVEL = 0.0001
+    DV_GAMMA = 2.2
+
+    DV_CONFIG_FILENAME = "DolbyVision_UserDisplayConfiguration.txt"

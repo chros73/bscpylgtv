@@ -22,9 +22,17 @@ from .storage_sqlitedict import StorageSqliteDict
 
 if np:
     from . import cal_commands as cal
-    from .constants import BT2020_PRIMARIES, CALIBRATION_TYPE_MAP, DEFAULT_CAL_DATA
+    from .constants import (
+        BT2020_PRIMARIES,
+        CALIBRATION_TYPE_MAP,
+        DEFAULT_CAL_DATA,
+        DV_PICTURE_MODES,
+        DV_BLACK_LEVEL,
+        DV_GAMMA,
+    )
     from .lut_tools import (
         create_dolby_vision_config,
+        write_dolby_vision_config,
         read_cal_file,
         read_cube_file,
         unity_lut_1d,
@@ -2319,8 +2327,10 @@ class WebOsClient:
             return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, picMode, data)
 
         async def set_dolby_vision_config_data(
-            self, white_level=700.0, black_level=0.0, gamma=2.2, primaries=BT2020_PRIMARIES
+            self, picture_mode=DV_PICTURE_MODES[1], white_level=700.0, black_level=DV_BLACK_LEVEL, gamma=DV_GAMMA, primaries=BT2020_PRIMARIES
         ):
+            """This method is NOT recommended since it uses the calibration API,
+            use generate_dolby_vision_config method instead!"""
 
             info = self.calibration_support_info()
             dv_config_type = info["dv_config_type"]
@@ -2335,6 +2345,7 @@ class WebOsClient:
                 functools.partial(
                     create_dolby_vision_config,
                     version=dv_config_type,
+                    picture_mode=picture_mode,
                     white_level=white_level,
                     black_level=black_level,
                     gamma=gamma,
@@ -2342,10 +2353,45 @@ class WebOsClient:
                 ),
             )
 
-            data = np.frombuffer(config.encode(), dtype=np.uint8)
+            data = np.frombuffer(config.replace("\n", "\r\n").encode(), dtype=np.uint8)
             return await self.calibration_request(
                 command=cal.DOLBY_CFG_DATA, picMode=None, data=data
             )
+
+        async def generate_dolby_vision_config_file(self, data, apply_to_all_modes=False):
+            """Generates Dolby Vision config file for USB upload."""
+
+            info = self.calibration_support_info()
+            dv_config_type = info["dv_config_type"]
+            if dv_config_type is None:
+                model = self._system_info["modelName"]
+                raise PyLGTVCmdException(
+                    f"Dolby Vision Configuration Upload not supported by tv model {model}."
+                )
+
+            if apply_to_all_modes and len(data) == 1 and type(data[0]) is dict and 'primaries' in data[0]:
+                # copy picture mode data multiple times and modify picture mode
+                counter = 0
+
+                for picture_mode in DV_PICTURE_MODES:
+                    if counter > 0:
+                        data.append({**data[0]})
+                        data[counter]['primaries'] = list(data[0]['primaries'])
+
+                    data[counter]['picture_mode'] = picture_mode
+                    counter += 1
+
+            filename = await asyncio.get_running_loop().run_in_executor(
+                None,
+                functools.partial(
+                    write_dolby_vision_config,
+                    data=data,
+                    version=dv_config_type,
+                ),
+            )
+
+            print(f"Generated DoVi config file: {filename}")
+            return True
 
         async def set_tonemap_params(
             self,

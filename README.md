@@ -186,8 +186,9 @@ More useful examples can be found in [docs/scripts](https://github.com/chros73/b
 ## Calibration functionality
 **WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe, but no guarantees.*
 
-On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (for >=2019 models) and generating Dolby Vision config file is supported.
-The supported input formats for LUTs are IRIDAS `.cube` format for both 1D and 3D LUTs, and ArgyllCMS `.cal` files for 1D LUTs. Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
+On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (>=2019 models), using internal pattern generator (iTPG, >=2019 models) and generating Dolby Vision config file is supported.
+
+n.b. this has only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models, so fixes may be needed still for the others.
 
 Supported models (more models can be added via PR once they confirmed working well):
 ```
@@ -207,7 +208,9 @@ LG 2018 Alpha 7 G1: OLED B8
 LG 2018 Alpha 7 G1: Super UHD LED (8000 & higher model numbers)
 ```
 
-n.b. this has only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models, so fixes may be needed still for the others.
+### Calibration commands
+
+The supported input formats for LUTs are IRIDAS `.cube` format for both 1D and 3D LUTs, and ArgyllCMS `.cal` files for 1D LUTs. Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
 
 *WARNING:* When running the `ddc_reset` or uploading LUT data on 2018 models the only way to restore the factory LUTs and behaviour for a given input mode is to do a factory reset of the TV. From 2019 models  picture preset reset results the same until calibration mode is activated again for the same preset.
 `ddc_reset` uploads unity 1d and 3d luts and resets oled light/brightness/contrast/color/ to default values (80/50/85/50).
@@ -276,20 +279,22 @@ async def runloop():
 asyncio.run(runloop())
 ```
 
-Uploading custom EOTF params for HDR10 Cinema preset (>=2019 models):
+### Uploading custom EOTF params for HDR10 Cinema preset (>=2019 models):
 ```bash
 # Start calibration mode
 bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema
 # Upload custom EOTF params for HDR10 Cinema preset
-bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema
 ```
 
-Generating Dolby Vision config file for USB upload (config of 2018 models is different from the rest of the models):
+### Generating Dolby Vision config file for USB upload:
 
 - picture modes: 1 - DoVi Cinema Home, 2 - DoVi Cinema, 4 - DoVi Game
 - primaries (in this order): xr, yr, xg, yg, xb, yb
+- config of 2018 models is different from the rest of the models
+
 ```bash
 # Generating DoVi config for one preset (DoVi Cinema)
 bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
@@ -298,6 +303,51 @@ bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"white_level
 # Generating DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) by specifying them separately
 bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"picture_mode\": 1, \"white_level\": 710, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 4, \"white_level\": 680, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
 ```
+
+### Displaying color patches using the internal pattern generator (iTPG, >=2019 models):
+
+- it can be used inside or outside of calibration mode as well
+- it can be broken in defferent ways in given firmware version / picture mode / etc
+- 2019 models require Full Range 10 bit values (0-1023) using HDR10, while >=2020 models Limited Range 10 bit values (64-940)
+- all suported models require Full Range 10 bit values (0-1023) using DoVi
+- more useful example can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/tree/master/docs/scripts/lg-itpg-manual-measure-from-csv.py) directory.
+
+```bash
+# Set full screen black window in the background
+bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 0 0 0 3840 2160 0 0 -s
+# Set 5% window green patch on top of the background
+bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 1023 0 1 -s
+# Display the 2 set patches
+bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 2 -s
+# Disable the 2 set patches
+bscpylgtvcommand 192.168.1.18 toggle_itpg_patches false 0 -s
+
+# Or using "overlay" 5% window green patch on top of the content
+bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 1023 0 0 -s
+# Display the set patch
+bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 1 -s
+# Disable the set patch
+bscpylgtvcommand 192.168.1.18 toggle_itpg_patches false 0 -s
+```
+
+Displaying gradation window:
+```bash
+# Set black to white gradation window for vertical type
+bscpylgtvcommand 192.168.1.18 set_gradation_window 0 3 0 0 0 1 1 1 -s
+# Display vertical gradation bars
+bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 1 1 -s
+# Set black to white gradation window for horizontal type
+bscpylgtvcommand 192.168.1.18 set_gradation_window 0 1 0 0 0 1 1 1 -s
+# Display horizontal gradation bars
+bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 1 2 -s
+# Display 2 colored vertical gradation bars at the same time
+bscpylgtvcommand 192.168.1.18 set_gradation_window 0 3 610 520 230 1 1 1 -s
+bscpylgtvcommand 192.168.1.18 set_gradation_window 1 3 610 50 23 1 1 1 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 2 1 -s
+# Disable gradation window
+bscpylgtvcommand 192.168.1.18 toggle_itpg_patches false 0 -s
+```
+
 
 ## Development of `bscpylgtv`
 

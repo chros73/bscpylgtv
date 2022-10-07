@@ -2124,6 +2124,7 @@ class WebOsClient:
                 "lut1d": False,
                 "lut3d_size": None,
                 "custom_tone_mapping": False,
+                "itpg": False,
                 "dv_config_type": None,
             }
             model_name = self._system_info["modelName"]
@@ -2143,6 +2144,7 @@ class WebOsClient:
                     info["dv_config_type"] = 2018
                 elif year >= 9:
                     info["custom_tone_mapping"] = True
+                    info["itpg"] = True
                     info["dv_config_type"] = 2019
             elif len(model_name) > 5:
                 size = None
@@ -2166,6 +2168,7 @@ class WebOsClient:
                             info["dv_config_type"] = 2018
                         elif modelyear == "M":
                             info["custom_tone_mapping"] = True
+                            info["itpg"] = True
                             info["dv_config_type"] = 2019
 
             return info
@@ -2405,6 +2408,14 @@ class WebOsClient:
             rolloff_point_3=50,
         ):
 
+            info = self.calibration_support_info()
+            custom_tone_mapping = info["custom_tone_mapping"]
+            if not custom_tone_mapping:
+                model = self._system_info["modelName"]
+                raise PyLGTVCmdException(
+                    f"Uploading custom tone mapping parameters is not supported by tv model {model}."
+                )
+
             data = np.array(
                 [
                     luminance,
@@ -2436,3 +2447,110 @@ class WebOsClient:
                 await self.upload_1d_lut(picMode)
 
             return True
+
+        async def set_itpg_patch(
+            self, r=0, g=0, b=0, win_id=0, width=858, height=482, startx=1491, starty=839
+        ):
+            """Set iTPG patch properties.
+
+                r / g / b: The fill color of the window. Values are 10 bit full range (0-1023).
+                win_id: Identifier of the window to be displayed on the screen together with all others.
+                    The maximum number of simultaneous windows is 10, so valid values are 0 to 9.
+                    Use the IDs in ascending order, with the window with ID 0 on the Z axis at the very back.
+                width / height: The size of the window. The size of the screen is defined by
+                    its native resolution and not the resolution of the current signal.
+                    So with UHD TVs the screen always has a size of 3840x2160.
+                startx / starty: The origin of the window, the coordinate system of the screen
+                    has its origin in the upper left corner.
+
+            """
+
+            info = self.calibration_support_info()
+            itpg = info["itpg"]
+            if not itpg:
+                model = self._system_info["modelName"]
+                raise PyLGTVCmdException(f"iTPG is not supported by tv model {model}.")
+
+            payload = {
+                "command": cal.PATTERN_WINDOW,
+                "fillR": r,
+                "fillG": g,
+                "fillB": b,
+                "winId": win_id,
+                "width": width,
+                "height": height,
+                "startX": startx,
+                "startY": starty,
+                "programID": 1,
+            }
+
+        async def set_gradation_window(
+            self, bar_id=0, stride_size=240, start_r=64, start_g=64, start_b=64, step_r=58, step_g=58, step_b=58
+        ):
+            """Set iTPG gradation window properties.
+
+                bar_id: Identifier of the gradient bar to be displayed on the screen.
+                    The maximum number of simultaneous displayed gradient bars is 4, so the valid value range is 0 to 3.
+                stride_size: Stride size of the gradient bars in pixels. The value of the first
+                    bar with ID 0 defines the stride size of all displayed gradient bars.
+                    I.e. all bars always have the same size.
+                start_r / start_g / start_g: The starting color of the gradient (10 bit full range).
+                step_r / step_g / step_b: The color value increment applied to the gradient
+                    (10 bit full range) for each color step.
+
+                E.g. displaying vertical grayscale gradient pattern from black (0) to white (1023)
+                    on 3840 width display with the following example results in bars being 3 pixels wide
+                    and the pattern ends at a witdh of 3072 pixels and the rest of the screen is filled with the color of the last color step:
+                    bar_id=0, stride_size=3, start_r=0, start_g=0, start_b=0, step_r=1, step_g=1, step_b=1
+
+            """
+
+            info = self.calibration_support_info()
+            itpg = info["itpg"]
+            if not itpg:
+                model = self._system_info["modelName"]
+                raise PyLGTVCmdException(f"iTPG is not supported by tv model {model}.")
+
+            payload = {
+                "command": cal.PATTERN_GRADATION,
+                "barId": bar_id,
+                "strideSize": stride_size,
+                "startR": start_r,
+                "startG": start_g,
+                "startB": start_b,
+                "stepR": step_r,
+                "stepG": step_g,
+                "stepB": step_b,
+                "programID": 1,
+            }
+
+            return await self.request(ep.CALIBRATION, payload)
+
+        async def toggle_itpg_patches(self, enable=True, numOfBox=2, ptnType=0, fix_enable=True):
+            """Toggle (enable / disable) iTPG patches.
+
+                enable: "true" or "false" String value activating or deactivating the pattern display.
+                    This used to be a Bool value on older models / firmware versions
+                    but now has to be a String value (fix_enable can be used to mitigate the issue).
+                numOfBox: The total number of windows or gradient bars to activate.
+                    Usually "2" if you have one window for the background and one for the
+                    calibration pattern in the center of the screen.
+                ptnType: 0 windowBoxes, 1 gradationBarsVertical, 2 gradationBarsHorizontal
+
+            """
+
+            info = self.calibration_support_info()
+            itpg = info["itpg"]
+            if not itpg:
+                model = self._system_info["modelName"]
+                raise PyLGTVCmdException(f"iTPG is not supported by tv model {model}.")
+
+            payload = {
+                "command": cal.PATTERN_CONTROL,
+                "enable": (str(enable).lower() if fix_enable else enable),
+                "numOfBox": numOfBox,
+                "ptnType": ptnType,
+                "programID": 1,
+            }
+
+            return await self.request(ep.CALIBRATION, payload)

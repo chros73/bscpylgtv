@@ -55,6 +55,7 @@ TURN_ON_SCREEN = "com.webos.service.tvpower/power/turnOnScreen"
 TURN_OFF_SCREEN_WO4 = "com.webos.service.tv.power/turnOffScreen"
 TURN_ON_SCREEN_WO4 = "com.webos.service.tv.power/turnOnScreen"
 GET_CONFIGS = "config/getConfigs"
+LIST_DEVICES = "com.webos.service.attachedstoragemanager/listDevices"
 
 # webOS TV internal Luna API endpoints
 LUNA_SET_CONFIGS = "com.webos.service.config/setConfigs"
@@ -64,3 +65,4 @@ LUNA_REBOOT_TV = "com.webos.service.tvpower/power/reboot"
 LUNA_REBOOT_TV_WO4 = "com.webos.service.tv.power/reboot"
 LUNA_SHOW_INPUT_PICKER = "com.webos.surfacemanager/showInputPicker"
 LUNA_SET_DEVICE_INFO = "com.webos.service.eim/setDeviceInfo"
+LUNA_EJECT_DEVICE = "com.webos.service.attachedstoragemanager/ejectDevice"

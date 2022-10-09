@@ -1045,6 +1045,14 @@ class WebOsClient:
         """Close web app."""
         return await self.request(ep.CLOSE_WEB_APP)
 
+    async def get_attached_devices(self, types=[], jsonOutput=False):
+        """Get attached devices. types can be:
+            ["usb", "internal camera", "internal samples", "internal igallery", "dms", "internal store demo"]
+        """
+        types = types if type(types) is list else []
+        res = await self.request(ep.LIST_DEVICES, {"deviceType": types})
+        return self.__output_result(res.get("devices"), jsonOutput)
+
     async def luna_request(self, uri, params):
         """luna api call."""
         # n.b. this is a hack which abuses the alert API
@@ -2014,6 +2022,10 @@ class WebOsClient:
             raise ValueError(f"there's no {epName} endpoint")
 
         return await self.luna_request(getattr(ep, epName), {"reason": "reset"})
+
+    async def eject_attached_device(self, device_id):
+        """Eject a USB device. deviceId can be obtained with get_attached_devices method."""
+        return await self.luna_request(ep.LUNA_EJECT_DEVICE, {"deviceId": device_id})
 
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.

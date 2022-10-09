@@ -42,6 +42,7 @@ REGISTRATION_PAYLOAD = {
             "CONTROL_MOUSE_AND_KEYBOARD",
             "READ_INSTALLED_APPS",
             "READ_SETTINGS",
+            "READ_STORAGE_DEVICE_LIST",
         ],
         "signatures": [{"signature": SIGNATURE, "signatureVersion": 1}],
         "signed": {

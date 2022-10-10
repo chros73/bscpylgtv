@@ -183,7 +183,7 @@ asyncio.run(runloop())
 
 More useful examples can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/tree/master/docs/scripts) directory.
 
-## Calibration functionality
+## Calibration functionality (only in full version)
 **WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe, but no guarantees.*
 
 On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (>=2019 models), using internal pattern generator (iTPG, >=2019 models) and generating Dolby Vision config file is supported.
@@ -239,11 +239,12 @@ Calibration command line examples, modifying expert1 SDR preset (ISF Expert Brig
 bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Start calibration mode
 bscpylgtvcommand 192.168.1.18 start_calibration expert1 -s
-# Set oled light to 33
-bscpylgtvcommand 192.168.1.18 set_oled_light expert1 33
-# Set contrast to 85
-bscpylgtvcommand 192.168.1.18 set_contrast expert1 85
-# Do a DDC reset including uploading unity 1DLUT
+# Set oled light to 39, contrast to 85, brightness and color to 50
+bscpylgtvcommand 192.168.1.18 set_oled_light expert1 39 -s
+bscpylgtvcommand 192.168.1.18 set_contrast expert1 -s
+bscpylgtvcommand 192.168.1.18 set_brightness expert1 -s
+bscpylgtvcommand 192.168.1.18 set_color expert1 -s
+# Set bypass mode (also known as DDC reset) including uploading unity 1DLUT
 bscpylgtvcommand 192.168.1.18 set_bypass_mode expert1 true -s
 # Upload custom 1DLUT from file
 bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file expert1 "test.cal" -s
@@ -266,8 +267,10 @@ async def runloop():
 
     await client.set_input("HDMI_2")
     await client.start_calibration(picMode="expert1")
-    await client.set_oled_light(picMode="expert1", value=33)
-    await client.set_contrast(picMode="expert1", value=85)
+    await client.set_oled_light(picMode="expert1", value=39)
+    await client.set_contrast(picMode="expert1")
+    await client.set_brightness(picMode="expert1")
+    await client.set_color(picMode="expert1")
     await client.set_bypass_mode(picMode="expert1", unity_1d_lut=True)
     await client.upload_1d_lut_from_file(picMode="expert1", filename="test.cal")
     await client.upload_3d_lut_bt709_from_file(picMode="expert1", filename="test3d-1.cube")

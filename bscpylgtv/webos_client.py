@@ -88,6 +88,7 @@ class WebOsClient:
         self._system_info = None
         self._software_info = None
         self._hello_info = None
+        self._calibration_info = None
         self._sound_output = None
         self._picture_settings = None
         self.state_update_callbacks = []
@@ -297,6 +298,7 @@ class WebOsClient:
             self._system_info = None
             self._software_info = None
             self._hello_info = None
+            self._calibration_info = None
             self._sound_output = None
             self._picture_settings = None
 
@@ -427,6 +429,10 @@ class WebOsClient:
     @property
     def hello_info(self):
         return self._hello_info
+
+    @property
+    def calibration_info(self):
+        return self._calibration_info
 
     @property
     def sound_output(self):
@@ -808,6 +814,11 @@ class WebOsClient:
     async def get_hello_info(self, jsonOutput=False):
         """Return hello information."""
         return self.__output_result(self._hello_info, jsonOutput)
+
+    async def get_calibration_info(self, jsonOutput=False):
+        """Return calibration support information."""
+        self.calibration_support_info()
+        return self.__output_result(self._calibration_info, jsonOutput)
 
     async def power_off(self):
         """Power off TV."""
@@ -2126,11 +2137,12 @@ class WebOsClient:
 
     # Calibration
 
-    if np:
-        def calibration_support_info(self):
+    def calibration_support_info(self):
+        if self._calibration_info is None:
             if self._system_info is None:
-                raise PyLGTVCmdException(f"System info is not available, -s command line switch is required.")
-
+                raise PyLGTVCmdException(
+                    f"System info is not available, -s command line switch is required."
+                )
             info = {
                 "lut1d": False,
                 "lut3d_size": None,
@@ -2138,6 +2150,7 @@ class WebOsClient:
                 "itpg": False,
                 "dv_config_type": None,
             }
+
             model_name = self._system_info["modelName"]
             if model_name.startswith("OLED") and len(model_name) > 7:
                 model = model_name[6]
@@ -2182,19 +2195,22 @@ class WebOsClient:
                             info["itpg"] = True
                             info["dv_config_type"] = 2019
 
-            return info
+            self._calibration_info = info
+
+    if np:
+        def check_calibration_support(self, property="lut1d", message="Calibration commands"):
+            self.calibration_support_info()
+            if not self._calibration_info[property]:
+                model = self._system_info["modelName"]
+                raise PyLGTVCmdException(f"{message} not supported by tv model {model}.")
 
         def validateCalibrationData(self, data, shape, dtype):
             if not isinstance(data, np.ndarray):
                 raise TypeError(f"data must be of type ndarray but is instead {type(data)}")
             if data.shape != shape:
-                raise ValueError(
-                    f"data should have shape {shape} but instead has {data.shape}"
-                )
+                raise ValueError(f"data should have shape {shape} but instead has {data.shape}")
             if data.dtype != dtype:
-                raise TypeError(
-                    f"numpy dtype should be {dtype} but is instead {data.dtype}"
-                )
+                raise TypeError(f"numpy dtype should be {dtype} but is instead {data.dtype}")
 
         async def calibration_request(self, command, picMode, data):
             dataenc = base64.b64encode(data.tobytes()).decode()
@@ -2214,32 +2230,37 @@ class WebOsClient:
             return await self.request(ep.CALIBRATION, payload)
 
         async def start_calibration(self, picMode):
-            info = self.calibration_support_info()
-            if not info["lut1d"]:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(
-                    f"Calibration commands not supported by tv model {model}."
-                )
+            self.check_calibration_support()
             data = np.array([], dtype=np.float32)
             return await self.calibration_request(cal.CAL_START, picMode, data)
 
         async def end_calibration(self, picMode):
-            info = self.calibration_support_info()
-            if not info["lut1d"]:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(
-                    f"Calibration commands not supported by tv model {model}."
-                )
+            self.check_calibration_support()
             data = np.array([], dtype=np.float32)
             return await self.calibration_request(cal.CAL_END, picMode, data)
 
+        async def set_ui_data(self, command, picMode, value):
+            self.check_calibration_support("lut1d", "Setting picture mode property")
+            if not (value >= 0 and value <= 100):
+                raise ValueError
+
+            data = np.array(value, dtype=np.uint16)
+            return await self.calibration_request(command, picMode, data)
+
+        async def set_oled_light(self, picMode, value=33):
+            return await self.set_ui_data(cal.BACKLIGHT_UI_DATA, picMode, value)
+
+        async def set_contrast(self, picMode, value=85):
+            return await self.set_ui_data(cal.CONTRAST_UI_DATA, picMode, value)
+
+        async def set_brightness(self, picMode, value=50):
+            return await self.set_ui_data(cal.BRIGHTNESS_UI_DATA, picMode, value)
+
+        async def set_color(self, picMode, value=50):
+            return await self.set_ui_data(cal.COLOR_UI_DATA, picMode, value)
+
         async def upload_1d_lut(self, picMode, data=None):
-            info = self.calibration_support_info()
-            if not info["lut1d"]:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(
-                    f"1D LUT Upload not supported by tv model {model}."
-                )
+            self.check_calibration_support("lut1d", "1D LUT Upload")
             if data is None:
                 data = await asyncio.get_running_loop().run_in_executor(None, unity_lut_1d)
             self.validateCalibrationData(data, (3, 1024), np.uint16)
@@ -2263,15 +2284,11 @@ class WebOsClient:
             return await self.upload_1d_lut(picMode, lut)
 
         async def upload_3d_lut(self, command, picMode, data):
+            self.check_calibration_support("lut3d_size", "3D LUT Upload")
             if command not in [cal.UPLOAD_3D_LUT_BT709, cal.UPLOAD_3D_LUT_BT2020]:
                 raise PyLGTVCmdException(f"Invalid 3D LUT Upload command {command}.")
-            info = self.calibration_support_info()
-            lut3d_size = info["lut3d_size"]
-            if not lut3d_size:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(
-                    f"3D LUT Upload not supported by tv model {model}."
-                )
+
+            lut3d_size = self._calibration_info["lut3d_size"]
             if data is None:
                 data = await asyncio.get_running_loop().run_in_executor(
                     None, unity_lut_3d, lut3d_size
@@ -2300,57 +2317,77 @@ class WebOsClient:
             return await self.upload_3d_lut(command, picMode, lut)
 
         async def upload_3d_lut_bt709_from_file(self, picMode, filename):
-            return await self.upload_3d_lut_from_file(
-                cal.UPLOAD_3D_LUT_BT709, picMode, filename
-            )
+            return await self.upload_3d_lut_from_file(cal.UPLOAD_3D_LUT_BT709, picMode, filename)
 
         async def upload_3d_lut_bt2020_from_file(self, picMode, filename):
-            return await self.upload_3d_lut_from_file(
-                cal.UPLOAD_3D_LUT_BT2020, picMode, filename
-            )
-
-        async def set_ui_data(self, command, picMode, value):
-            if not (value >= 0 and value <= 100):
-                raise ValueError
-
-            data = np.array(value, dtype=np.uint16)
-            return await self.calibration_request(command, picMode, data)
-
-        async def set_brightness(self, picMode, value):
-            return await self.set_ui_data(cal.BRIGHTNESS_UI_DATA, picMode, value)
-
-        async def set_contrast(self, picMode, value):
-            return await self.set_ui_data(cal.CONTRAST_UI_DATA, picMode, value)
-
-        async def set_oled_light(self, picMode, value):
-            return await self.set_ui_data(cal.BACKLIGHT_UI_DATA, picMode, value)
-
-        async def set_color(self, picMode, value):
-            return await self.set_ui_data(cal.COLOR_UI_DATA, picMode, value)
+            return await self.upload_3d_lut_from_file(cal.UPLOAD_3D_LUT_BT2020, picMode, filename)
 
         async def set_1d_2_2_en(self, picMode, value=0):
+            self.check_calibration_support("lut1d", "1d_2_2 Upload")
             data = np.array(value, dtype=np.uint16)
-            return await self.calibration_request(
-                cal.ENABLE_GAMMA_2_2_TRANSFORM, picMode, data
-            )
+            return await self.calibration_request(cal.ENABLE_GAMMA_2_2_TRANSFORM, picMode, data)
 
         async def set_1d_0_45_en(self, picMode, value=0):
+            self.check_calibration_support("lut1d", "1d_0_45 Upload")
             data = np.array(value, dtype=np.uint16)
-            return await self.calibration_request(
-                cal.ENABLE_GAMMA_0_45_TRANSFORM, picMode, data
-            )
+            return await self.calibration_request(cal.ENABLE_GAMMA_0_45_TRANSFORM, picMode, data)
 
-        async def set_bt709_3by3_gamut_data(
-            self, picMode, data=np.identity(3, dtype=np.float32)
-        ):
+        async def set_bt709_3by3_gamut_data(self, picMode, data=np.identity(3, dtype=np.float32)):
+            self.check_calibration_support("lut1d", "BT709 3by3 Gamut Data Upload")
             self.validateCalibrationData(data, (3, 3), np.float32)
             return await self.calibration_request(cal.BT709_3BY3_GAMUT_DATA, picMode, data)
 
-        async def set_bt2020_3by3_gamut_data(
-            self, picMode, data=np.identity(3, dtype=np.float32)
-        ):
+        async def set_bt2020_3by3_gamut_data(self, picMode, data=np.identity(3, dtype=np.float32)):
+            self.check_calibration_support("lut1d", "BT2020 3by3 Gamut Data Upload")
             self.validateCalibrationData(data, (3, 3), np.float32)
             return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, picMode, data)
+
+        async def set_bypass_mode(self, picMode, unity_1d_lut=True):
+            """Also known as ddc_reset."""
+            if not isinstance(unity_1d_lut, bool):
+                raise TypeError(
+                    f"unity_1d_lut should be a bool, instead got {unity_1d_lut} of type {type(unity_1d_lut)}."
+                )
+
+            await self.set_1d_2_2_en(picMode)
+            await self.set_1d_0_45_en(picMode)
+            await self.set_bt709_3by3_gamut_data(picMode)
+            await self.set_bt2020_3by3_gamut_data(picMode)
+            await self.upload_3d_lut_bt709(picMode)
+            await self.upload_3d_lut_bt2020(picMode)
+            if unity_1d_lut:
+                await self.upload_1d_lut(picMode)
+
+            return True
+
+        async def set_tonemap_params(
+            self,
+            picMode,
+            luminance=700,
+            mastering_peak_1=1000,
+            rolloff_point_1=70,
+            mastering_peak_2=4000,
+            rolloff_point_2=60,
+            mastering_peak_3=10000,
+            rolloff_point_3=50,
+        ):
+            """Uploads custom HDR10 tone mapping parameters."""
+            self.check_calibration_support("custom_tone_mapping", "Custom tone mapping parameters Upload")
+
+            data = np.array(
+                [
+                    luminance,
+                    mastering_peak_1,
+                    rolloff_point_1,
+                    mastering_peak_2,
+                    rolloff_point_2,
+                    mastering_peak_3,
+                    rolloff_point_3,
+                ],
+                dtype=np.uint16,
+            )
+
+            return await self.calibration_request(cal.SET_TONEMAP_PARAM, picMode, data)
 
         async def set_dolby_vision_config_data(
             self, picture_mode=DV_PICTURE_MODES[1], white_level=700.0, black_level=DV_BLACK_LEVEL, gamma=DV_GAMMA, primaries=BT2020_PRIMARIES
@@ -2358,19 +2395,13 @@ class WebOsClient:
             """This method is NOT recommended since it uses the calibration API,
             use generate_dolby_vision_config method instead!"""
 
-            info = self.calibration_support_info()
-            dv_config_type = info["dv_config_type"]
-            if dv_config_type is None:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(
-                    f"Dolby Vision Configuration Upload not supported by tv model {model}."
-                )
+            self.check_calibration_support("dv_config_type", "Dolby Vision Configuration Upload")
 
             config = await asyncio.get_running_loop().run_in_executor(
                 None,
                 functools.partial(
                     create_dolby_vision_config,
-                    version=dv_config_type,
+                    version=self._calibration_info["dv_config_type"],
                     picture_mode=picture_mode,
                     white_level=white_level,
                     black_level=black_level,
@@ -2380,20 +2411,12 @@ class WebOsClient:
             )
 
             data = np.frombuffer(config.replace("\n", "\r\n").encode(), dtype=np.uint8)
-            return await self.calibration_request(
-                command=cal.DOLBY_CFG_DATA, picMode=None, data=data
-            )
+            return await self.calibration_request(command=cal.DOLBY_CFG_DATA, picMode=None, data=data)
 
         async def generate_dolby_vision_config_file(self, data, apply_to_all_modes=False):
             """Generates Dolby Vision config file for USB upload."""
 
-            info = self.calibration_support_info()
-            dv_config_type = info["dv_config_type"]
-            if dv_config_type is None:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(
-                    f"Dolby Vision Configuration Upload not supported by tv model {model}."
-                )
+            self.check_calibration_support("dv_config_type", "Dolby Vision Configuration Generation")
 
             if apply_to_all_modes and len(data) == 1 and type(data[0]) is dict and 'primaries' in data[0]:
                 # copy picture mode data multiple times and modify picture mode
@@ -2412,63 +2435,11 @@ class WebOsClient:
                 functools.partial(
                     write_dolby_vision_config,
                     data=data,
-                    version=dv_config_type,
+                    version=self._calibration_info["dv_config_type"],
                 ),
             )
 
             print(f"Generated DoVi config file: {filename}")
-            return True
-
-        async def set_tonemap_params(
-            self,
-            picMode,
-            luminance=700,
-            mastering_peak_1=1000,
-            rolloff_point_1=70,
-            mastering_peak_2=4000,
-            rolloff_point_2=60,
-            mastering_peak_3=10000,
-            rolloff_point_3=50,
-        ):
-
-            info = self.calibration_support_info()
-            custom_tone_mapping = info["custom_tone_mapping"]
-            if not custom_tone_mapping:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(
-                    f"Uploading custom tone mapping parameters is not supported by tv model {model}."
-                )
-
-            data = np.array(
-                [
-                    luminance,
-                    mastering_peak_1,
-                    rolloff_point_1,
-                    mastering_peak_2,
-                    rolloff_point_2,
-                    mastering_peak_3,
-                    rolloff_point_3,
-                ],
-                dtype=np.uint16,
-            )
-
-            return await self.calibration_request(cal.SET_TONEMAP_PARAM, picMode, data)
-
-        async def set_bypass_mode(self, picMode, unity_1d_lut=True):
-            if not isinstance(unity_1d_lut, bool):
-                raise TypeError(
-                    f"unity_1d_lut should be a bool, instead got {unity_1d_lut} of type {type(unity_1d_lut)}."
-                )
-
-            await self.set_1d_2_2_en(picMode)
-            await self.set_1d_0_45_en(picMode)
-            await self.set_bt709_3by3_gamut_data(picMode)
-            await self.set_bt2020_3by3_gamut_data(picMode)
-            await self.upload_3d_lut_bt709(picMode)
-            await self.upload_3d_lut_bt2020(picMode)
-            if unity_1d_lut:
-                await self.upload_1d_lut(picMode)
-
             return True
 
         async def set_itpg_patch(
@@ -2488,11 +2459,7 @@ class WebOsClient:
 
             """
 
-            info = self.calibration_support_info()
-            itpg = info["itpg"]
-            if not itpg:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(f"iTPG is not supported by tv model {model}.")
+            self.check_calibration_support("itpg", "iTPG")
 
             payload = {
                 "command": cal.PATTERN_WINDOW,
@@ -2506,6 +2473,8 @@ class WebOsClient:
                 "startY": starty,
                 "programID": 1,
             }
+
+            return await self.request(ep.CALIBRATION, payload)
 
         async def set_gradation_window(
             self, bar_id=0, stride_size=240, start_r=64, start_g=64, start_b=64, step_r=58, step_g=58, step_b=58
@@ -2528,11 +2497,7 @@ class WebOsClient:
 
             """
 
-            info = self.calibration_support_info()
-            itpg = info["itpg"]
-            if not itpg:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(f"iTPG is not supported by tv model {model}.")
+            self.check_calibration_support("itpg", "iTPG")
 
             payload = {
                 "command": cal.PATTERN_GRADATION,
@@ -2562,11 +2527,7 @@ class WebOsClient:
 
             """
 
-            info = self.calibration_support_info()
-            itpg = info["itpg"]
-            if not itpg:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(f"iTPG is not supported by tv model {model}.")
+            self.check_calibration_support("itpg", "iTPG")
 
             payload = {
                 "command": cal.PATTERN_CONTROL,

@@ -238,7 +238,7 @@ Calibration command line examples, modifying expert1 SDR preset (ISF Expert Brig
 # Switch to HDMI2 input
 bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration expert1
+bscpylgtvcommand 192.168.1.18 start_calibration expert1 -s
 # Set oled light to 33
 bscpylgtvcommand 192.168.1.18 set_oled_light expert1 33
 # Set contrast to 85
@@ -252,7 +252,7 @@ bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt709_from_file expert1 "test3d-1.cu
 # Upload custom 3DLUT from file into bt2020 slot
 bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
 # End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration expert1
+bscpylgtvcommand 192.168.1.18 end_calibration expert1 -s
 ```
 
 Same calibration via scripting:
@@ -282,11 +282,11 @@ asyncio.run(runloop())
 ### Uploading custom EOTF params for HDR10 Cinema preset (>=2019 models):
 ```bash
 # Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema
+bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema -s
 # Upload custom EOTF params for HDR10 Cinema preset
 bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
 # End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema
+bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema -s
 ```
 
 ### Generating Dolby Vision config file for USB upload:

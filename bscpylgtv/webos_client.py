@@ -25,7 +25,6 @@ if np:
     from .constants import (
         BT2020_PRIMARIES,
         CALIBRATION_TYPE_MAP,
-        DEFAULT_CAL_DATA,
         DV_PICTURE_MODES,
         DV_BLACK_LEVEL,
         DV_GAMMA,
@@ -2214,12 +2213,24 @@ class WebOsClient:
 
             return await self.request(ep.CALIBRATION, payload)
 
-        async def start_calibration(self, picMode, data=DEFAULT_CAL_DATA):
-            self.validateCalibrationData(data, (9,), np.float32)
+        async def start_calibration(self, picMode):
+            info = self.calibration_support_info()
+            if not info["lut1d"]:
+                model = self._system_info["modelName"]
+                raise PyLGTVCmdException(
+                    f"Calibration commands not supported by tv model {model}."
+                )
+            data = np.array([], dtype=np.float32)
             return await self.calibration_request(cal.CAL_START, picMode, data)
 
-        async def end_calibration(self, picMode, data=DEFAULT_CAL_DATA):
-            self.validateCalibrationData(data, (9,), np.float32)
+        async def end_calibration(self, picMode):
+            info = self.calibration_support_info()
+            if not info["lut1d"]:
+                model = self._system_info["modelName"]
+                raise PyLGTVCmdException(
+                    f"Calibration commands not supported by tv model {model}."
+                )
+            data = np.array([], dtype=np.float32)
             return await self.calibration_request(cal.CAL_END, picMode, data)
 
         async def upload_1d_lut(self, picMode, data=None):

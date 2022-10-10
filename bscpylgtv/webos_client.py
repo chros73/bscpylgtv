@@ -2443,10 +2443,10 @@ class WebOsClient:
 
             return await self.calibration_request(cal.SET_TONEMAP_PARAM, picMode, data)
 
-        async def ddc_reset(self, picMode, reset_1d_lut=True):
-            if not isinstance(reset_1d_lut, bool):
+        async def set_bypass_mode(self, picMode, unity_1d_lut=True):
+            if not isinstance(unity_1d_lut, bool):
                 raise TypeError(
-                    f"reset_1d_lut should be a bool, instead got {reset_1d_lut} of type {type(reset_1d_lut)}."
+                    f"unity_1d_lut should be a bool, instead got {unity_1d_lut} of type {type(unity_1d_lut)}."
                 )
 
             await self.set_1d_2_2_en(picMode)
@@ -2455,7 +2455,7 @@ class WebOsClient:
             await self.set_bt2020_3by3_gamut_data(picMode)
             await self.upload_3d_lut_bt709(picMode)
             await self.upload_3d_lut_bt2020(picMode)
-            if reset_1d_lut:
+            if unity_1d_lut:
                 await self.upload_1d_lut(picMode)
 
             return True

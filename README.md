@@ -212,9 +212,9 @@ LG 2018 Alpha 7 G1: Super UHD LED (8000 & higher model numbers)
 
 The supported input formats for LUTs are IRIDAS `.cube` format for both 1D and 3D LUTs, and ArgyllCMS `.cal` files for 1D LUTs. Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
 
-*WARNING:* When running the `ddc_reset` or uploading LUT data on 2018 models the only way to restore the factory LUTs and behaviour for a given input mode is to do a factory reset of the TV. From 2019 models  picture preset reset results the same until calibration mode is activated again for the same preset.
-`ddc_reset` uploads unity 1d and 3d luts and resets oled light/brightness/contrast/color/ to default values (80/50/85/50).
-When running the `ddc_reset` or uploading any 1D LUT data, service menu white balance settings are ignored, and gamma, colorspace, and white balance settings in the user menu are greyed out and inaccessible. From 2019 models white balance 2pt low values can be set.
+*WARNING:* When running the `set_bypass_mode` or uploading LUT data on 2018 models the only way to restore the factory LUTs and behaviour for a given input mode is to do a factory reset of the TV. From 2019 models  picture preset reset results the same until calibration mode is activated again for the same preset.
+`set_bypass_mode` uploads unity 1d and 3d luts and resets oled light/brightness/contrast/color/ to default values (80/50/85/50).
+When running the `set_bypass_mode` or uploading any 1D LUT data, service menu white balance settings are ignored, and gamma, colorspace, and white balance settings in the user menu are greyed out and inaccessible. From 2019 models white balance 2pt low values can be set.
 
 Calibration data is specific to each picture mode, and picture modes are independent for SDR, HDR10+HLG, and Dolby Vision.
 Picture modes from each of the three groups are only accessible when the TV is in the appropriate mode. Ie to upload calibration data for HDR10 picture modes, one has to send the TV an HDR10 signal or play an HDR10 file, and similarly for Dolby Vision.
@@ -244,7 +244,7 @@ bscpylgtvcommand 192.168.1.18 set_oled_light expert1 33
 # Set contrast to 85
 bscpylgtvcommand 192.168.1.18 set_contrast expert1 85
 # Do a DDC reset including uploading unity 1DLUT
-bscpylgtvcommand 192.168.1.18 ddc_reset expert1 true -s
+bscpylgtvcommand 192.168.1.18 set_bypass_mode expert1 true -s
 # Upload custom 1DLUT from file
 bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file expert1 "test.cal" -s
 # Upload custom 3DLUT from file into BT709 slot
@@ -268,7 +268,7 @@ async def runloop():
     await client.start_calibration(picMode="expert1")
     await client.set_oled_light(picMode="expert1", value=33)
     await client.set_contrast(picMode="expert1", value=85)
-    await client.ddc_reset(picMode="expert1", reset_1d_lut=True)
+    await client.set_bypass_mode(picMode="expert1", unity_1d_lut=True)
     await client.upload_1d_lut_from_file(picMode="expert1", filename="test.cal")
     await client.upload_3d_lut_bt709_from_file(picMode="expert1", filename="test3d-1.cube")
     await client.upload_3d_lut_bt2020_from_file(picMode="expert1", filename="test3d-2.cube")

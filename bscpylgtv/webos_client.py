@@ -2213,31 +2213,30 @@ class WebOsClient:
                 raise TypeError(f"numpy dtype should be {dtype} but is instead {data.dtype}")
 
         async def calibration_request(self, command, picMode, data):
-            dataenc = base64.b64encode(data.tobytes()).decode()
-
             payload = {
                 "command": command,
-                "data": dataenc,
-                "dataCount": data.size,
-                "dataOpt": 1,
-                "dataType": CALIBRATION_TYPE_MAP[data.dtype.name],
                 "profileNo": 0,
                 "programID": 1,
             }
-            if picMode is not None:
+            if picMode:
                 payload["picMode"] = picMode
+
+            if data:
+                dataenc = base64.b64encode(data.tobytes()).decode()
+                payload["data"] = dataenc
+                payload["dataCount"] = data.size
+                payload["dataType"] = CALIBRATION_TYPE_MAP[data.dtype.name]
+                payload["dataOpt"] = 1
 
             return await self.request(ep.CALIBRATION, payload)
 
         async def start_calibration(self, picMode):
             self.check_calibration_support()
-            data = np.array([], dtype=np.float32)
-            return await self.calibration_request(cal.CAL_START, picMode, data)
+            return await self.calibration_request(cal.CAL_START, picMode, None)
 
         async def end_calibration(self, picMode):
             self.check_calibration_support()
-            data = np.array([], dtype=np.float32)
-            return await self.calibration_request(cal.CAL_END, picMode, data)
+            return await self.calibration_request(cal.CAL_END, picMode, None)
 
         async def set_ui_data(self, command, picMode, value):
             self.check_calibration_support("lut1d", "Setting picture mode property")

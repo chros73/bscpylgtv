@@ -2212,21 +2212,25 @@ class WebOsClient:
             if data.dtype != dtype:
                 raise TypeError(f"numpy dtype should be {dtype} but is instead {data.dtype}")
 
-        async def calibration_request(self, command, picMode, data):
+        async def calibration_request(self, command, picMode, data, dataOpt=1):
+            # dataOpt: 0 - Apply, 1 - Apply and Save, 2 - Reset
+            if dataOpt < 0 or dataOpt > 2:
+                raise ValueError
+
             payload = {
                 "command": command,
                 "profileNo": 0,
                 "programID": 1,
             }
-            if picMode:
+            if picMode is not None:
                 payload["picMode"] = picMode
 
-            if data:
+            if data is not None:
                 dataenc = base64.b64encode(data.tobytes()).decode()
                 payload["data"] = dataenc
                 payload["dataCount"] = data.size
                 payload["dataType"] = CALIBRATION_TYPE_MAP[data.dtype.name]
-                payload["dataOpt"] = 1
+                payload["dataOpt"] = dataOpt
 
             return await self.request(ep.CALIBRATION, payload)
 
@@ -2260,10 +2264,18 @@ class WebOsClient:
 
         async def upload_1d_lut(self, picMode, data=None):
             self.check_calibration_support("lut1d", "1D LUT Upload")
-            if data is None:
-                data = await asyncio.get_running_loop().run_in_executor(None, unity_lut_1d)
-            self.validateCalibrationData(data, (3, 1024), np.uint16)
-            return await self.calibration_request(cal.UPLOAD_1D_LUT, picMode, data)
+
+            if type(data) is list and len(data) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.uint16)
+                dataOpt = 2
+            else:
+                if data is None:
+                    data = await asyncio.get_running_loop().run_in_executor(None, unity_lut_1d)
+                self.validateCalibrationData(data, (3, 1024), np.uint16)
+                dataOpt = 1
+
+            return await self.calibration_request(cal.UPLOAD_1D_LUT, picMode, data, dataOpt)
 
         async def upload_1d_lut_from_file(self, picMode, filename):
             ext = filename.split(".")[-1].lower()
@@ -2277,7 +2289,7 @@ class WebOsClient:
                 )
             else:
                 raise ValueError(
-                    f"Unsupported file format {ext} for 1D LUT.  Supported file formats are cal and cube."
+                    f"Unsupported file format {ext} for 1D LUT. Supported file formats are cal and cube."
                 )
 
             return await self.upload_1d_lut(picMode, lut)
@@ -2287,14 +2299,21 @@ class WebOsClient:
             if command not in [cal.UPLOAD_3D_LUT_BT709, cal.UPLOAD_3D_LUT_BT2020]:
                 raise PyLGTVCmdException(f"Invalid 3D LUT Upload command {command}.")
 
-            lut3d_size = self._calibration_info["lut3d_size"]
-            if data is None:
-                data = await asyncio.get_running_loop().run_in_executor(
-                    None, unity_lut_3d, lut3d_size
-                )
-            lut3d_shape = (lut3d_size, lut3d_size, lut3d_size, 3)
-            self.validateCalibrationData(data, lut3d_shape, np.uint16)
-            return await self.calibration_request(command, picMode, data)
+            if type(data) is list and len(data) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.uint16)
+                dataOpt = 2
+            else:
+                lut3d_size = self._calibration_info["lut3d_size"]
+                if data is None:
+                    data = await asyncio.get_running_loop().run_in_executor(
+                        None, unity_lut_3d, lut3d_size
+                    )
+                lut3d_shape = (lut3d_size, lut3d_size, lut3d_size, 3)
+                self.validateCalibrationData(data, lut3d_shape, np.uint16)
+                dataOpt = 1
+
+            return await self.calibration_request(command, picMode, data, dataOpt)
 
         async def upload_3d_lut_bt709(self, picMode, data=None):
             return await self.upload_3d_lut(cal.UPLOAD_3D_LUT_BT709, picMode, data)
@@ -2310,7 +2329,7 @@ class WebOsClient:
                 )
             else:
                 raise ValueError(
-                    f"Unsupported file format {ext} for 3D LUT.  Supported file formats are cube."
+                    f"Unsupported file format {ext} for 3D LUT. Supported file formats are cube."
                 )
 
             return await self.upload_3d_lut(command, picMode, lut)
@@ -2323,25 +2342,53 @@ class WebOsClient:
 
         async def set_1d_2_2_en(self, picMode, value=0):
             self.check_calibration_support("lut1d", "1d_2_2 Upload")
+            if ((type(value) is list and len(value) != 0)
+                or (type(value) is int and (value < 0 or value > 10))):
+                raise ValueError
+
+            # Set or reset uploaded data
             data = np.array(value, dtype=np.uint16)
-            return await self.calibration_request(cal.ENABLE_GAMMA_2_2_TRANSFORM, picMode, data)
+            dataOpt = 2 if type(value) is list and len(value) == 0 else 1
+            return await self.calibration_request(cal.ENABLE_GAMMA_2_2_TRANSFORM, picMode, data, dataOpt)
 
         async def set_1d_0_45_en(self, picMode, value=0):
             self.check_calibration_support("lut1d", "1d_0_45 Upload")
+            if ((type(value) is list and len(value) != 0)
+                or (type(value) is int and (value < 0 or value > 10))):
+                raise ValueError
+
+            # Set or reset uploaded data
             data = np.array(value, dtype=np.uint16)
-            return await self.calibration_request(cal.ENABLE_GAMMA_0_45_TRANSFORM, picMode, data)
+            dataOpt = 2 if type(value) is list and len(value) == 0 else 1
+            return await self.calibration_request(cal.ENABLE_GAMMA_0_45_TRANSFORM, picMode, data, dataOpt)
 
         async def set_bt709_3by3_gamut_data(self, picMode, data=np.identity(3, dtype=np.float32)):
             self.check_calibration_support("lut1d", "BT709 3by3 Gamut Data Upload")
-            self.validateCalibrationData(data, (3, 3), np.float32)
-            return await self.calibration_request(cal.BT709_3BY3_GAMUT_DATA, picMode, data)
+
+            if type(data) is list and len(data) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.float32)
+                dataOpt = 2
+            else:
+                self.validateCalibrationData(data, (3, 3), np.float32)
+                dataOpt = 1
+
+            return await self.calibration_request(cal.BT709_3BY3_GAMUT_DATA, picMode, data, dataOpt)
 
         async def set_bt2020_3by3_gamut_data(self, picMode, data=np.identity(3, dtype=np.float32)):
             self.check_calibration_support("lut1d", "BT2020 3by3 Gamut Data Upload")
-            self.validateCalibrationData(data, (3, 3), np.float32)
-            return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, picMode, data)
 
-        async def set_bypass_mode(self, picMode, unity_1d_lut=True):
+            if type(data) is list and len(data) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.float32)
+                dataOpt = 2
+            else:
+                self.validateCalibrationData(data, (3, 3), np.float32)
+                dataOpt = 1
+
+            return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, picMode, data, dataOpt)
+
+        async def set_bypass_modes(self, picMode, unity_1d_lut=True):
             """Also known as ddc_reset."""
             if not isinstance(unity_1d_lut, bool):
                 raise TypeError(
@@ -2359,6 +2406,25 @@ class WebOsClient:
 
             return True
 
+        async def set_factory_calibration_data(self, picMode, hdr10_tonemap_params=False):
+            """Set factory calibration data."""
+            if not isinstance(hdr10_tonemap_params, bool):
+                raise TypeError(
+                    f"hdr10_tonemap_params should be a bool, instead got {hdr10_tonemap_params} of type {type(hdr10_tonemap_params)}."
+                )
+
+            await self.set_1d_2_2_en(picMode, [])
+            await self.set_1d_0_45_en(picMode, [])
+            await self.set_bt709_3by3_gamut_data(picMode, [])
+            await self.set_bt2020_3by3_gamut_data(picMode, [])
+            await self.upload_3d_lut_bt709(picMode, [])
+            await self.upload_3d_lut_bt2020(picMode, [])
+            await self.upload_1d_lut(picMode, [])
+            if hdr10_tonemap_params:
+                await self.set_tonemap_params(picMode, [])
+
+            return True
+
         async def set_tonemap_params(
             self,
             picMode,
@@ -2373,20 +2439,26 @@ class WebOsClient:
             """Uploads custom HDR10 tone mapping parameters."""
             self.check_calibration_support("custom_tone_mapping", "Custom tone mapping parameters Upload")
 
-            data = np.array(
-                [
-                    luminance,
-                    mastering_peak_1,
-                    rolloff_point_1,
-                    mastering_peak_2,
-                    rolloff_point_2,
-                    mastering_peak_3,
-                    rolloff_point_3,
-                ],
-                dtype=np.uint16,
-            )
+            if type(luminance) is list and len(luminance) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.uint16)
+                dataOpt = 2
+            else:
+                data = np.array(
+                    [
+                        luminance,
+                        mastering_peak_1,
+                        rolloff_point_1,
+                        mastering_peak_2,
+                        rolloff_point_2,
+                        mastering_peak_3,
+                        rolloff_point_3,
+                    ],
+                    dtype=np.uint16,
+                )
+                dataOpt = 1
 
-            return await self.calibration_request(cal.SET_TONEMAP_PARAM, picMode, data)
+            return await self.calibration_request(cal.SET_TONEMAP_PARAM, picMode, data, dataOpt)
 
         async def set_dolby_vision_config_data(
             self, picture_mode=DV_PICTURE_MODES[1], white_level=700.0, black_level=DV_BLACK_LEVEL, gamma=DV_GAMMA, primaries=BT2020_PRIMARIES
@@ -2396,21 +2468,27 @@ class WebOsClient:
 
             self.check_calibration_support("dv_config_type", "Dolby Vision Configuration Upload")
 
-            config = await asyncio.get_running_loop().run_in_executor(
-                None,
-                functools.partial(
-                    create_dolby_vision_config,
-                    version=self._calibration_info["dv_config_type"],
-                    picture_mode=picture_mode,
-                    white_level=white_level,
-                    black_level=black_level,
-                    gamma=gamma,
-                    primaries=primaries,
-                ),
-            )
+            if type(picture_mode) is list and len(picture_mode) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.uint8)
+                dataOpt = 2
+            else:
+                config = await asyncio.get_running_loop().run_in_executor(
+                    None,
+                    functools.partial(
+                        create_dolby_vision_config,
+                        version=self._calibration_info["dv_config_type"],
+                        picture_mode=picture_mode,
+                        white_level=white_level,
+                        black_level=black_level,
+                        gamma=gamma,
+                        primaries=primaries,
+                    ),
+                )
+                data = np.frombuffer(config.replace("\n", "\r\n").encode(), dtype=np.uint8)
+                dataOpt = 1
 
-            data = np.frombuffer(config.replace("\n", "\r\n").encode(), dtype=np.uint8)
-            return await self.calibration_request(command=cal.DOLBY_CFG_DATA, picMode=None, data=data)
+            return await self.calibration_request(cal.DOLBY_CFG_DATA, None, data, dataOpt)
 
         async def generate_dolby_vision_config_file(self, data, apply_to_all_modes=False):
             """Generates Dolby Vision config file for USB upload."""

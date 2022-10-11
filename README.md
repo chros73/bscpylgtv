@@ -212,9 +212,9 @@ LG 2018 Alpha 7 G1: Super UHD LED (8000 & higher model numbers)
 
 The supported input formats for LUTs are IRIDAS `.cube` format for both 1D and 3D LUTs, and ArgyllCMS `.cal` files for 1D LUTs. Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
 
-*WARNING:* When running the `set_bypass_mode` or uploading LUT data on 2018 models the only way to restore the factory LUTs and behaviour for a given input mode is to do a factory reset of the TV. From 2019 models  picture preset reset results the same until calibration mode is activated again for the same preset.
-`set_bypass_mode` uploads unity 1d and 3d luts and resets oled light/brightness/contrast/color/ to default values (80/50/85/50).
-When running the `set_bypass_mode` or uploading any 1D LUT data, service menu white balance settings are ignored, and gamma, colorspace, and white balance settings in the user menu are greyed out and inaccessible. From 2019 models white balance 2pt low values can be set.
+*WARNING:* When running the `set_bypass_modes` or uploading LUT data on 2018 models the only way to restore the factory LUTs and behaviour for a given input mode is to do a factory reset of the TV. From 2019 models  picture preset reset results the same until calibration mode is activated again for the same preset.
+`set_bypass_modes` uploads unity 1d and 3d luts and resets oled light/brightness/contrast/color/ to default values (80/50/85/50).
+When running the `set_bypass_modes` or uploading any 1D LUT data, service menu white balance settings are ignored, and gamma, colorspace, and white balance settings in the user menu are greyed out and inaccessible. From 2019 models white balance 2pt low values can be set.
 
 Calibration data is specific to each picture mode, and picture modes are independent for SDR, HDR10+HLG, and Dolby Vision.
 Picture modes from each of the three groups are only accessible when the TV is in the appropriate mode. Ie to upload calibration data for HDR10 picture modes, one has to send the TV an HDR10 signal or play an HDR10 file, and similarly for Dolby Vision.
@@ -245,7 +245,7 @@ bscpylgtvcommand 192.168.1.18 set_contrast expert1 -s
 bscpylgtvcommand 192.168.1.18 set_brightness expert1 -s
 bscpylgtvcommand 192.168.1.18 set_color expert1 -s
 # Set bypass mode (also known as DDC reset) including uploading unity 1DLUT
-bscpylgtvcommand 192.168.1.18 set_bypass_mode expert1 true -s
+bscpylgtvcommand 192.168.1.18 set_bypass_modes expert1 true -s
 # Upload custom 1DLUT from file
 bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file expert1 "test.cal" -s
 # Upload custom 3DLUT from file into BT709 slot
@@ -271,7 +271,7 @@ async def runloop():
     await client.set_contrast(picMode="expert1")
     await client.set_brightness(picMode="expert1")
     await client.set_color(picMode="expert1")
-    await client.set_bypass_mode(picMode="expert1", unity_1d_lut=True)
+    await client.set_bypass_modes(picMode="expert1", unity_1d_lut=True)
     await client.upload_1d_lut_from_file(picMode="expert1", filename="test.cal")
     await client.upload_3d_lut_bt709_from_file(picMode="expert1", filename="test3d-1.cube")
     await client.upload_3d_lut_bt2020_from_file(picMode="expert1", filename="test3d-2.cube")
@@ -290,6 +290,27 @@ bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema -s
 bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema -s
+```
+
+### Resetting uploaded calibration data
+
+Now it's possible to reset individual factory calibration data (previously a picture preset reset or factory reset was required for this) or reset all of them with `set_factory_calibration_data` command.
+The following calibration commands are supported:
+```
+upload_1d_lut, upload_3d_lut_bt709, upload_3d_lut_bt2020,
+set_1d_2_2_en, set_1d_0_45_en, set_bt709_3by3_gamut_data, set_bt2020_3by3_gamut_data,
+set_tonemap_params (for HDR10 picture modes),
+set_dolby_vision_config_data (not recommended on >=2020 models!)
+```
+
+Example usage (all the supported commands has the same syntax):
+```bash
+# Start calibration mode
+bscpylgtvcommand 192.168.1.18 start_calibration expert1 -s
+# Restore factory 1DLUT after custom 1DLUT was uploaded (by specifying empty list)
+bscpylgtvcommand 192.168.1.18 upload_1d_lut expert1 [] -s
+# End calibration mode
+bscpylgtvcommand 192.168.1.18 end_calibration expert1 -s
 ```
 
 ### Generating Dolby Vision config file for USB upload:

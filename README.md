@@ -186,7 +186,7 @@ More useful examples can be found in [docs/scripts](https://github.com/chros73/b
 ## Calibration functionality (only in full version)
 **WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe, but no guarantees.*
 
-On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (>=2019 models), using internal pattern generator (iTPG, >=2019 models) and generating Dolby Vision config file is supported.
+On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (>=2019 models), using internal pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
 
 n.b. this has only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models, so fixes may be needed still for the others.
 
@@ -313,19 +313,19 @@ bscpylgtvcommand 192.168.1.18 upload_1d_lut expert1 [] -s
 bscpylgtvcommand 192.168.1.18 end_calibration expert1 -s
 ```
 
-### Generating Dolby Vision config file for USB upload:
+### Writing Dolby Vision config file for USB upload:
 
 - picture modes: 1 - DoVi Cinema Home, 2 - DoVi Cinema, 4 - DoVi Game
 - primaries (in this order): xr, yr, xg, yg, xb, yb
 - config of 2018 models is different from the rest of the models
 
 ```bash
-# Generating DoVi config for one preset (DoVi Cinema)
-bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
-# Generating DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) based on one set of data
-bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" true -s
-# Generating DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) by specifying them separately
-bscpylgtvcommand 192.168.1.18 generate_dolby_vision_config_file "[{\"picture_mode\": 1, \"white_level\": 710, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 4, \"white_level\": 680, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
+# Writing DoVi config for one preset (DoVi Cinema)
+bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
+# Writing DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) based on one set of data
+bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" true D:\temp -s
+# Writing DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) by specifying them separately
+bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\": 1, \"white_level\": 710, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 4, \"white_level\": 680, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
 ```
 
 ### Displaying color patches using the internal pattern generator (iTPG, >=2019 models):

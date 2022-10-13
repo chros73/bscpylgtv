@@ -28,10 +28,11 @@ if np:
         DV_PICTURE_MODES,
         DV_BLACK_LEVEL,
         DV_GAMMA,
+        DV_CONFIG_FILENAME,
     )
     from .lut_tools import (
         create_dolby_vision_config,
-        write_dolby_vision_config,
+        generate_dolby_vision_config,
         read_cal_file,
         read_cube_file,
         unity_lut_1d,
@@ -2491,10 +2492,14 @@ class WebOsClient:
 
             return await self.calibration_request(cal.DOLBY_CFG_DATA, None, data, dataOpt)
 
-        async def generate_dolby_vision_config_file(self, data, apply_to_all_modes=False):
-            """Generates Dolby Vision config file for USB upload."""
+        async def write_dolby_vision_config_file(self, data, apply_to_all_modes=False, full_path=""):
+            """Writes Dolby Vision config file for USB upload."""
 
             self.check_calibration_support("dv_config_type", "Dolby Vision Configuration Generation")
+            if not isinstance(apply_to_all_modes, bool):
+                raise TypeError(
+                    f"apply_to_all_modes should be a bool, instead got {apply_to_all_modes} of type {type(apply_to_all_modes)}."
+                )
 
             if apply_to_all_modes and len(data) == 1 and type(data[0]) is dict and 'primaries' in data[0]:
                 # copy picture mode data multiple times and modify picture mode
@@ -2508,16 +2513,19 @@ class WebOsClient:
                     data[counter]['picture_mode'] = picture_mode
                     counter += 1
 
-            filename = await asyncio.get_running_loop().run_in_executor(
+            config = await asyncio.get_running_loop().run_in_executor(
                 None,
                 functools.partial(
-                    write_dolby_vision_config,
+                    generate_dolby_vision_config,
                     data=data,
                     version=self._calibration_info["dv_config_type"],
                 ),
             )
 
-            print(f"Generated DoVi config file: {filename}")
+            with open(os.path.join(full_path, DV_CONFIG_FILENAME), "w", newline='\r\n') as f:
+                f.write(config)
+
+            print(f"Generated DoVi config file: {DV_CONFIG_FILENAME}")
             return True
 
         async def set_itpg_patch(

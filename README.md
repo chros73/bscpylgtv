@@ -186,7 +186,7 @@ More useful examples can be found in [docs/scripts](https://github.com/chros73/b
 ## Calibration functionality (only in full version)
 **WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe, but no guarantees.*
 
-On supported models, calibration functionality, upload to internal LUTs, uploading custom tone mapping parameters (>=2019 models), using internal pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
+On supported models, calibration functionality, upload to internal LUTs, resetting uploaded data via calibration API, uploading custom tone mapping parameters (>=2019 models), using internal pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
 
 n.b. this has only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models, so fixes may be needed still for the others.
 
@@ -282,17 +282,7 @@ async def runloop():
 asyncio.run(runloop())
 ```
 
-### Uploading custom EOTF params for HDR10 Cinema preset (>=2019 models):
-```bash
-# Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema -s
-# Upload custom EOTF params for HDR10 Cinema preset
-bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
-# End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema -s
-```
-
-### Resetting uploaded calibration data
+### Resetting uploaded calibration data via calibration API
 
 Now it's possible to reset individual factory calibration data (previously a picture preset reset or factory reset was required for this) or reset all of them with `set_factory_calibration_data` command.
 The following calibration commands are supported:
@@ -313,7 +303,17 @@ bscpylgtvcommand 192.168.1.18 upload_1d_lut expert1 [] -s
 bscpylgtvcommand 192.168.1.18 end_calibration expert1 -s
 ```
 
-### Writing Dolby Vision config file for USB upload:
+### Uploading custom EOTF params for HDR10 Cinema preset (>=2019 models)
+```bash
+# Start calibration mode
+bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema -s
+# Upload custom EOTF params for HDR10 Cinema preset
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
+# End calibration mode
+bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema -s
+```
+
+### Writing Dolby Vision config file for USB upload
 
 - picture modes: 1 - DoVi Cinema Home, 2 - DoVi Cinema, 4 - DoVi Game
 - primaries (in this order): xr, yr, xg, yg, xb, yb
@@ -328,7 +328,7 @@ bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"white_level\":
 bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\": 1, \"white_level\": 710, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 4, \"white_level\": 680, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
 ```
 
-### Displaying color patches using the internal pattern generator (iTPG, >=2019 models):
+### Displaying color patches using the internal pattern generator (iTPG, >=2019 models)
 
 - it can be used inside or outside of calibration mode as well
 - it can be broken in defferent ways in given firmware version / picture mode / etc
@@ -382,6 +382,24 @@ We use [`pre-commit`](https://pre-commit.com) to keep a consistent code style, s
 pre-commit install
 ```
 to install the hooks.
+
+### Unit testing
+
+Required extra packages:
+```bash
+pip install numpy pytest pytest-asyncio pytest-mock
+```
+
+Running unit tests:
+```bash
+# Run all the tests in all files
+pytest tests
+# Run all the tests in one file
+pytest tests/test_webos_client_lite.py
+# Run a specific test in one file
+pytest tests/test_webos_client_calibration.py -k "test_set_ui_data_methods"
+```
+
 
 ## Forum
 

@@ -342,34 +342,34 @@ bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 0 0 0 3840 2160 0 0 -s
 # Set 5% window green patch on top of the background
 bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 1023 0 1 -s
 # Display the 2 set patches
-bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 2 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 2 -s
 # Disable the 2 set patches
-bscpylgtvcommand 192.168.1.18 toggle_itpg_patches false 0 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg false 0 -s
 
 # Or using "overlay" 5% window green patch on top of the content
 bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 1023 0 0 -s
 # Display the set patch
-bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 1 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 -s
 # Disable the set patch
-bscpylgtvcommand 192.168.1.18 toggle_itpg_patches false 0 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg false 0 -s
 ```
 
 Displaying gradation window:
 ```bash
 # Set black to white gradation window for vertical type
-bscpylgtvcommand 192.168.1.18 set_gradation_window 0 3 0 0 0 1 1 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 3 0 0 0 1 1 1 -s
 # Display vertical gradation bars
-bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 1 1 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 1 -s
 # Set black to white gradation window for horizontal type
-bscpylgtvcommand 192.168.1.18 set_gradation_window 0 1 0 0 0 1 1 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 1 0 0 0 1 1 1 -s
 # Display horizontal gradation bars
-bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 1 2 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 2 -s
 # Display 2 colored vertical gradation bars at the same time
-bscpylgtvcommand 192.168.1.18 set_gradation_window 0 3 610 520 230 1 1 1 -s
-bscpylgtvcommand 192.168.1.18 set_gradation_window 1 3 610 50 23 1 1 1 -s
-bscpylgtvcommand 192.168.1.18 toggle_itpg_patches true 2 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 3 610 520 230 1 1 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 1 3 610 50 23 1 1 1 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 2 1 -s
 # Disable gradation window
-bscpylgtvcommand 192.168.1.18 toggle_itpg_patches false 0 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg false 0 -s
 ```
 
 

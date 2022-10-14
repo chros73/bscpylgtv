@@ -45,14 +45,14 @@ async def display_patch(client, patch, patch_interval, bfi_interval, window_full
     await client.set_itpg_patch(r=int(patch[1]), g=int(patch[2]), b=int(patch[3]), win_id=1, width=window_patch['width'], height=window_patch['height'], startx=window_patch['startx'], starty=window_patch['starty'])
     await client.set_itpg_patch(r=0, b=0, g=0, win_id=0, width=window_full['width'], height=window_full['height'], startx=window_full['startx'], starty=window_full['starty'])
 
-    await client.toggle_itpg_patches(enable=True, numOfBox=2)
+    await client.toggle_itpg(enable=True, numOfBox=2)
     await asyncio.sleep(patch_interval)
 
     if bfi_interval:
         print("BFI")
         # Set full screen black window in the background again
         await client.set_itpg_patch(r=0, b=0, g=0, win_id=0, width=window_full['width'], height=window_full['height'], startx=window_full['startx'], starty=window_full['starty'])
-        await client.toggle_itpg_patches(enable=True, numOfBox=1)
+        await client.toggle_itpg(enable=True, numOfBox=1)
         await asyncio.sleep(bfi_interval)
 
 
@@ -79,7 +79,7 @@ async def runloop(screen_resolution, bfi_interval, patch_interval, patch_size):
             await display_patch(client, patch, patch_interval, bfi_interval, window_full, window_patch)
 
     # Disable patches
-    await client.toggle_itpg_patches(enable=False, numOfBox=0)
+    await client.toggle_itpg(enable=False, numOfBox=0)
 
     # Disconnect WebOS
     await client.disconnect()

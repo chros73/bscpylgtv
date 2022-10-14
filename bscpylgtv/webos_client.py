@@ -2592,7 +2592,7 @@ class WebOsClient:
 
             return await self.request(ep.CALIBRATION, payload)
 
-        async def set_gradation_window(
+        async def set_itpg_gradation_window(
             self, bar_id=0, stride_size=240, start_r=64, start_g=64, start_b=64, step_r=58, step_g=58, step_b=58
         ):
             """Set iTPG gradation window properties.
@@ -2640,8 +2640,8 @@ class WebOsClient:
 
             return await self.request(ep.CALIBRATION, payload)
 
-        async def toggle_itpg_patches(self, enable=True, numOfBox=2, ptnType=0, fix_enable=True):
-            """Toggle (enable / disable) iTPG patches.
+        async def toggle_itpg(self, enable=True, numOfBox=2, ptnType=0, fix_enable=True):
+            """Toggle (enable / disable) iTPG.
 
                 enable: "true" or "false" String value activating or deactivating the pattern display.
                     This used to be a Bool value on older models / firmware versions

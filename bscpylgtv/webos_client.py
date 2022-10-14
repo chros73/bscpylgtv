@@ -2217,7 +2217,9 @@ class WebOsClient:
         async def calibration_request(self, command, picMode, data, dataOpt=1):
             # dataOpt: 0 - Apply, 1 - Apply and Save, 2 - Reset
             if dataOpt < 0 or dataOpt > 2:
-                raise ValueError
+                raise ValueError(f"Invalid dataOpt {dataOpt}, must be between 0. and 2.")
+            if not command:
+                raise PyLGTVCmdException(f"Invalid Calibration Request command {command}.")
 
             payload = {
                 "command": command,
@@ -2246,8 +2248,10 @@ class WebOsClient:
 
         async def set_ui_data(self, command, picMode, value):
             self.check_calibration_support("lut1d", "Setting picture mode property")
-            if not (value >= 0 and value <= 100):
-                raise ValueError
+            if command not in [cal.BACKLIGHT_UI_DATA, cal.CONTRAST_UI_DATA, cal.BRIGHTNESS_UI_DATA, cal.COLOR_UI_DATA]:
+                raise PyLGTVCmdException(f"Invalid UI Data command {command}.")
+            if value < 0 or value > 100:
+                raise ValueError(f"Invalid value {value}, must be between 0. and 100.")
 
             data = np.array(value, dtype=np.uint16)
             return await self.calibration_request(command, picMode, data)
@@ -2346,7 +2350,7 @@ class WebOsClient:
             self.check_calibration_support("lut1d", "1d_2_2 Upload")
             if ((type(value) is list and len(value) != 0)
                 or (type(value) is int and (value < 0 or value > 10))):
-                raise ValueError
+                raise ValueError(f"Invalid value {value}, must be between 0. and 10. or empty list.")
 
             # Set or reset uploaded data
             data = np.array(value, dtype=np.uint16)
@@ -2357,7 +2361,7 @@ class WebOsClient:
             self.check_calibration_support("lut1d", "1d_0_45 Upload")
             if ((type(value) is list and len(value) != 0)
                 or (type(value) is int and (value < 0 or value > 10))):
-                raise ValueError
+                raise ValueError(f"Invalid value {value}, must be between 0. and 10. or empty list.")
 
             # Set or reset uploaded data
             data = np.array(value, dtype=np.uint16)
@@ -2440,6 +2444,15 @@ class WebOsClient:
         ):
             """Uploads custom HDR10 tone mapping parameters."""
             self.check_calibration_support("custom_tone_mapping", "Custom tone mapping parameters Upload")
+            if ((type(luminance) is list and len(luminance) != 0)
+                or (type(luminance) is int and (luminance < 100 or luminance > 4000))):
+                raise ValueError(f"Invalid luminance {luminance}, must be between 100. and 4000.")
+            for value in [mastering_peak_1, mastering_peak_2, mastering_peak_3]:
+                if value < 100 or value > 10000:
+                    raise ValueError(f"Invalid mastering_peak {value}, must be between 100. and 10000.")
+            for value in [rolloff_point_1, rolloff_point_2, rolloff_point_3]:
+                if value < 0 or value > 100:
+                    raise ValueError(f"Invalid rolloff_point {value}, must be between 0. and 100.")
 
             if type(luminance) is list and len(luminance) == 0:
                 # Reset uploaded data
@@ -2500,6 +2513,10 @@ class WebOsClient:
                 raise TypeError(
                     f"apply_to_all_modes should be a bool, instead got {apply_to_all_modes} of type {type(apply_to_all_modes)}."
                 )
+            if not isinstance(full_path, str):
+                raise TypeError(
+                    f"full_path should be a str, instead got {full_path} of type {type(full_path)}."
+                )
 
             if apply_to_all_modes and len(data) == 1 and type(data[0]) is dict and 'primaries' in data[0]:
                 # copy picture mode data multiple times and modify picture mode
@@ -2546,6 +2563,19 @@ class WebOsClient:
             """
 
             self.check_calibration_support("itpg", "iTPG")
+            for value in [r, g, b]:
+                if value < 0 or value > 1023:
+                    raise ValueError(f"Invalid fill color {value}, must be between 0. and 1023.")
+            if win_id < 0 or win_id > 9:
+                raise ValueError(f"Invalid win_id {win_id}, must be between 0. and 9.")
+            if width < 100 or width > 7680:
+                raise ValueError(f"Invalid width {width}, must be between 100. and 7680.")
+            if height < 56 or height > 4320:
+                raise ValueError(f"Invalid height {height}, must be between 56. and 4320.")
+            if startx < 0 or startx > 7579:
+                raise ValueError(f"Invalid startx {startx}, must be between 0. and 7579.")
+            if starty < 0 or starty > 4263:
+                raise ValueError(f"Invalid starty {starty}, must be between 0. and 4263.")
 
             payload = {
                 "command": cal.PATTERN_WINDOW,
@@ -2584,6 +2614,16 @@ class WebOsClient:
             """
 
             self.check_calibration_support("itpg", "iTPG")
+            if bar_id < 0 or bar_id > 3:
+                raise ValueError(f"Invalid bar_id {bar_id}, must be between 0. and 3.")
+            if stride_size < 0 or stride_size > 3840:
+                raise ValueError(f"Invalid stride_size {stride_size}, must be between 0. and 3840.")
+            for value in [start_r, start_g, start_b]:
+                if value < 0 or value > 1023:
+                    raise ValueError(f"Invalid starting color {value}, must be between 0. and 1023.")
+            for value in [step_r, step_g, step_b]:
+                if value < 0 or value > 512:
+                    raise ValueError(f"Invalid starting color {value}, must be between 0. and 512.")
 
             payload = {
                 "command": cal.PATTERN_GRADATION,
@@ -2606,7 +2646,7 @@ class WebOsClient:
                 enable: "true" or "false" String value activating or deactivating the pattern display.
                     This used to be a Bool value on older models / firmware versions
                     but now has to be a String value (fix_enable can be used to mitigate the issue).
-                numOfBox: The total number of windows or gradient bars to activate.
+                numOfBox: The total number of windows or gradient bars to activate, maximum is 10.
                     Usually "2" if you have one window for the background and one for the
                     calibration pattern in the center of the screen.
                 ptnType: 0 windowBoxes, 1 gradationBarsVertical, 2 gradationBarsHorizontal
@@ -2614,6 +2654,15 @@ class WebOsClient:
             """
 
             self.check_calibration_support("itpg", "iTPG")
+            if not isinstance(enable, bool):
+                raise TypeError(f"enable should be a bool, instead got {enable} of type {type(enable)}.")
+            if numOfBox < 0 or numOfBox > 10:
+                raise ValueError(f"Invalid numOfBox {numOfBox}, must be between 0. and 10.")
+            if ptnType < 0 or ptnType > 2:
+                raise ValueError(f"Invalid ptnType {ptnType}, must be between 0. and 2.")
+            if not isinstance(fix_enable, bool):
+                raise TypeError(f"fix_enable should be a bool, instead got {fix_enable} of type {type(fix_enable)}.")
+
 
             payload = {
                 "command": cal.PATTERN_CONTROL,

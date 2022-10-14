@@ -2284,6 +2284,8 @@ class WebOsClient:
             return await self.calibration_request(cal.UPLOAD_1D_LUT, picMode, data, dataOpt)
 
         async def upload_1d_lut_from_file(self, picMode, filename):
+            self.check_calibration_support("lut1d", "1D LUT Upload")
+
             ext = filename.split(".")[-1].lower()
             if ext == "cal":
                 lut = await asyncio.get_running_loop().run_in_executor(
@@ -2328,6 +2330,8 @@ class WebOsClient:
             return await self.upload_3d_lut(cal.UPLOAD_3D_LUT_BT2020, picMode, data)
 
         async def upload_3d_lut_from_file(self, command, picMode, filename):
+            self.check_calibration_support("lut3d_size", "3D LUT Upload")
+
             ext = filename.split(".")[-1].lower()
             if ext == "cube":
                 lut = await asyncio.get_running_loop().run_in_executor(

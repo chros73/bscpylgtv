@@ -2549,10 +2549,10 @@ class WebOsClient:
             print(f"Generated DoVi config file: {DV_CONFIG_FILENAME}")
             return True
 
-        async def set_itpg_patch(
+        async def set_itpg_patch_window(
             self, r=0, g=0, b=0, win_id=0, width=858, height=482, startx=1491, starty=839
         ):
-            """Set iTPG patch properties.
+            """Set iTPG patch window properties.
 
                 r / g / b: The fill color of the window. Values are 10 bit full range (0-1023).
                 win_id: Identifier of the window to be displayed on the screen together with all others.

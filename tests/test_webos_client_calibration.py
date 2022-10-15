@@ -694,7 +694,7 @@ class TestWebOsClientCalibration():
 
 
 
-    data_set_itpg_patch = [
+    data_set_itpg_patch_window = [
         ( "OLED65C6V",      71, 81,     98, 1,  858,    482,    1491,   839,    -1 ),
 
         ( "OLED65C26LA",    -1, 81,     98, 0,  858,    482,    1491,   839,    0 ),
@@ -714,15 +714,15 @@ class TestWebOsClientCalibration():
         ( "OLED65C26LA",    71, 81,     98, 1,  858,    482,    1491,   839,    1 ),
     ]
 
-    @pytest.mark.parametrize("model,r,g,b,winId,w,h,sx,sy,expected", data_set_itpg_patch)
-    async def test_set_itpg_patch(self, mocker, model, r, g, b, winId, w, h, sx, sy, expected):
+    @pytest.mark.parametrize("model,r,g,b,winId,w,h,sx,sy,expected", data_set_itpg_patch_window)
+    async def test_set_itpg_patch_window(self, mocker, model, r, g, b, winId, w, h, sx, sy, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
 
         if expected > 0:
-            await client.set_itpg_patch(r, g, b, winId, w, h, sx, sy)
+            await client.set_itpg_patch_window(r, g, b, winId, w, h, sx, sy)
 
             payload = {
                 "command":      cal.PATTERN_WINDOW,
@@ -740,10 +740,10 @@ class TestWebOsClientCalibration():
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
             with pytest.raises(ValueError, match=r'Invalid .+$'):
-                await client.set_itpg_patch(r, g, b, winId, w, h, sx, sy)
+                await client.set_itpg_patch_window(r, g, b, winId, w, h, sx, sy)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await client.set_itpg_patch(r, g, b, winId, w, h, sx, sy)
+                await client.set_itpg_patch_window(r, g, b, winId, w, h, sx, sy)
 
 
 

@@ -186,7 +186,7 @@ More useful examples can be found in [docs/scripts](https://github.com/chros73/b
 ## Calibration functionality (only in full version)
 **WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe, but no guarantees.*
 
-On supported models, calibration functionality, upload to internal LUTs, resetting uploaded data via calibration API, uploading custom tone mapping parameters (>=2019 models), using internal pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
+On supported models, calibration functionality, upload to internal LUTs, resetting uploaded data via calibration API, uploading custom tone mapping parameters (>=2019 models), using internal test pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
 
 n.b. this has only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models, so fixes may be needed still for the others.
 
@@ -303,11 +303,14 @@ bscpylgtvcommand 192.168.1.18 upload_1d_lut expert1 [] -s
 bscpylgtvcommand 192.168.1.18 end_calibration expert1 -s
 ```
 
-### Uploading custom EOTF params for HDR10 Cinema preset (>=2019 models)
+### Uploading custom tonemapping parameters for HDR10 presets
+
+- available only on supported (>=2019) models
+
 ```bash
 # Start calibration mode
 bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema -s
-# Upload custom EOTF params for HDR10 Cinema preset
+# Upload custom tonemapping parameters for HDR10 Cinema preset
 bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema -s
@@ -328,26 +331,27 @@ bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"white_level\":
 bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\": 1, \"white_level\": 710, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 4, \"white_level\": 680, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
 ```
 
-### Displaying color patches using the internal pattern generator (iTPG, >=2019 models)
+### Using the internal Test Pattern Generator (iTPG)
 
 - it can be used inside or outside of calibration mode as well
-- it can be broken in defferent ways in given firmware version / picture mode / etc
+- it can be broken in many defferent ways in a given firmware version / picture mode / etc
+- available only on supported (>=2019) models
 - 2019 models require Full Range 10 bit values (0-1023) using HDR10, while >=2020 models Limited Range 10 bit values (64-940)
 - all suported models require Full Range 10 bit values (0-1023) using DoVi
 - more useful example can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/tree/master/docs/scripts/lg-itpg-manual-measure-from-csv.py) directory.
 
 ```bash
 # Set full screen black window in the background
-bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 0 0 0 3840 2160 0 0 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 0 0 0 3840 2160 0 0 -s
 # Set 5% window green patch on top of the background
-bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 1023 0 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 1023 0 1 -s
 # Display the 2 set patches
 bscpylgtvcommand 192.168.1.18 toggle_itpg true 2 -s
 # Disable the 2 set patches
 bscpylgtvcommand 192.168.1.18 toggle_itpg false 0 -s
 
 # Or using "overlay" 5% window green patch on top of the content
-bscpylgtvcommand 192.168.1.18 set_itpg_patch 0 1023 0 0 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 1023 0 0 -s
 # Display the set patch
 bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 -s
 # Disable the set patch

@@ -38,12 +38,12 @@ async def get_window_properties(screen_resolution, patch_size):
 
 
 async def display_patch(client, patch, patch_interval, bfi_interval, window_full, window_patch):
-    """ Display full screen black window in the background and color patch on top of it
+    """ Display full screen black window in the background and color patch window on top of it
     in the given window size. The complete new state should always be set for both."""
 
     print(f"patch: {patch}")
-    await client.set_itpg_patch(r=int(patch[1]), g=int(patch[2]), b=int(patch[3]), win_id=1, width=window_patch['width'], height=window_patch['height'], startx=window_patch['startx'], starty=window_patch['starty'])
-    await client.set_itpg_patch(r=0, b=0, g=0, win_id=0, width=window_full['width'], height=window_full['height'], startx=window_full['startx'], starty=window_full['starty'])
+    await client.set_itpg_patch_window(r=int(patch[1]), g=int(patch[2]), b=int(patch[3]), win_id=1, width=window_patch['width'], height=window_patch['height'], startx=window_patch['startx'], starty=window_patch['starty'])
+    await client.set_itpg_patch_window(r=0, b=0, g=0, win_id=0, width=window_full['width'], height=window_full['height'], startx=window_full['startx'], starty=window_full['starty'])
 
     await client.toggle_itpg(enable=True, numOfBox=2)
     await asyncio.sleep(patch_interval)
@@ -51,7 +51,7 @@ async def display_patch(client, patch, patch_interval, bfi_interval, window_full
     if bfi_interval:
         print("BFI")
         # Set full screen black window in the background again
-        await client.set_itpg_patch(r=0, b=0, g=0, win_id=0, width=window_full['width'], height=window_full['height'], startx=window_full['startx'], starty=window_full['starty'])
+        await client.set_itpg_patch_window(r=0, b=0, g=0, win_id=0, width=window_full['width'], height=window_full['height'], startx=window_full['startx'], starty=window_full['starty'])
         await client.toggle_itpg(enable=True, numOfBox=1)
         await asyncio.sleep(bfi_interval)
 
@@ -75,10 +75,10 @@ async def runloop(screen_resolution, bfi_interval, patch_interval, patch_size):
     with open(csv_filename, newline='') as csv_file:
         cvs_reader = csv.reader(csv_file, delimiter=',')
         for patch in cvs_reader:
-            # Display background and color patch on top of it
+            # Display background window and color patch window on top of it
             await display_patch(client, patch, patch_interval, bfi_interval, window_full, window_patch)
 
-    # Disable patches
+    # Disable patch windows
     await client.toggle_itpg(enable=False, numOfBox=0)
 
     # Disconnect WebOS

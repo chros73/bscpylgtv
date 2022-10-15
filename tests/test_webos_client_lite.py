@@ -64,8 +64,8 @@ class TestWebOsClientLite():
         ( 'OLED65G26LA',    (True,  33,     True,   True,   2019) ),
         ( 'OLED77Z29LA',    (True,  33,     True,   True,   2019) ),
 
-        ( '55LX1Q6LA',      (False, None,   False,  False,  None) ),
-        ( '65ART90E6QA',    (False, None,   False,  False,  None) ),
+        ( '55LX1Q6LA',      (True,  33,     True,   True,   2019) ),
+        ( '65ART90E6QA',    (True,  33,     True,   True,   2019) ),
 
         ( 'OLED65A36LA',    (True,  17,     True,   True,   2019) ),
         ( 'OLED65B36LA',    (True,  17,     True,   True,   2019) ),

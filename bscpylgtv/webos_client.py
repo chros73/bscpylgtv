@@ -2179,23 +2179,31 @@ class WebOsClient:
                 except ValueError:
                     pass
                 if size:
-                    modeltype = model_name[2]
-                    modelyear = model_name[3]
-                    modelseries = model_name[4]
-                    modelnumber = model_name[5]
-
-                    if modeltype == "S" and modelyear in ["K", "M"] and modelseries >= 8:
+                    if model_name[2:5] == "ART" or model_name[2:4] == "LX":
+                        # LG Objet Collection
                         info["lut1d"] = True
-                        if modelseries == 9 and modelnumber == 9:
-                            info["lut3d_size"] = 33
-                        else:
-                            info["lut3d_size"] = 17
-                        if modelyear == "K":
-                            info["dv_config_type"] = 2018
-                        elif modelyear == "M":
-                            info["custom_tone_mapping"] = True
-                            info["itpg"] = True
-                            info["dv_config_type"] = 2019
+                        info["lut3d_size"] = 33
+                        info["custom_tone_mapping"] = True
+                        info["itpg"] = True
+                        info["dv_config_type"] = 2019
+                    else:
+                        modeltype = model_name[2]
+                        modelyear = model_name[3]
+                        modelseries = model_name[4]
+                        modelnumber = model_name[5]
+
+                        if modeltype == "S" and modelyear in ["K", "M"] and modelseries >= 8:
+                            info["lut1d"] = True
+                            if modelseries == 9 and modelnumber == 9:
+                                info["lut3d_size"] = 33
+                            else:
+                                info["lut3d_size"] = 17
+                            if modelyear == "K":
+                                info["dv_config_type"] = 2018
+                            elif modelyear == "M":
+                                info["custom_tone_mapping"] = True
+                                info["itpg"] = True
+                                info["dv_config_type"] = 2019
 
             self._calibration_info = info
 

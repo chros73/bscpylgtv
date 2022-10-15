@@ -192,12 +192,12 @@ n.b. this has only been extensively tested for the 2018 Alpha 7/9, 2019/2021/202
 
 Supported models (more models can be added via PR once they confirmed working well):
 ```
-LG 2023-25 Alpha 9 Gx: OLED Zx Gx Cx
-LG 2023-25 Alpha 7 Gx: OLED Bx
-LG 2022 Alpha 9 G5: OLED Z2 G2 C2
-LG 2022 Alpha 7 G5: OLED B2
+LG 2023-25 Alpha 9 Gx: OLED Rx Zx Gx Cx ARTx LXx
+LG 2023-25 Alpha 7 Gx: OLED Bx Ax
+LG 2022 Alpha 9 G5: OLED R2 Z2 G2 C2 CS ART90 LX1
+LG 2022 Alpha 7 G5: OLED B2 A2
 LG 2021 Alpha 9 G4: OLED R1 Z1 G1 C1
-LG 2021 Alpha 7 G4: OLED B1
+LG 2021 Alpha 7 G4: OLED B1 A1
 LG 2020 Alpha 9 G3: OLED RX ZX WX GX CX
 LG 2020 Alpha 7 G3: OLED BX
 LG 2019 Alpha 9 G2: OLED R9 Z9 W9 W9S E9 C9 NanoCell SM99

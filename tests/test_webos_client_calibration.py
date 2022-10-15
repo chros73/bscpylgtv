@@ -646,7 +646,10 @@ class TestWebOsClientCalibration():
         ( "OLED65C6V",      [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   -3 ),
 
         ( "OLED65C8PLA",    [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,    None, None, -2 ),
+
         ( "OLED65C8PLA",    [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   "false",    "", None,   -1 ),
+
+        ( "OLED65C26LA",    [{"picture_mode": 1, "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 4, "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 4, "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
         ( "OLED65C8PLA",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False, "", None,   0 ),
         ( "OLED65C8PLA",    [{"picture_mode": 2, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
         ( "OLED65C8PLA",    [{"picture_mode": 2, "white_level": 750}],   False, "", None,   0 ),

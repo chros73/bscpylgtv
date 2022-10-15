@@ -2359,10 +2359,11 @@ class WebOsClient:
             return await self.upload_3d_lut_from_file(cal.UPLOAD_3D_LUT_BT2020, picMode, filename)
 
         async def set_1d_2_2_en(self, picMode, value=0):
+            """1D LUT de-gamma flag (gamma -> linear space transformation)."""
             self.check_calibration_support("lut1d", "1d_2_2 Upload")
             if ((type(value) is list and len(value) != 0)
-                or (type(value) is int and (value < 0 or value > 10))):
-                raise ValueError(f"Invalid value {value}, must be between 0. and 10. or empty list.")
+                or (type(value) is int and (value < 0 or value > 1))):
+                raise ValueError(f"Invalid value {value}, must be between 0. and 1. or empty list.")
 
             # Set or reset uploaded data
             data = np.array(value, dtype=np.uint16)
@@ -2370,10 +2371,11 @@ class WebOsClient:
             return await self.calibration_request(cal.ENABLE_GAMMA_2_2_TRANSFORM, picMode, data, dataOpt)
 
         async def set_1d_0_45_en(self, picMode, value=0):
+            """1D LUT re-gamma flag (linear -> gamma space transformation)."""
             self.check_calibration_support("lut1d", "1d_0_45 Upload")
             if ((type(value) is list and len(value) != 0)
-                or (type(value) is int and (value < 0 or value > 10))):
-                raise ValueError(f"Invalid value {value}, must be between 0. and 10. or empty list.")
+                or (type(value) is int and (value < 0 or value > 1))):
+                raise ValueError(f"Invalid value {value}, must be between 0. and 1. or empty list.")
 
             # Set or reset uploaded data
             data = np.array(value, dtype=np.uint16)
@@ -2381,6 +2383,7 @@ class WebOsClient:
             return await self.calibration_request(cal.ENABLE_GAMMA_0_45_TRANSFORM, picMode, data, dataOpt)
 
         async def set_bt709_3by3_gamut_data(self, picMode, data=np.identity(3, dtype=np.float32)):
+            """BT709 slot 3x3 color matrix (color transformation in linear space)."""
             self.check_calibration_support("lut1d", "BT709 3by3 Gamut Data Upload")
 
             if type(data) is list and len(data) == 0:
@@ -2394,6 +2397,7 @@ class WebOsClient:
             return await self.calibration_request(cal.BT709_3BY3_GAMUT_DATA, picMode, data, dataOpt)
 
         async def set_bt2020_3by3_gamut_data(self, picMode, data=np.identity(3, dtype=np.float32)):
+            """BT2020 slot 3x3 color matrix (color transformation in linear space)."""
             self.check_calibration_support("lut1d", "BT2020 3by3 Gamut Data Upload")
 
             if type(data) is list and len(data) == 0:
@@ -2407,7 +2411,7 @@ class WebOsClient:
             return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, picMode, data, dataOpt)
 
         async def set_bypass_modes(self, picMode, unity_1d_lut=True):
-            """Also known as ddc_reset."""
+            """Also known as ddc reset."""
             if not isinstance(unity_1d_lut, bool):
                 raise TypeError(
                     f"unity_1d_lut should be a bool, instead got {unity_1d_lut} of type {type(unity_1d_lut)}."
@@ -2628,8 +2632,8 @@ class WebOsClient:
             self.check_calibration_support("itpg", "iTPG")
             if bar_id < 0 or bar_id > 3:
                 raise ValueError(f"Invalid bar_id {bar_id}, must be between 0. and 3.")
-            if stride_size < 0 or stride_size > 3840:
-                raise ValueError(f"Invalid stride_size {stride_size}, must be between 0. and 3840.")
+            if stride_size < 0 or stride_size > 7680:
+                raise ValueError(f"Invalid stride_size {stride_size}, must be between 0. and 7680.")
             for value in [start_r, start_g, start_b]:
                 if value < 0 or value > 1023:
                     raise ValueError(f"Invalid starting color {value}, must be between 0. and 1023.")

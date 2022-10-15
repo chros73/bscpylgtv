@@ -387,15 +387,17 @@ class TestWebOsClientCalibration():
     data_set_1d_2_2_1d_0_45_en = [
         ( "OLED65C6V",      0,  "1d_2_2_en",    None,                           None,   None,   None,   -1 ),
         ( "OLED65C26LA",    -1, "1d_2_2_en",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    11, "1d_2_2_en",    None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    2,  "1d_2_2_en",    None,                           None,   None,   None,   0 ),
         ( "OLED65C26LA",    [], "1d_2_2_en",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "",     0,      2,      1 ),
         ( "OLED65C26LA",    0,  "1d_2_2_en",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AAA=", 1,      1,      1 ),
+        ( "OLED65C26LA",    1,  "1d_2_2_en",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AQA=", 1,      1,      1 ),
 
         ( "OLED65C6V",      0,  "1d_0_45_en",   None,                           None,   None,   None,   -1 ),
         ( "OLED65C26LA",    -1, "1d_0_45_en",   None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    11, "1d_0_45_en",   None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    2,  "1d_0_45_en",   None,                           None,   None,   None,   0 ),
         ( "OLED65C26LA",    [], "1d_0_45_en",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"",     0,      2,      1 ),
         ( "OLED65C26LA",    0,  "1d_0_45_en",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AAA=", 1,      1,      1 ),
+        ( "OLED65C26LA",    1,  "1d_0_45_en",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AQA=", 1,      1,      1 ),
     ]
 
     @pytest.mark.parametrize("model,value,methodName,command,data,dataCount,dataOpt,expected", data_set_1d_2_2_1d_0_45_en)
@@ -756,7 +758,7 @@ class TestWebOsClientCalibration():
         ( "OLED65C26LA",    -1, 3,      610,    520,    230,    1,  1,      1,  0 ),
         ( "OLED65C26LA",    4,  3,      610,    520,    230,    1,  1,      1,  0 ),
         ( "OLED65C26LA",    0,  -1,     610,    520,    230,    1,  1,      1,  0 ),
-        ( "OLED65C26LA",    0,  3841,   610,    520,    230,    1,  1,      1,  0 ),
+        ( "OLED65C26LA",    0,  7681,   610,    520,    230,    1,  1,      1,  0 ),
         ( "OLED65C26LA",    0,  3,      -1,     520,    230,    1,  1,      1,  0 ),
         ( "OLED65C26LA",    0,  3,      610,    1024,   230,    1,  1,      1,  0 ),
         ( "OLED65C26LA",    0,  3,      610,    520,    230,    -1, 1,      1,  0 ),

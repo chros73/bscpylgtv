@@ -4,17 +4,26 @@ except ImportError:
     np = None
 
 if np:
-    CALIBRATION_TYPE_MAP = {
-        "uint8": "unsigned char",
-        "uint16": "unsigned integer16",
-        "float32": "float",
-    }
+    from types import MappingProxyType
 
     #  xr, yr, xg, yg, xb, yb, xw, yw
     BT2020_PRIMARIES = (0.708, 0.292, 0.170, 0.797, 0.131, 0.046, 0.3127, 0.3290)
 
-    # DoVi picture modes: 1 - DoVi Cinema Home, 2 - DoVi Cinema, 4 - DoVi Game
-    DV_PICTURE_MODES = (1, 2, 4)
+    CALIBRATION_TYPE_MAP = MappingProxyType({
+        "uint8":    "unsigned char",
+        "uint16":   "unsigned integer16",
+        "float32":  "float",
+    })
+
+    SDR_PICTURE_MODES = ("cinema", "expert1", "expert2", "game", "technicolorExpert", "filmMaker")
+    HDR10_PICTURE_MODES = ("hdr_cinema", "hdr_game", "hdr_technicolorExpert", "hdr_filmMaker")
+
+    DV_PICTURE_MODES = MappingProxyType({
+        "dolby_cinema_bright":  1,
+        "dolby_cinema_dark":    2,
+        "dolby_game":           4,
+    })
+
     DV_BLACK_LEVEL = 0.0001
     DV_GAMMA = 2.2
 

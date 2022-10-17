@@ -42,24 +42,21 @@ class TestWebOsClientCalibration():
 
 
 
-    data_start_end_calibration = [
-        ( "OLED65C6V",      "start",    None,           False ),
-        ( "OLED65C26LA",    "start",    cal.CAL_START,  True ),
-        ( "OLED65C6V",      "end",      None,           False ),
-        ( "OLED65C26LA",    "end",      cal.CAL_END,    True ),
+    data_start_calibration = [
+        ( "OLED65C6V",      "expert1",  None,           -1 ),
+        ( "OLED65C26LA",    "foo",      None,           0 ),
+        ( "OLED65C26LA",    "expert1",  cal.CAL_START,  1 ),
     ]
 
-    @pytest.mark.parametrize("model,methodName,command,expected", data_start_end_calibration)
-    async def test_start_end_calibration(self, mocker, model, methodName, command, expected):
+    @pytest.mark.parametrize("model,picMode,command,expected", data_start_calibration)
+    async def test_start_calibration(self, mocker, model, picMode, command, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
-        method = getattr(client, f'{methodName}_calibration')
 
-        if expected:
-            await method(picMode)
+        if expected > 0:
+            await client.start_calibration(picMode)
 
             payload = {
                 "command":      command,
@@ -69,9 +66,40 @@ class TestWebOsClientCalibration():
             }
 
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
+        elif expected == 0:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid picture_mode .+$'):
+                await client.start_calibration(picMode)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await method(picMode)
+                await client.start_calibration(picMode)
+
+
+
+    data_end_calibration = [
+        ( "OLED65C6V",      None,           0 ),
+        ( "OLED65C26LA",    cal.CAL_END,    1 ),
+    ]
+
+    @pytest.mark.parametrize("model,command,expected", data_end_calibration)
+    async def test_end_calibration(self, mocker, model, command, expected):
+        mocker.patch('bscpylgtv.WebOsClient.request')
+
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : model}
+
+        if expected > 0:
+            await client.end_calibration()
+
+            payload = {
+                "command":      command,
+                "profileNo":    0,
+                "programID":    1,
+            }
+
+            client.request.assert_called_once_with(ep.CALIBRATION, payload)
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+                await client.end_calibration()
 
 
 
@@ -101,19 +129,17 @@ class TestWebOsClientCalibration():
     async def test_set_ui_data_methods(self, mocker, model, value, methodName, command, data, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
         method = getattr(client, f'set_{methodName}')
 
         if expected > 0:
-            await method(picMode, value)
+            await method(value)
 
             payload = {
                 "command":      command,
                 "profileNo":    0,
                 "programID":    1,
-                "picMode":      picMode,
                 "data":         data,
                 "dataCount":    1,
                 "dataType":     "unsigned integer16",
@@ -123,10 +149,10 @@ class TestWebOsClientCalibration():
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
             with pytest.raises(ValueError, match=r'Invalid .+$'):
-                await method(picMode, value)
+                await method(value)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await method(picMode, value)
+                await method(value)
 
 
 
@@ -141,12 +167,11 @@ class TestWebOsClientCalibration():
     async def test_upload_1d_lut(self, mocker, model, inputData, dataFile, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
 
         if expected > 0:
-            await client.upload_1d_lut(picMode, inputData)
+            await client.upload_1d_lut(inputData)
             
             data = dataFile
             if dataFile:
@@ -158,7 +183,6 @@ class TestWebOsClientCalibration():
                 "command":      cal.UPLOAD_1D_LUT,
                 "profileNo":    0,
                 "programID":    1,
-                "picMode":      picMode,
                 "data":         data,
                 "dataCount":    dataCount,
                 "dataType":     "unsigned integer16",
@@ -168,10 +192,10 @@ class TestWebOsClientCalibration():
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
             with pytest.raises(TypeError, match=r'data must be of type ndarray .+$'):
-                await client.upload_1d_lut(picMode, inputData)
+                await client.upload_1d_lut(inputData)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await client.upload_1d_lut(picMode, inputData)
+                await client.upload_1d_lut(inputData)
 
 
 
@@ -192,13 +216,12 @@ class TestWebOsClientCalibration():
     async def test_upload_1d_lut_from_file(self, mocker, model, fileName, dataFile, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
         currentDir = os.path.dirname(os.path.realpath(__file__))
 
         if expected > 0:
-            await client.upload_1d_lut_from_file(picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+            await client.upload_1d_lut_from_file(os.path.join(currentDir, TEST_DIR_DATA, fileName))
             
             with open(os.path.join(currentDir, TEST_DIR_EXPECTED, dataFile)) as f:
                 data = f.read()
@@ -207,7 +230,6 @@ class TestWebOsClientCalibration():
                 "command":      cal.UPLOAD_1D_LUT,
                 "profileNo":    0,
                 "programID":    1,
-                "picMode":      picMode,
                 "data":         data,
                 "dataCount":    dataCount,
                 "dataType":     "unsigned integer16",
@@ -217,19 +239,19 @@ class TestWebOsClientCalibration():
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
             with pytest.raises(ValueError, match=r'data should have shape .+$'):
-                await client.upload_1d_lut_from_file(picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+                await client.upload_1d_lut_from_file(os.path.join(currentDir, TEST_DIR_DATA, fileName))
         elif expected == -1:
             with pytest.raises(ValueError, match=r'Expected shape .+$'):
-                await client.upload_1d_lut_from_file(picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+                await client.upload_1d_lut_from_file(os.path.join(currentDir, TEST_DIR_DATA, fileName))
         elif expected == -2:
             with pytest.raises(ValueError, match=r'Some errors were detected .+'):
-                await client.upload_1d_lut_from_file(picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+                await client.upload_1d_lut_from_file(os.path.join(currentDir, TEST_DIR_DATA, fileName))
         elif expected == -3:
             with pytest.raises(ValueError, match=r'Unsupported file format .+$'):
-                await client.upload_1d_lut_from_file(picMode, fileName)
+                await client.upload_1d_lut_from_file(fileName)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await client.upload_1d_lut_from_file(picMode, fileName)
+                await client.upload_1d_lut_from_file(fileName)
 
 
 
@@ -246,12 +268,11 @@ class TestWebOsClientCalibration():
     async def test_upload_3d_lut(self, mocker, model, inputData, command, dataFile, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
 
         if expected > 0:
-            await client.upload_3d_lut(command, picMode, inputData)
+            await client.upload_3d_lut(command, inputData)
             
             data = dataFile
             if dataFile:
@@ -263,7 +284,6 @@ class TestWebOsClientCalibration():
                 "command":      command,
                 "profileNo":    0,
                 "programID":    1,
-                "picMode":      picMode,
                 "data":         data,
                 "dataCount":    dataCount,
                 "dataType":     "unsigned integer16",
@@ -273,13 +293,13 @@ class TestWebOsClientCalibration():
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
             with pytest.raises(TypeError, match=r'data must be of type ndarray .+$'):
-                await client.upload_3d_lut(command, picMode, inputData)
+                await client.upload_3d_lut(command, inputData)
         elif expected == -1:
             with pytest.raises(PyLGTVCmdException, match=r'Invalid 3D LUT Upload command .+$'):
-                await client.upload_3d_lut(command, picMode, inputData)
+                await client.upload_3d_lut(command, inputData)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await client.upload_3d_lut(command, picMode, inputData)
+                await client.upload_3d_lut(command, inputData)
 
 
 
@@ -292,14 +312,13 @@ class TestWebOsClientCalibration():
     async def test_upload_3d_lut_bt709_bt2020(self, mocker, methodName, command):
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut')
         
-        picMode = "expert1"
         data = []
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : "OLED65C26LA"}
         method = getattr(client, f'upload_3d_lut_{methodName}')
-        await method(picMode, data)
+        await method(data)
 
-        client.upload_3d_lut.assert_called_once_with(command, picMode, data)
+        client.upload_3d_lut.assert_called_once_with(command, data)
 
 
 
@@ -320,13 +339,12 @@ class TestWebOsClientCalibration():
     async def test_upload_3d_lut_from_file(self, mocker, model, fileName, command, dataFile, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
         currentDir = os.path.dirname(os.path.realpath(__file__))
 
         if expected > 0:
-            await client.upload_3d_lut_from_file(command, picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+            await client.upload_3d_lut_from_file(command, os.path.join(currentDir, TEST_DIR_DATA, fileName))
             
             with open(os.path.join(currentDir, TEST_DIR_EXPECTED, dataFile)) as f:
                 data = f.read()
@@ -335,7 +353,6 @@ class TestWebOsClientCalibration():
                 "command":      command,
                 "profileNo":    0,
                 "programID":    1,
-                "picMode":      picMode,
                 "data":         data,
                 "dataCount":    dataCount,
                 "dataType":     "unsigned integer16",
@@ -345,22 +362,22 @@ class TestWebOsClientCalibration():
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
             with pytest.raises(ValueError, match=r'data should have shape .+$'):
-                await client.upload_3d_lut_from_file(command, picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+                await client.upload_3d_lut_from_file(command, os.path.join(currentDir, TEST_DIR_DATA, fileName))
         elif expected == -1:
             with pytest.raises(ValueError, match=r'Must specify one of .+$'):
-                await client.upload_3d_lut_from_file(command, picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+                await client.upload_3d_lut_from_file(command, os.path.join(currentDir, TEST_DIR_DATA, fileName))
         elif expected == -2:
             with pytest.raises(ValueError, match=r'Cannot specify both .+$'):
-                await client.upload_3d_lut_from_file(command, picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+                await client.upload_3d_lut_from_file(command, os.path.join(currentDir, TEST_DIR_DATA, fileName))
         elif expected == -3:
             with pytest.raises(ValueError, match=r'Expected shape .+$'):
-                await client.upload_3d_lut_from_file(command, picMode, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+                await client.upload_3d_lut_from_file(command, os.path.join(currentDir, TEST_DIR_DATA, fileName))
         elif expected == -4:
             with pytest.raises(ValueError, match=r'Unsupported file format .+$'):
-                await client.upload_3d_lut_from_file(command, picMode, fileName)
+                await client.upload_3d_lut_from_file(command, fileName)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await client.upload_3d_lut_from_file(command, picMode, fileName)
+                await client.upload_3d_lut_from_file(command, fileName)
 
 
 
@@ -373,14 +390,13 @@ class TestWebOsClientCalibration():
     async def test_upload_3d_lut_bt709_bt2020_from_file(self, mocker, methodName, command):
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_from_file')
         
-        picMode = "expert1"
         fileName = f'3dlut_33pt_{methodName}.cube'
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : "OLED65C26LA"}
         method = getattr(client, f'upload_3d_lut_{methodName}_from_file')
-        await method(picMode, fileName)
+        await method(fileName)
 
-        client.upload_3d_lut_from_file.assert_called_once_with(command, picMode, fileName)
+        client.upload_3d_lut_from_file.assert_called_once_with(command, fileName)
 
 
 
@@ -404,19 +420,17 @@ class TestWebOsClientCalibration():
     async def test_set_1d_2_2_1d_0_45_en(self, mocker, model, value, methodName, command, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
         method = getattr(client, f'set_{methodName}')
 
         if expected > 0:
-            await method(picMode, value)
+            await method(value)
 
             payload = {
                 "command":      command,
                 "profileNo":    0,
                 "programID":    1,
-                "picMode":      picMode,
                 "data":         data,
                 "dataCount":    dataCount,
                 "dataType":     "unsigned integer16",
@@ -426,10 +440,10 @@ class TestWebOsClientCalibration():
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
             with pytest.raises(ValueError, match=r'Invalid .+$'):
-                await method(picMode, value)
+                await method(value)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await method(picMode, value)
+                await method(value)
 
 
 
@@ -449,22 +463,20 @@ class TestWebOsClientCalibration():
     async def test_set_bt709_bt2020_3by3_gamut_data(self, mocker, model, value, methodName, command, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
         method = getattr(client, f'set_{methodName}')
 
         if expected > 0:
             if value == 0:
-                await method(picMode)
+                await method()
             else:
-                await method(picMode, value)
+                await method(value)
 
             payload = {
                 "command":      command,
                 "profileNo":    0,
                 "programID":    1,
-                "picMode":      picMode,
                 "data":         data,
                 "dataCount":    dataCount,
                 "dataType":     "float",
@@ -474,10 +486,10 @@ class TestWebOsClientCalibration():
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
             with pytest.raises(TypeError, match=r'data must be of type ndarray but .+$'):
-                await method(picMode, value)
+                await method(value)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await method(picMode, value)
+                await method(value)
 
 
 
@@ -497,19 +509,18 @@ class TestWebOsClientCalibration():
         if unity1dLut:
             mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
         
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : "OLED65C26LA"}
-        result = await client.set_bypass_modes(picMode, unity1dLut)
+        result = await client.set_bypass_modes(unity1dLut)
 
-        client.set_1d_2_2_en.assert_called_once_with(picMode)
-        client.set_1d_0_45_en.assert_called_once_with(picMode)
-        client.set_bt709_3by3_gamut_data.assert_called_once_with(picMode)
-        client.set_bt2020_3by3_gamut_data.assert_called_once_with(picMode)
-        client.upload_3d_lut_bt709.assert_called_once_with(picMode)
-        client.upload_3d_lut_bt2020.assert_called_once_with(picMode)
+        client.set_1d_2_2_en.assert_called_once_with()
+        client.set_1d_0_45_en.assert_called_once_with()
+        client.set_bt709_3by3_gamut_data.assert_called_once_with()
+        client.set_bt2020_3by3_gamut_data.assert_called_once_with()
+        client.upload_3d_lut_bt709.assert_called_once_with()
+        client.upload_3d_lut_bt2020.assert_called_once_with()
         if unity1dLut:
-            client.upload_1d_lut.assert_called_once_with(picMode)
+            client.upload_1d_lut.assert_called_once_with()
         assert result == True
 
 
@@ -531,43 +542,44 @@ class TestWebOsClientCalibration():
         if hdr10TonemapParams:
             mocker.patch('bscpylgtv.WebOsClient.set_tonemap_params')
         
-        picMode = "expert1"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : "OLED65C26LA"}
-        result = await client.set_factory_calibration_data(picMode, hdr10TonemapParams)
+        result = await client.set_factory_calibration_data(hdr10TonemapParams)
 
-        client.set_1d_2_2_en.assert_called_once_with(picMode, [])
-        client.set_1d_0_45_en.assert_called_once_with(picMode, [])
-        client.set_bt709_3by3_gamut_data.assert_called_once_with(picMode, [])
-        client.set_bt2020_3by3_gamut_data.assert_called_once_with(picMode, [])
-        client.upload_3d_lut_bt709.assert_called_once_with(picMode, [])
-        client.upload_3d_lut_bt2020.assert_called_once_with(picMode, [])
-        client.upload_1d_lut.assert_called_once_with(picMode, [])
+        client.set_1d_2_2_en.assert_called_once_with([])
+        client.set_1d_0_45_en.assert_called_once_with([])
+        client.set_bt709_3by3_gamut_data.assert_called_once_with([])
+        client.set_bt2020_3by3_gamut_data.assert_called_once_with([])
+        client.upload_3d_lut_bt709.assert_called_once_with([])
+        client.upload_3d_lut_bt2020.assert_called_once_with([])
+        client.upload_1d_lut.assert_called_once_with([])
         if hdr10TonemapParams:
-            client.set_tonemap_params.assert_called_once_with(picMode, [])
+            client.set_tonemap_params.assert_called_once_with("hdr_cinema", [])
         assert result == True
 
 
 
     data_set_tonemap_params = [
-        ( "OLED65C6V",      810,    1000,   75, None,                   None,   None,   -1 ),
+        ( "OLED65C6V",      "hdr_cinema",   810,    1000,   75, None,                   None,   None,   -2 ),
 
-        ( "OLED65C26LA",    99,     1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    4001,   1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    810,    99,     75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    810,    10001,  75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    810,    1000,   -1, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    810,    1000,   101,"KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "OLED65C26LA",    "foo",          810,    1000,   75, None,                   None,   None,   -1 ),
+        ( "OLED65C26LA",    "expert1",      810,    1000,   75, None,                   None,   None,   -1 ),
 
-        ( "OLED65C26LA",    [],     1000,   75, "",                     0,      2,      1 ),
-        ( "OLED65C26LA",    810,    1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      1 ),
+        ( "OLED65C26LA",    "hdr_cinema",   99,     1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "OLED65C26LA",    "hdr_game",     4001,   1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "OLED65C26LA",    "hdr_cinema",   810,    99,     75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "OLED65C26LA",    "hdr_cinema",   810,    10001,  75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "OLED65C26LA",    "hdr_cinema",   810,    1000,   -1, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "OLED65C26LA",    "hdr_cinema",   810,    1000,   101,"KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+
+        ( "OLED65C26LA",    "hdr_cinema",   [],     1000,   75, "",                     0,      2,      1 ),
+        ( "OLED65C26LA",    "hdr_game",     810,    1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      1 ),
     ]
 
-    @pytest.mark.parametrize("model,luminance,mp,rp,data,dataCount,dataOpt,expected", data_set_tonemap_params)
-    async def test_set_tonemap_params(self, mocker, model, luminance, mp, rp, data, dataCount, dataOpt, expected):
+    @pytest.mark.parametrize("model,picMode,luminance,mp,rp,data,dataCount,dataOpt,expected", data_set_tonemap_params)
+    async def test_set_tonemap_params(self, mocker, model, picMode, luminance, mp, rp, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        picMode = "hdr_cinema"
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
 
@@ -578,7 +590,6 @@ class TestWebOsClientCalibration():
                 "command":      cal.SET_TONEMAP_PARAM,
                 "profileNo":    0,
                 "programID":    1,
-                "picMode":      picMode,
                 "data":         data,
                 "dataCount":    dataCount,
                 "dataType":     "unsigned integer16",
@@ -589,6 +600,9 @@ class TestWebOsClientCalibration():
         elif expected == 0:
             with pytest.raises(ValueError, match=r'Invalid .+$'):
                 await client.set_tonemap_params(picMode, luminance, mp, rp)
+        elif expected == -1:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid picture_mode .+$'):
+                await client.set_tonemap_params(picMode, luminance, mp, rp)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
                 await client.set_tonemap_params(picMode, luminance, mp, rp)
@@ -596,22 +610,23 @@ class TestWebOsClientCalibration():
 
 
     data_set_dolby_vision_config_data = [
-        ( "OLED65C6V",      4, 620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  -1 ),
+        ( "OLED65C6V",      "dolby_game",   620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  -1 ),
 
-        ( "OLED65C8PLA",    3, 620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    4, 50,  0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    4, 4001,0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    4, 620, -1,     2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    4, 620, 1,      2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    4, 620, 0.0001, -1,  [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    4, 620, 0.0001, 10,  [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    4, 620, 0.0001, 2.2, [-0.0001, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    4, 620, 0.0001, 2.2, [0.6796, 1.0001, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "foo",          620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "expert1",      620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "dolby_game",   50,  0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "dolby_game",   4001,0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "dolby_game",   620, -1,     2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "dolby_game",   620, 1,      2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "dolby_game",   620, 0.0001, -1,  [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "dolby_game",   620, 0.0001, 10,  [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "dolby_game",   620, 0.0001, 2.2, [-0.0001, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "OLED65C8PLA",    "dolby_game",   620, 0.0001, 2.2, [0.6796, 1.0001, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
 
-        ( "OLED65C8PLA",    [], None,   None,   None,   None,   "", 0,  2,  1 ),
-        ( "OLED65C8PLA",    2, 710, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], "UGljdHVyZU1vZGUgPSAyDQpUbWF4ID0gNzEwLjAwMDANClRtaW4gPSAwLjAwMDENClRnYW1tYSA9IDIuMg0KQ29sb3JQcmltYXJpZXMgPSAwLjY3OTYgMC4zMTg3IDAuMjU5NSAwLjY4NDkgMC4xNDQ4IDAuMDQ5NCAwLjMxMjcgMC4zMjkwDQpUTE1TMlJHQm1hdCA9IDQuMTgyNzgzOTgzMjk0NTEgLTMuMzAwNDkyOTUxMDE5NDEgMC4xMTc3NDk4NzA5NTUzMjUgLTAuODgyNDY3MTQwNzYyNzUwIDIuMDE3MzQ1NDgyODExODMgLTAuMTM0ODY1ODY5Nzg0NTI3IDAuMDQzNzgyNzQ3MzA0ODQzMSAtMC4xMDc2NzAyODY3NTcwMjUgMS4wNjM5MTU1MTA2MDc1MA0K",  315,    1,  1 ),
-        ( "OLED65C26LA",    [], None,   None,   None,   None,   "", 0,  2,  1 ),
-        ( "OLED65C26LA",    4, 820, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], "W1BpY3R1cmVNb2RlID0gNF0NClRtYXggPSA4MjAuMDAwMA0KVG1pbiA9IDAuMDAwMQ0KVGdhbW1hID0gMi4yDQpUUHJpbWFyaWVzID0gMC42Nzk2IDAuMzE4NyAwLjI1OTUgMC42ODQ5IDAuMTQ0OCAwLjA0OTQgMC4zMTI3IDAuMzI5MA0K",  135,    1,  1 ),
+        ( "OLED65C8PLA",    "dolby_game",   [],   None,   None,   None,   "", 0,  2,  1 ),
+        ( "OLED65C8PLA",    "dolby_cinema_dark",    710, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], "UGljdHVyZU1vZGUgPSAyDQpUbWF4ID0gNzEwLjAwMDANClRtaW4gPSAwLjAwMDENClRnYW1tYSA9IDIuMg0KQ29sb3JQcmltYXJpZXMgPSAwLjY3OTYgMC4zMTg3IDAuMjU5NSAwLjY4NDkgMC4xNDQ4IDAuMDQ5NCAwLjMxMjcgMC4zMjkwDQpUTE1TMlJHQm1hdCA9IDQuMTgyNzgzOTgzMjk0NTEgLTMuMzAwNDkyOTUxMDE5NDEgMC4xMTc3NDk4NzA5NTUzMjUgLTAuODgyNDY3MTQwNzYyNzUwIDIuMDE3MzQ1NDgyODExODMgLTAuMTM0ODY1ODY5Nzg0NTI3IDAuMDQzNzgyNzQ3MzA0ODQzMSAtMC4xMDc2NzAyODY3NTcwMjUgMS4wNjM5MTU1MTA2MDc1MA0K",  315,    1,  1 ),
+        ( "OLED65C26LA",    "dolby_game",   [],   None,   None,   None,   "", 0,  2,  1 ),
+        ( "OLED65C26LA",    "dolby_game",   820, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], "W1BpY3R1cmVNb2RlID0gNF0NClRtYXggPSA4MjAuMDAwMA0KVG1pbiA9IDAuMDAwMQ0KVGdhbW1hID0gMi4yDQpUUHJpbWFyaWVzID0gMC42Nzk2IDAuMzE4NyAwLjI1OTUgMC42ODQ5IDAuMTQ0OCAwLjA0OTQgMC4zMTI3IDAuMzI5MA0K",  135,    1,  1 ),
     ]
 
     @pytest.mark.parametrize("model,picMode,whiteL,blackL,gamma,primaries,data,dataCount,dataOpt,expected", data_set_dolby_vision_config_data)
@@ -645,27 +660,28 @@ class TestWebOsClientCalibration():
 
 
     data_write_dolby_vision_config_file = [
-        ( "OLED65C6V",      [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   -3 ),
+        ( "OLED65C6V",      [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   -3 ),
 
-        ( "OLED65C8PLA",    [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,    None, None, -2 ),
+        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,    None, None, -2 ),
 
-        ( "OLED65C8PLA",    [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   "false",    "", None,   -1 ),
+        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   "false",    "", None,   -1 ),
 
-        ( "OLED65C26LA",    [{"picture_mode": 1, "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 4, "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 4, "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
+        ( "OLED65C8PLA",    [{"picture_mode": "foo", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
+        ( "OLED65C26LA",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
         ( "OLED65C8PLA",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False, "", None,   0 ),
-        ( "OLED65C8PLA",    [{"picture_mode": 2, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
-        ( "OLED65C8PLA",    [{"picture_mode": 2, "white_level": 750}],   False, "", None,   0 ),
-        ( "OLED65C8PLA",    [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448]}],   False,  "", None,   0 ),
+        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
+        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750}],   False, "", None,   0 ),
+        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448]}],   False,  "", None,   0 ),
         ( "OLED65C8PLA",    [{}], False,  "", None, 0 ),
         ( "OLED65C8PLA",    [],   False,  "", None, 0 ),
         ( "OLED65C8PLA",    None, False,  "", None, 0 ),
 
-        ( "OLED65C8PLA",    [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2018_01.txt",   1 ),
+        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2018_01.txt",   1 ),
         ( "OLED65C8PLA",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   True,  "", "dv_cfg_2018_02.txt",   1 ),
-        ( "OLED65C8PLA",    [{"picture_mode": 1, "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 4, "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2018_03.txt",   1 ),
-        ( "OLED65C26LA",    [{"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2019_01.txt",   1 ),
+        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2018_03.txt",   1 ),
+        ( "OLED65C26LA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2019_01.txt",   1 ),
         ( "OLED65C26LA",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   True,  "", "dv_cfg_2019_02.txt",   1 ),
-        ( "OLED65C26LA",    [{"picture_mode": 1, "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 2, "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": 4, "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "d:\temp",    "dv_cfg_2019_03.txt",   1 ),
+        ( "OLED65C26LA",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "d:\temp",    "dv_cfg_2019_03.txt",   1 ),
     ]
 
     @pytest.mark.parametrize("model,data,allModes,path,cfgFile,expected", data_write_dolby_vision_config_file)

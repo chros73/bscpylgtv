@@ -225,7 +225,7 @@ Known supported picMode strings are:
 ```
 SDR: cinema, expert1, expert2, game, technicolorExpert, filmMaker
 HDR10(+HLG): hdr_cinema, hdr_game, hdr_technicolorExpert, hdr_filmMaker
-DV: dolby_cinema_dark, dolby_cinema_bright, dolby_game
+DV: dolby_cinema_bright, dolby_cinema_dark, dolby_game
 ```
 
 Calibration commands can only be run while in calibration mode (controlled by `start_calibration` and `end_calibration`).
@@ -240,20 +240,20 @@ bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Start calibration mode
 bscpylgtvcommand 192.168.1.18 start_calibration expert1 -s
 # Set oled light to 39, contrast to 85, brightness and color to 50
-bscpylgtvcommand 192.168.1.18 set_oled_light expert1 39 -s
-bscpylgtvcommand 192.168.1.18 set_contrast expert1 -s
-bscpylgtvcommand 192.168.1.18 set_brightness expert1 -s
-bscpylgtvcommand 192.168.1.18 set_color expert1 -s
+bscpylgtvcommand 192.168.1.18 set_oled_light 39 -s
+bscpylgtvcommand 192.168.1.18 set_contrast -s
+bscpylgtvcommand 192.168.1.18 set_brightness -s
+bscpylgtvcommand 192.168.1.18 set_color -s
 # Set bypass mode (also known as DDC reset) including uploading unity 1DLUT
-bscpylgtvcommand 192.168.1.18 set_bypass_modes expert1 true -s
+bscpylgtvcommand 192.168.1.18 set_bypass_modes true -s
 # Upload custom 1DLUT from file
-bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file expert1 "test.cal" -s
+bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file "test.cal" -s
 # Upload custom 3DLUT from file into BT709 slot
-bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt709_from_file expert1 "test3d-1.cube" -s
+bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt709_from_file "test3d-1.cube" -s
 # Upload custom 3DLUT from file into bt2020 slot
-bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
+bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file "test3d-2.cube" -s
 # End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration expert1 -s
+bscpylgtvcommand 192.168.1.18 end_calibration -s
 ```
 
 Same calibration via scripting:
@@ -266,16 +266,16 @@ async def runloop():
     await client.connect()
 
     await client.set_input("HDMI_2")
-    await client.start_calibration(picMode="expert1")
-    await client.set_oled_light(picMode="expert1", value=39)
-    await client.set_contrast(picMode="expert1")
-    await client.set_brightness(picMode="expert1")
-    await client.set_color(picMode="expert1")
-    await client.set_bypass_modes(picMode="expert1", unity_1d_lut=True)
-    await client.upload_1d_lut_from_file(picMode="expert1", filename="test.cal")
-    await client.upload_3d_lut_bt709_from_file(picMode="expert1", filename="test3d-1.cube")
-    await client.upload_3d_lut_bt2020_from_file(picMode="expert1", filename="test3d-2.cube")
-    await client.end_calibration(picMode="expert1")
+    await client.start_calibration(picture_mode="expert1")
+    await client.set_oled_light(value=39)
+    await client.set_contrast()
+    await client.set_brightness()
+    await client.set_color()
+    await client.set_bypass_modes(unity_1d_lut=True)
+    await client.upload_1d_lut_from_file(filename="test.cal")
+    await client.upload_3d_lut_bt709_from_file(filename="test3d-1.cube")
+    await client.upload_3d_lut_bt2020_from_file(filename="test3d-2.cube")
+    await client.end_calibration()
 
     await client.disconnect()
 
@@ -298,9 +298,9 @@ Example usage (all the supported commands has the same syntax):
 # Start calibration mode
 bscpylgtvcommand 192.168.1.18 start_calibration expert1 -s
 # Restore factory 1DLUT after custom 1DLUT was uploaded (by specifying empty list)
-bscpylgtvcommand 192.168.1.18 upload_1d_lut expert1 [] -s
+bscpylgtvcommand 192.168.1.18 upload_1d_lut [] -s
 # End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration expert1 -s
+bscpylgtvcommand 192.168.1.18 end_calibration -s
 ```
 
 ### Uploading custom tonemapping parameters for HDR10 presets
@@ -313,7 +313,7 @@ bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema -s
 # Upload custom tonemapping parameters for HDR10 Cinema preset
 bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
 # End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema -s
+bscpylgtvcommand 192.168.1.18 end_calibration -s
 ```
 
 ### Writing Dolby Vision config file for USB upload
@@ -324,11 +324,11 @@ bscpylgtvcommand 192.168.1.18 end_calibration hdr_cinema -s
 
 ```bash
 # Writing DoVi config for one preset (DoVi Cinema)
-bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
+bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\": \"dolby_cinema_dark\", \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
 # Writing DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) based on one set of data
 bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" true D:\temp -s
 # Writing DoVi config for all the presets (DoVi Cinema Home, Cinema, Game) by specifying them separately
-bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\": 1, \"white_level\": 710, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 2, \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": 4, \"white_level\": 680, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
+bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\": \"dolby_cinema_bright\", \"white_level\": 710, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": \"dolby_cinema_dark\", \"white_level\": 750, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {\"picture_mode\": \"dolby_game\", \"white_level\": 680, \"primaries\": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}]" -s
 ```
 
 ### Using the internal Test Pattern Generator (iTPG)
@@ -394,7 +394,7 @@ Required extra packages:
 pip install numpy pytest pytest-asyncio pytest-mock
 ```
 
-Running unit tests:
+Running unit tests against the installed package:
 ```bash
 # Run all the tests in all files
 pytest tests

@@ -191,7 +191,7 @@ if np:
 
     def create_dolby_vision_config(
         version=2019,
-        picture_mode=DV_PICTURE_MODES[1],
+        picture_mode=DV_PICTURE_MODES["dolby_cinema_dark"],
         white_level=700.0,
         black_level=DV_BLACK_LEVEL,
         gamma=DV_GAMMA,
@@ -234,7 +234,7 @@ if np:
             lms2rgb = lms2rgb_matrix(primaries)
             tlms2rgb = np.reshape(lms2rgb, [9])
 
-            config += f"""PictureMode = {picture_mode}
+            config += f"""PictureMode = {DV_PICTURE_MODES[picture_mode]}
 Tmax = {white_level:#.4f}
 Tmin = {black_level:#.4f}
 Tgamma = {gamma:#.2g}
@@ -243,7 +243,7 @@ TLMS2RGBmat = {tlms2rgb[0]:#.15g} {tlms2rgb[1]:#.15g} {tlms2rgb[2]:#.15g} {tlms2
 """
 
         elif version == 2019:
-            config += f"""[PictureMode = {picture_mode}]
+            config += f"""[PictureMode = {DV_PICTURE_MODES[picture_mode]}]
 Tmax = {white_level:#.4f}
 Tmin = {black_level:#.4f}
 Tgamma = {gamma:#.2g}

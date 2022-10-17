@@ -448,15 +448,39 @@ class TestWebOsClientCalibration():
 
 
     data_set_bt709_bt2020_3by3_gamut_data = [
-        ( "OLED65C6V",      0,  "bt709_3by3_gamut_data",    None,                       None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [3],"bt709_3by3_gamut_data",    None,                       None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [], "bt709_3by3_gamut_data",    cal.BT709_3BY3_GAMUT_DATA,  "",     0,      2,      1 ),
-        ( "OLED65C26LA",    0,  "bt709_3by3_gamut_data",    cal.BT709_3BY3_GAMUT_DATA,  "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
+        ( "OLED65C6V",      0,                                      "3by3_gamut_data_bt709",    None,   None,   None,   None,   -3 ),
 
-        ( "OLED65C6V",      0,  "bt2020_3by3_gamut_data",   None,                       None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [3],"bt2020_3by3_gamut_data",   None,                       None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [], "bt2020_3by3_gamut_data",   cal.BT2020_3BY3_GAMUT_DATA, "",     0,      2,      1 ),
-        ( "OLED65C26LA",    0,  "bt2020_3by3_gamut_data",   cal.BT2020_3BY3_GAMUT_DATA, "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
+        ( "OLED65C26LA",    "",                                     "3by3_gamut_data_bt709",    None,   None,   None,   None,   -2 ),
+
+        ( "OLED65C26LA",    [3],                                    "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0, 1]],                            "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
+
+        ( "OLED65C26LA",    [[1, 2, 0], [0, 1, 0], [0, 0, 1]],      "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, -1], [0, 0, 1]],     "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, 0], [0, 0, 1.1]],    "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
+
+        ( "OLED65C26LA",    [], "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "",     0,      2,      1 ),
+        ( "OLED65C26LA",    0,  "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
+        ( "OLED65C26LA",    [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
+
+        ( "OLED65C6V",      0,                                      "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -3 ),
+
+        ( "OLED65C26LA",    "",                                     "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -2 ),
+
+        ( "OLED65C26LA",    [3],                                    "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0, 1]],                            "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
+
+        ( "OLED65C26LA",    [[1, 2, 0], [0, 1, 0], [0, 0, 1]],      "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, -1], [0, 0, 1]],     "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, 0], [0, 0, 1.1]],    "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
+
+        ( "OLED65C26LA",    [], "3by3_gamut_data_bt2020",   cal.BT2020_3BY3_GAMUT_DATA, "",     0,      2,      1 ),
+        ( "OLED65C26LA",    0,  "3by3_gamut_data_bt2020",   cal.BT2020_3BY3_GAMUT_DATA, "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
+        ( "OLED65C26LA",    [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_bt2020",    cal.BT2020_3BY3_GAMUT_DATA,  "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
     ]
 
     @pytest.mark.parametrize("model,value,methodName,command,data,dataCount,dataOpt,expected", data_set_bt709_bt2020_3by3_gamut_data)
@@ -485,7 +509,13 @@ class TestWebOsClientCalibration():
 
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
         elif expected == 0:
-            with pytest.raises(TypeError, match=r'data must be of type ndarray but .+$'):
+            with pytest.raises(ValueError, match=r'values in data must be between .+$'):
+                await method(value)
+        elif expected == -1:
+            with pytest.raises(ValueError, match=r'data should have shape .+$'):
+                await method(value)
+        elif expected == -2:
+            with pytest.raises(ValueError, match=r'could not convert .+$'):
                 await method(value)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
@@ -502,8 +532,8 @@ class TestWebOsClientCalibration():
     async def test_set_bypass_modes(self, mocker, unity1dLut):
         mocker.patch('bscpylgtv.WebOsClient.set_1d_2_2_en')
         mocker.patch('bscpylgtv.WebOsClient.set_1d_0_45_en')
-        mocker.patch('bscpylgtv.WebOsClient.set_bt709_3by3_gamut_data')
-        mocker.patch('bscpylgtv.WebOsClient.set_bt2020_3by3_gamut_data')
+        mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt709')
+        mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt2020')
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt709')
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt2020')
         if unity1dLut:
@@ -515,8 +545,8 @@ class TestWebOsClientCalibration():
 
         client.set_1d_2_2_en.assert_called_once_with()
         client.set_1d_0_45_en.assert_called_once_with()
-        client.set_bt709_3by3_gamut_data.assert_called_once_with()
-        client.set_bt2020_3by3_gamut_data.assert_called_once_with()
+        client.set_3by3_gamut_data_bt709.assert_called_once_with()
+        client.set_3by3_gamut_data_bt2020.assert_called_once_with()
         client.upload_3d_lut_bt709.assert_called_once_with()
         client.upload_3d_lut_bt2020.assert_called_once_with()
         if unity1dLut:
@@ -534,8 +564,8 @@ class TestWebOsClientCalibration():
     async def test_set_factory_calibration_data(self, mocker, hdr10TonemapParams):
         mocker.patch('bscpylgtv.WebOsClient.set_1d_2_2_en')
         mocker.patch('bscpylgtv.WebOsClient.set_1d_0_45_en')
-        mocker.patch('bscpylgtv.WebOsClient.set_bt709_3by3_gamut_data')
-        mocker.patch('bscpylgtv.WebOsClient.set_bt2020_3by3_gamut_data')
+        mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt709')
+        mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt2020')
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt709')
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt2020')
         mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
@@ -548,8 +578,8 @@ class TestWebOsClientCalibration():
 
         client.set_1d_2_2_en.assert_called_once_with([])
         client.set_1d_0_45_en.assert_called_once_with([])
-        client.set_bt709_3by3_gamut_data.assert_called_once_with([])
-        client.set_bt2020_3by3_gamut_data.assert_called_once_with([])
+        client.set_3by3_gamut_data_bt709.assert_called_once_with([])
+        client.set_3by3_gamut_data_bt2020.assert_called_once_with([])
         client.upload_3d_lut_bt709.assert_called_once_with([])
         client.upload_3d_lut_bt2020.assert_called_once_with([])
         client.upload_1d_lut.assert_called_once_with([])

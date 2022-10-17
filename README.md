@@ -288,7 +288,7 @@ Now it's possible to reset individual factory calibration data (previously a pic
 The following calibration commands are supported:
 ```
 upload_1d_lut, upload_3d_lut_bt709, upload_3d_lut_bt2020,
-set_1d_2_2_en, set_1d_0_45_en, set_bt709_3by3_gamut_data, set_bt2020_3by3_gamut_data,
+set_1d_2_2_en, set_1d_0_45_en, set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020,
 set_tonemap_params (for HDR10 picture modes),
 set_dolby_vision_config_data (not recommended on >=2020 models!)
 ```

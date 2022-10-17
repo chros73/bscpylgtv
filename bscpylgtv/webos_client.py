@@ -2216,13 +2216,15 @@ class WebOsClient:
                 model = self._system_info["modelName"]
                 raise PyLGTVCmdException(f"{message} not supported by tv model {model}.")
 
-        def validateCalibrationData(self, data, shape, dtype):
+        def validateCalibrationData(self, data, shape, dtype, range=None):
             if not isinstance(data, np.ndarray):
                 raise TypeError(f"data must be of type ndarray but is instead {type(data)}")
             if data.shape != shape:
                 raise ValueError(f"data should have shape {shape} but instead has {data.shape}")
             if data.dtype != dtype:
                 raise TypeError(f"numpy dtype should be {dtype} but is instead {data.dtype}")
+            if isinstance(range, tuple) and len(range) == 2 and ((data >= range[0]).all() != (data <= range[1]).all()):
+                raise ValueError(f"values in data must be between {range[0]} and {range[1]}")
 
         async def calibration_request(self, command, data=None, dataOpt=1, picture_mode=None):
             # dataOpt: 0 - Apply, 1 - Apply and Save, 2 - Reset
@@ -2387,33 +2389,32 @@ class WebOsClient:
             dataOpt = 2 if type(value) is list and len(value) == 0 else 1
             return await self.calibration_request(cal.ENABLE_GAMMA_0_45_TRANSFORM, data, dataOpt)
 
-        async def set_bt709_3by3_gamut_data(self, data=np.identity(3, dtype=np.float32)):
+        async def set_3by3_gamut_data(self, command, data):
+            self.check_calibration_support("lut1d", "3by3 Gamut Data Upload")
+            if command not in [cal.BT709_3BY3_GAMUT_DATA, cal.BT2020_3BY3_GAMUT_DATA]:
+                raise PyLGTVCmdException(f"Invalid 3by3 Gamut Data Upload command {command}.")
+
+            if type(data) is list and len(data) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.float32)
+                dataOpt = 2
+            else:
+                if data is None:
+                    data = np.identity(3, dtype=np.float32)
+                else:
+                    data = np.array(data, dtype=np.float32)
+                self.validateCalibrationData(data, (3, 3), np.float32, (0, 1))
+                dataOpt = 1
+
+            return await self.calibration_request(command, data, dataOpt)
+
+        async def set_3by3_gamut_data_bt709(self, data=None):
             """BT709 slot 3x3 color matrix (color transformation in linear space)."""
-            self.check_calibration_support("lut1d", "BT709 3by3 Gamut Data Upload")
+            return await self.set_3by3_gamut_data(cal.BT709_3BY3_GAMUT_DATA, data)
 
-            if type(data) is list and len(data) == 0:
-                # Reset uploaded data
-                data = np.array([], dtype=np.float32)
-                dataOpt = 2
-            else:
-                self.validateCalibrationData(data, (3, 3), np.float32)
-                dataOpt = 1
-
-            return await self.calibration_request(cal.BT709_3BY3_GAMUT_DATA, data, dataOpt)
-
-        async def set_bt2020_3by3_gamut_data(self, data=np.identity(3, dtype=np.float32)):
+        async def set_3by3_gamut_data_bt2020(self, data=None):
             """BT2020 slot 3x3 color matrix (color transformation in linear space)."""
-            self.check_calibration_support("lut1d", "BT2020 3by3 Gamut Data Upload")
-
-            if type(data) is list and len(data) == 0:
-                # Reset uploaded data
-                data = np.array([], dtype=np.float32)
-                dataOpt = 2
-            else:
-                self.validateCalibrationData(data, (3, 3), np.float32)
-                dataOpt = 1
-
-            return await self.calibration_request(cal.BT2020_3BY3_GAMUT_DATA, data, dataOpt)
+            return await self.set_3by3_gamut_data(cal.BT2020_3BY3_GAMUT_DATA, data)
 
         async def set_bypass_modes(self, unity_1d_lut=True):
             """Also known as ddc reset."""
@@ -2424,8 +2425,8 @@ class WebOsClient:
 
             await self.set_1d_2_2_en()
             await self.set_1d_0_45_en()
-            await self.set_bt709_3by3_gamut_data()
-            await self.set_bt2020_3by3_gamut_data()
+            await self.set_3by3_gamut_data_bt709()
+            await self.set_3by3_gamut_data_bt2020()
             await self.upload_3d_lut_bt709()
             await self.upload_3d_lut_bt2020()
             if unity_1d_lut:
@@ -2442,8 +2443,8 @@ class WebOsClient:
 
             await self.set_1d_2_2_en([])
             await self.set_1d_0_45_en([])
-            await self.set_bt709_3by3_gamut_data([])
-            await self.set_bt2020_3by3_gamut_data([])
+            await self.set_3by3_gamut_data_bt709([])
+            await self.set_3by3_gamut_data_bt2020([])
             await self.upload_3d_lut_bt709([])
             await self.upload_3d_lut_bt2020([])
             await self.upload_1d_lut([])

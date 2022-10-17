@@ -2414,8 +2414,8 @@ class WebOsClient:
             """BT2020 slot 3x3 color matrix (color gamut space transformation in linear space)."""
             return await self.set_3by3_gamut_data(cal.BT2020_3BY3_GAMUT_DATA, data)
 
-        async def set_bypass_modes(self, unity_1d_lut=True):
-            """Also known as ddc reset."""
+        async def set_bypass_modes_sdr(self, unity_1d_lut=False):
+            """Set SDR bypass modes."""
             if not isinstance(unity_1d_lut, bool):
                 raise TypeError(
                     f"unity_1d_lut should be a bool, instead got {unity_1d_lut} of type {type(unity_1d_lut)}."
@@ -2432,11 +2432,41 @@ class WebOsClient:
 
             return True
 
-        async def set_factory_calibration_data(self, hdr10_tonemap_params=False):
-            """Set factory calibration data."""
-            if not isinstance(hdr10_tonemap_params, bool):
+        async def reset_factory_data_sdr(self):
+            """Reset SDR factory calibration data."""
+            await self.set_1d_en_2_2([])
+            await self.set_1d_en_0_45([])
+            await self.set_3by3_gamut_data_bt709([])
+            await self.set_3by3_gamut_data_bt2020([])
+            await self.upload_3d_lut_bt709([])
+            await self.upload_3d_lut_bt2020([])
+            await self.upload_1d_lut([])
+
+            return True
+
+        async def set_bypass_modes_hdr10(self, unity_3d_lut=False):
+            """Set HDR10 bypass modes."""
+            if not isinstance(unity_3d_lut, bool):
                 raise TypeError(
-                    f"hdr10_tonemap_params should be a bool, instead got {hdr10_tonemap_params} of type {type(hdr10_tonemap_params)}."
+                    f"unity_3d_lut should be a bool, instead got {unity_3d_lut} of type {type(unity_3d_lut)}."
+                )
+
+            await self.upload_1d_lut()
+            if unity_3d_lut:
+                await self.set_1d_en_2_2()
+                await self.set_1d_en_0_45()
+                await self.set_3by3_gamut_data_bt709()
+                await self.set_3by3_gamut_data_bt2020()
+                await self.upload_3d_lut_bt709()
+                await self.upload_3d_lut_bt2020()
+
+            return True
+
+        async def reset_factory_data_hdr10(self, picture_mode=None, tonemap_params=False):
+            """Reset HDR10 factory calibration data."""
+            if not isinstance(tonemap_params, bool):
+                raise TypeError(
+                    f"tonemap_params should be a bool, instead got {tonemap_params} of type {type(tonemap_params)}."
                 )
 
             await self.set_1d_en_2_2([])
@@ -2446,8 +2476,27 @@ class WebOsClient:
             await self.upload_3d_lut_bt709([])
             await self.upload_3d_lut_bt2020([])
             await self.upload_1d_lut([])
-            if hdr10_tonemap_params:
-                await self.set_tonemap_params("hdr_cinema", [])
+            if tonemap_params:
+                await self.set_tonemap_params(picture_mode, [])
+
+            return True
+
+        async def set_bypass_modes_dovi(self):
+            """Set DoVi bypass modes."""
+            await self.upload_1d_lut()
+
+            return True
+
+        async def reset_factory_data_dovi(self, picture_mode=None, dovi_config=False):
+            """Reset DoVi factory calibration data."""
+            if not isinstance(dovi_config, bool):
+                raise TypeError(
+                    f"dovi_config should be a bool, instead got {dovi_config} of type {type(dovi_config)}."
+                )
+
+            await self.upload_1d_lut([])
+            if dovi_config:
+                await self.set_dolby_vision_config_data(picture_mode, [])
 
             return True
 

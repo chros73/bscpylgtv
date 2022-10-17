@@ -529,7 +529,7 @@ class TestWebOsClientCalibration():
     ]
 
     @pytest.mark.parametrize("unity1dLut", data_set_bypass_modes)
-    async def test_set_bypass_modes(self, mocker, unity1dLut):
+    async def test_set_bypass_modes_sdr(self, mocker, unity1dLut):
         mocker.patch('bscpylgtv.WebOsClient.set_1d_en_2_2')
         mocker.patch('bscpylgtv.WebOsClient.set_1d_en_0_45')
         mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt709')
@@ -541,7 +541,7 @@ class TestWebOsClientCalibration():
         
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : "OLED65C26LA"}
-        result = await client.set_bypass_modes(unity1dLut)
+        result = await client.set_bypass_modes_sdr(unity1dLut)
 
         client.set_1d_en_2_2.assert_called_once_with()
         client.set_1d_en_0_45.assert_called_once_with()
@@ -555,13 +555,7 @@ class TestWebOsClientCalibration():
 
 
 
-    data_set_factory_calibration_data = [
-        ( False ),
-        ( True  ),
-    ]
-
-    @pytest.mark.parametrize("hdr10TonemapParams", data_set_factory_calibration_data)
-    async def test_set_factory_calibration_data(self, mocker, hdr10TonemapParams):
+    async def test_reset_factory_data_sdr(self, mocker):
         mocker.patch('bscpylgtv.WebOsClient.set_1d_en_2_2')
         mocker.patch('bscpylgtv.WebOsClient.set_1d_en_0_45')
         mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt709')
@@ -569,12 +563,10 @@ class TestWebOsClientCalibration():
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt709')
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt2020')
         mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
-        if hdr10TonemapParams:
-            mocker.patch('bscpylgtv.WebOsClient.set_tonemap_params')
         
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : "OLED65C26LA"}
-        result = await client.set_factory_calibration_data(hdr10TonemapParams)
+        result = await client.reset_factory_data_sdr()
 
         client.set_1d_en_2_2.assert_called_once_with([])
         client.set_1d_en_0_45.assert_called_once_with([])
@@ -583,8 +575,112 @@ class TestWebOsClientCalibration():
         client.upload_3d_lut_bt709.assert_called_once_with([])
         client.upload_3d_lut_bt2020.assert_called_once_with([])
         client.upload_1d_lut.assert_called_once_with([])
-        if hdr10TonemapParams:
-            client.set_tonemap_params.assert_called_once_with("hdr_cinema", [])
+        assert result == True
+
+
+
+    data_set_bypass_modes_hdr10 = [
+        ( False ),
+        ( True  ),
+    ]
+
+    @pytest.mark.parametrize("unity_3d_lut", data_set_bypass_modes_hdr10)
+    async def test_set_bypass_modes_hdr10(self, mocker, unity_3d_lut):
+        mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
+        if unity_3d_lut:
+            mocker.patch('bscpylgtv.WebOsClient.set_1d_en_2_2')
+            mocker.patch('bscpylgtv.WebOsClient.set_1d_en_0_45')
+            mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt709')
+            mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt2020')
+            mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt709')
+            mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt2020')
+        
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : "OLED65C26LA"}
+        result = await client.set_bypass_modes_hdr10(unity_3d_lut)
+
+        client.upload_1d_lut.assert_called_once_with()
+        if unity_3d_lut:
+            client.set_1d_en_2_2.assert_called_once_with()
+            client.set_1d_en_0_45.assert_called_once_with()
+            client.set_3by3_gamut_data_bt709.assert_called_once_with()
+            client.set_3by3_gamut_data_bt2020.assert_called_once_with()
+            client.upload_3d_lut_bt709.assert_called_once_with()
+            client.upload_3d_lut_bt2020.assert_called_once_with()
+        assert result == True
+
+
+
+    data_reset_factory_data_hdr10 = [
+        ( None,         False ),
+        ( None,         True ),
+        ( "hdr_game",   False ),
+        ( "hdr_game",   True ),
+    ]
+
+    @pytest.mark.parametrize("picMode,tonemap_params", data_reset_factory_data_hdr10)
+    async def test_reset_factory_data_hdr10(self, mocker, picMode, tonemap_params):
+        mocker.patch('bscpylgtv.WebOsClient.set_1d_en_2_2')
+        mocker.patch('bscpylgtv.WebOsClient.set_1d_en_0_45')
+        mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt709')
+        mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt2020')
+        mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt709')
+        mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt2020')
+        mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
+        if tonemap_params:
+            mocker.patch('bscpylgtv.WebOsClient.set_tonemap_params')
+
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : "OLED65C26LA"}
+
+        result = await client.reset_factory_data_hdr10(picMode, tonemap_params)
+
+        client.set_1d_en_2_2.assert_called_once_with([])
+        client.set_1d_en_0_45.assert_called_once_with([])
+        client.set_3by3_gamut_data_bt709.assert_called_once_with([])
+        client.set_3by3_gamut_data_bt2020.assert_called_once_with([])
+        client.upload_3d_lut_bt709.assert_called_once_with([])
+        client.upload_3d_lut_bt2020.assert_called_once_with([])
+        client.upload_1d_lut.assert_called_once_with([])
+        if tonemap_params:
+            client.set_tonemap_params.assert_called_once_with(picMode, [])
+        assert result == True
+
+
+
+    async def test_set_bypass_modes_dovi(self, mocker):
+        mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
+        
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : "OLED65C26LA"}
+        result = await client.set_bypass_modes_dovi()
+
+        client.upload_1d_lut.assert_called_once_with()
+        assert result == True
+
+
+
+    data_reset_factory_data_dovi = [
+        ( None,         False ),
+        ( None,         True ),
+        ( "hdr_game",   False ),
+        ( "hdr_game",   True ),
+    ]
+
+    @pytest.mark.parametrize("picMode,dovi_config", data_reset_factory_data_dovi)
+    async def test_reset_factory_data_hdr10(self, mocker, picMode, dovi_config):
+        mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
+        if dovi_config:
+            mocker.patch('bscpylgtv.WebOsClient.set_dolby_vision_config_data')
+
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : "OLED65C26LA"}
+
+        result = await client.reset_factory_data_dovi(picMode, dovi_config)
+
+        client.upload_1d_lut.assert_called_once_with([])
+        if dovi_config:
+            client.set_dolby_vision_config_data.assert_called_once_with(picMode, [])
         assert result == True
 
 

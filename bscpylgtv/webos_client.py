@@ -2365,9 +2365,11 @@ class WebOsClient:
         async def upload_3d_lut_bt2020_from_file(self, filename):
             return await self.upload_3d_lut_from_file(cal.UPLOAD_3D_LUT_BT2020, filename)
 
-        async def set_1d_2_2_en(self, value=0):
+        async def set_1d_en(self, command, value):
             """1D LUT de-gamma flag (gamma -> linear space transformation)."""
-            self.check_calibration_support("lut1d", "1d_2_2 Upload")
+            self.check_calibration_support("lut1d", "1d_en Upload")
+            if command not in [cal.ENABLE_GAMMA_2_2_TRANSFORM, cal.ENABLE_GAMMA_0_45_TRANSFORM]:
+                raise PyLGTVCmdException(f"Invalid 1d_en Upload command {command}.")
             if ((type(value) is list and len(value) != 0)
                 or (type(value) is int and (value < 0 or value > 1))):
                 raise ValueError(f"Invalid value {value}, must be between 0. and 1. or empty list.")
@@ -2375,19 +2377,15 @@ class WebOsClient:
             # Set or reset uploaded data
             data = np.array(value, dtype=np.uint16)
             dataOpt = 2 if type(value) is list and len(value) == 0 else 1
-            return await self.calibration_request(cal.ENABLE_GAMMA_2_2_TRANSFORM, data, dataOpt)
+            return await self.calibration_request(command, data, dataOpt)
 
-        async def set_1d_0_45_en(self, value=0):
-            """1D LUT re-gamma flag (linear -> gamma space transformation)."""
-            self.check_calibration_support("lut1d", "1d_0_45 Upload")
-            if ((type(value) is list and len(value) != 0)
-                or (type(value) is int and (value < 0 or value > 1))):
-                raise ValueError(f"Invalid value {value}, must be between 0. and 1. or empty list.")
+        async def set_1d_en_2_2(self, value=0):
+            """1D LUT de-gamma flag (gamma to linear space transformation)."""
+            return await self.set_1d_en(cal.ENABLE_GAMMA_2_2_TRANSFORM, value)
 
-            # Set or reset uploaded data
-            data = np.array(value, dtype=np.uint16)
-            dataOpt = 2 if type(value) is list and len(value) == 0 else 1
-            return await self.calibration_request(cal.ENABLE_GAMMA_0_45_TRANSFORM, data, dataOpt)
+        async def set_1d_en_0_45(self, value=0):
+            """1D LUT re-gamma flag (linear to gamma space transformation)."""
+            return await self.set_1d_en(cal.ENABLE_GAMMA_0_45_TRANSFORM, value)
 
         async def set_3by3_gamut_data(self, command, data):
             self.check_calibration_support("lut1d", "3by3 Gamut Data Upload")
@@ -2409,11 +2407,11 @@ class WebOsClient:
             return await self.calibration_request(command, data, dataOpt)
 
         async def set_3by3_gamut_data_bt709(self, data=None):
-            """BT709 slot 3x3 color matrix (color transformation in linear space)."""
+            """BT709 slot 3x3 color matrix (color gamut space transformation in linear space)."""
             return await self.set_3by3_gamut_data(cal.BT709_3BY3_GAMUT_DATA, data)
 
         async def set_3by3_gamut_data_bt2020(self, data=None):
-            """BT2020 slot 3x3 color matrix (color transformation in linear space)."""
+            """BT2020 slot 3x3 color matrix (color gamut space transformation in linear space)."""
             return await self.set_3by3_gamut_data(cal.BT2020_3BY3_GAMUT_DATA, data)
 
         async def set_bypass_modes(self, unity_1d_lut=True):
@@ -2423,8 +2421,8 @@ class WebOsClient:
                     f"unity_1d_lut should be a bool, instead got {unity_1d_lut} of type {type(unity_1d_lut)}."
                 )
 
-            await self.set_1d_2_2_en()
-            await self.set_1d_0_45_en()
+            await self.set_1d_en_2_2()
+            await self.set_1d_en_0_45()
             await self.set_3by3_gamut_data_bt709()
             await self.set_3by3_gamut_data_bt2020()
             await self.upload_3d_lut_bt709()
@@ -2441,8 +2439,8 @@ class WebOsClient:
                     f"hdr10_tonemap_params should be a bool, instead got {hdr10_tonemap_params} of type {type(hdr10_tonemap_params)}."
                 )
 
-            await self.set_1d_2_2_en([])
-            await self.set_1d_0_45_en([])
+            await self.set_1d_en_2_2([])
+            await self.set_1d_en_0_45([])
             await self.set_3by3_gamut_data_bt709([])
             await self.set_3by3_gamut_data_bt2020([])
             await self.upload_3d_lut_bt709([])

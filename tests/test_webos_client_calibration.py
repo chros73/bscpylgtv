@@ -401,19 +401,19 @@ class TestWebOsClientCalibration():
 
 
     data_set_1d_2_2_1d_0_45_en = [
-        ( "OLED65C6V",      0,  "1d_2_2_en",    None,                           None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    -1, "1d_2_2_en",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    2,  "1d_2_2_en",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [], "1d_2_2_en",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "",     0,      2,      1 ),
-        ( "OLED65C26LA",    0,  "1d_2_2_en",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AAA=", 1,      1,      1 ),
-        ( "OLED65C26LA",    1,  "1d_2_2_en",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AQA=", 1,      1,      1 ),
+        ( "OLED65C6V",      0,  "1d_en_2_2",    None,                           None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    -1, "1d_en_2_2",    None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    2,  "1d_en_2_2",    None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [], "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "",     0,      2,      1 ),
+        ( "OLED65C26LA",    0,  "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AAA=", 1,      1,      1 ),
+        ( "OLED65C26LA",    1,  "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AQA=", 1,      1,      1 ),
 
-        ( "OLED65C6V",      0,  "1d_0_45_en",   None,                           None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    -1, "1d_0_45_en",   None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    2,  "1d_0_45_en",   None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [], "1d_0_45_en",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"",     0,      2,      1 ),
-        ( "OLED65C26LA",    0,  "1d_0_45_en",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AAA=", 1,      1,      1 ),
-        ( "OLED65C26LA",    1,  "1d_0_45_en",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AQA=", 1,      1,      1 ),
+        ( "OLED65C6V",      0,  "1d_en_0_45",   None,                           None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    -1, "1d_en_0_45",   None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    2,  "1d_en_0_45",   None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [], "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"",     0,      2,      1 ),
+        ( "OLED65C26LA",    0,  "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AAA=", 1,      1,      1 ),
+        ( "OLED65C26LA",    1,  "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AQA=", 1,      1,      1 ),
     ]
 
     @pytest.mark.parametrize("model,value,methodName,command,data,dataCount,dataOpt,expected", data_set_1d_2_2_1d_0_45_en)
@@ -530,8 +530,8 @@ class TestWebOsClientCalibration():
 
     @pytest.mark.parametrize("unity1dLut", data_set_bypass_modes)
     async def test_set_bypass_modes(self, mocker, unity1dLut):
-        mocker.patch('bscpylgtv.WebOsClient.set_1d_2_2_en')
-        mocker.patch('bscpylgtv.WebOsClient.set_1d_0_45_en')
+        mocker.patch('bscpylgtv.WebOsClient.set_1d_en_2_2')
+        mocker.patch('bscpylgtv.WebOsClient.set_1d_en_0_45')
         mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt709')
         mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt2020')
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt709')
@@ -543,8 +543,8 @@ class TestWebOsClientCalibration():
         client._system_info = {"modelName" : "OLED65C26LA"}
         result = await client.set_bypass_modes(unity1dLut)
 
-        client.set_1d_2_2_en.assert_called_once_with()
-        client.set_1d_0_45_en.assert_called_once_with()
+        client.set_1d_en_2_2.assert_called_once_with()
+        client.set_1d_en_0_45.assert_called_once_with()
         client.set_3by3_gamut_data_bt709.assert_called_once_with()
         client.set_3by3_gamut_data_bt2020.assert_called_once_with()
         client.upload_3d_lut_bt709.assert_called_once_with()
@@ -562,8 +562,8 @@ class TestWebOsClientCalibration():
 
     @pytest.mark.parametrize("hdr10TonemapParams", data_set_factory_calibration_data)
     async def test_set_factory_calibration_data(self, mocker, hdr10TonemapParams):
-        mocker.patch('bscpylgtv.WebOsClient.set_1d_2_2_en')
-        mocker.patch('bscpylgtv.WebOsClient.set_1d_0_45_en')
+        mocker.patch('bscpylgtv.WebOsClient.set_1d_en_2_2')
+        mocker.patch('bscpylgtv.WebOsClient.set_1d_en_0_45')
         mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt709')
         mocker.patch('bscpylgtv.WebOsClient.set_3by3_gamut_data_bt2020')
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt709')
@@ -576,8 +576,8 @@ class TestWebOsClientCalibration():
         client._system_info = {"modelName" : "OLED65C26LA"}
         result = await client.set_factory_calibration_data(hdr10TonemapParams)
 
-        client.set_1d_2_2_en.assert_called_once_with([])
-        client.set_1d_0_45_en.assert_called_once_with([])
+        client.set_1d_en_2_2.assert_called_once_with([])
+        client.set_1d_en_0_45.assert_called_once_with([])
         client.set_3by3_gamut_data_bt709.assert_called_once_with([])
         client.set_3by3_gamut_data_bt2020.assert_called_once_with([])
         client.upload_3d_lut_bt709.assert_called_once_with([])

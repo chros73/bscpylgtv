@@ -23,7 +23,7 @@ pip install --upgrade .
 pip install --upgrade .[with_calibration]
 ```
 
-## Windows binary
+## Windows binaries
 Portable Windows binaries can be found under [releases](https://github.com/chros73/bscpylgtv/releases).
 
 ## Examples
@@ -57,7 +57,7 @@ bscpylgtvcommand 192.168.1.18 set_device_info HDMI_2 hometheater "Home Theatre"
 # Launch and close screensaver
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.screensaver
 bscpylgtvcommand 192.168.1.18 close_app com.webos.app.screensaver
-# Turn screen off/on: turn_screen_off [webos_version] (e.g. for WebOS v4.x: turn_screen_off 4)
+# Turn screen off/on: turn_screen_off [webos_version] (e.g. for older WebOS: turn_screen_off 4)
 bscpylgtvcommand 192.168.1.18 turn_screen_off
 bscpylgtvcommand 192.168.1.18 turn_screen_on
 # Display current picture mode settings
@@ -82,6 +82,8 @@ bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]" true
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED Motion Pro\"}"
 # Display Total Power On Time under TV Information on EU models where it's hidden (using JSON)
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.conti.supportUsedTime\": true}"
+# Soft reboot the TV in case it is malfunctioning: reboot_soft [webos_version] (e.g. for older WebOS: reboot_soft 4)
+bscpylgtvcommand 192.168.1.18 reboot_soft
 # Turn the TV off (standby)
 bscpylgtvcommand 192.168.1.18 power_off
 ```
@@ -183,18 +185,16 @@ asyncio.run(runloop())
 
 More useful examples can be found in [docs/scripts](https://github.com/chros73/bscpylgtv/tree/master/docs/scripts) directory.
 
-## Calibration functionality (only in full version)
-**WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe, but no guarantees.*
+## Calibration functionality (in full version)
+**WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe (although they have only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models), but no guarantees.*
 
-On supported models, calibration functionality, upload to internal LUTs, resetting uploaded data via calibration API, uploading custom tone mapping parameters (>=2019 models), using internal test pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
+On supported models, upload to internal 1D/3D LUTs, resetting factory calibration data uploaded via calibration API, uploading custom tone mapping parameters (>=2019 models), using internal test pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
 
-n.b. this has only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models, so fixes may be needed still for the others.
-
-Supported models (more models can be added via PR once they confirmed working well):
+Supported models (more can be added via PR once they are confirmed working well):
 ```
 LG 2023-25 Alpha 9 Gx: OLED Rx Zx Gx Cx ARTx LXx
 LG 2023-25 Alpha 7 Gx: OLED Bx Ax
-LG 2022 Alpha 9 G5: OLED R2 Z2 G2 C2 CS ART90 LX1
+LG 2022 Alpha 9 G5: OLED R2 Z2 G2 C2 CS ART90 LX1 LX3
 LG 2022 Alpha 7 G5: OLED B2 A2
 LG 2021 Alpha 9 G4: OLED R1 Z1 G1 C1
 LG 2021 Alpha 7 G4: OLED B1 A1
@@ -210,28 +210,46 @@ LG 2018 Alpha 7 G1: Super UHD LED (8000 & higher model numbers)
 
 ### Calibration commands
 
-The supported input formats for LUTs are IRIDAS `.cube` format for both 1D and 3D LUTs, and ArgyllCMS `.cal` files for 1D LUTs. Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
+Here is a simplified version of the [image processing pipeline](https://displaycalibrations.com/images/LG_OLED_Video_Signal_Chain_Diagram_Picture.png) (there may be other not fully known/understood changes).
 
-*WARNING:* When running the `set_bypass_modes_*` method or uploading LUT data on 2018 models the only way to restore the factory LUTs and behaviour for a given input mode is to do a factory reset of the TV. From 2019 models  picture preset reset results the same until calibration mode is activated again for the same preset.
-`set_bypass_modes_*` uploads unity 1d and 3d luts and resets oled light/brightness/contrast/color/ to default values (80/50/85/50).
-When running the `set_bypass_modes_*` or uploading any 1D LUT data, service menu white balance settings are ignored, and gamma, colorspace, and white balance settings in the user menu are greyed out and inaccessible. From 2019 models white balance 2pt low values can be set.
+Calibration commands can only be run while in calibration mode (controlled by `start_calibration` and `end_calibration`).
+Most of the commands can be run in any mode, except for `set_tonemap_params` that is only for HDR10+HLG and `set_dolby_vision_config_data` that is only for Dolby Vision.
+In general, `set_1d_en_*` (de-gamma, re-gamma) and `set_3by3_gamut_data_*`(3x3 color matrices) commands should only be used when using a unity/custom 3D LUT.
+
+The following commands are supported:
+```
+start_calibration, end_calibration,
+set_oled_light, set_contrast, set_brightness, set_color
+upload_1d_lut, upload_1d_lut_from_file, upload_3d_lut_bt709, upload_3d_lut_bt709_from_file, upload_3d_lut_bt2020, upload_3d_lut_bt2020_from_file, 
+set_1d_en_2_2, set_1d_en_0_45, set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020,
+set_tonemap_params (for HDR10 picture modes),
+set_dolby_vision_config_data (not recommended on >=2020 models!),
+```
+
+Combined commands for setting bypass modes and resetting factory data:
+```
+set_bypass_modes_sdr, set_bypass_modes_hdr10, set_bypass_modes_dovi,
+reset_factory_data_sdr, reset_factory_data_hdr10, reset_factory_data_dovi
+```
 
 Calibration data is specific to each picture mode, and picture modes are independent for SDR, HDR10+HLG, and Dolby Vision.
 Picture modes from each of the three groups are only accessible when the TV is in the appropriate mode. Ie to upload calibration data for HDR10 picture modes, one has to send the TV an HDR10 signal or play an HDR10 file, and similarly for Dolby Vision.
 
-For SDR and HDR10 modes there are two 3D LUTs which will be automatically selected depending on the colorspace flags of the signal or content. In principle almost all SDR content should be bt709 and HDR10 content should be bt2020 but there could be nonstandard cases where this is not true. For Dolby Vision the bt709 3d LUT seems to be active and the only one used.
-
-Known supported picMode strings are:
+Known supported `picture_mode` strings are:
 ```
 SDR: cinema, expert1, expert2, game, technicolorExpert, filmMaker
 HDR10(+HLG): hdr_cinema, hdr_game, hdr_technicolorExpert, hdr_filmMaker
 DV: dolby_cinema_bright, dolby_cinema_dark, dolby_game
 ```
 
-Calibration commands can only be run while in calibration mode (controlled by `start_calibration` and `end_calibration`).
+For SDR and HDR10 modes there are two 3D LUTs which will be automatically selected depending on the colorspace flags of the signal or content. In principle almost all SDR content should be BT709 and HDR10 content should be BT2020 but there could be nonstandard cases where this is not true.
+For Dolby Vision the BT709 3D LUT seems to be active and the only one used.
 
+The supported input formats for LUTs are IRIDAS `.cube` format for both 1D and 3D LUTs, and ArgyllCMS `.cal` files for 1D LUTs.
+Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points.
+
+When uploading any 1D LUT data, service menu white balance settings are ignored, and gamma, colorspace, and white balance settings in the user menu are greyed out and inaccessible. From 2019 models white balance 2pt values can be set.
 While in calibration mode for HDR10 tone mapping is bypassed.
-There may be other not fully known/understood changes in the image processing pipeline while in calibration mode.
 
 Calibration command line examples, modifying expert1 SDR preset (ISF Expert Bright Room):
 ```bash
@@ -256,7 +274,7 @@ bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file "test3d-2.cube" -s
 bscpylgtvcommand 192.168.1.18 end_calibration -s
 ```
 
-Same calibration via scripting:
+Same calibration session via scripting:
 ```python
 import asyncio
 from bscpylgtv import WebOsClient
@@ -282,10 +300,11 @@ async def runloop():
 asyncio.run(runloop())
 ```
 
-### Resetting uploaded calibration data via calibration API
+#### Resetting factory calibration data uploaded via calibration API
 
-Now it's possible to reset individual factory calibration data (previously a picture preset reset or factory reset was required for this) or reset all of them with `set_factory_calibration_data` command.
-The following calibration commands are supported:
+It's possible to reset individual factory calibration data (previously a picture preset reset or factory reset was required for this)
+or reset all/most of them with `reset_factory_data_*` commands.
+The following commands are supported via calibration API:
 ```
 upload_1d_lut, upload_3d_lut_bt709, upload_3d_lut_bt2020,
 set_1d_en_2_2, set_1d_en_0_45, set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020,
@@ -293,32 +312,37 @@ set_tonemap_params (for HDR10 picture modes),
 set_dolby_vision_config_data (not recommended on >=2020 models!)
 ```
 
-Example usage (all the supported commands has the same syntax):
+Example usage (all the supported commands have the same syntax except for those that require a `picture_mode`):
 ```bash
 # Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration expert1 -s
+bscpylgtvcommand 192.168.1.18 start_calibration hdr_game -s
 # Restore factory 1DLUT after custom 1DLUT was uploaded (by specifying empty list)
 bscpylgtvcommand 192.168.1.18 upload_1d_lut [] -s
+# Restore factory tonemapping parameters after custom ones were uploaded (by specifying empty list)
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_game [] -s
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration -s
 ```
 
-### Uploading custom tonemapping parameters for HDR10 presets
+#### Uploading custom tonemapping parameters for HDR10 presets
 
-- available only on supported (>=2019) models
+- available only on supported models (>=2019)
+- parameters (in this order): picture_mode, peak luminance, mastering_peak_1, rolloff_point_1, mastering_peak_2, rolloff_point_2, mastering_peak_3, rolloff_point_3 
 
 ```bash
 # Start calibration mode
 bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema -s
 # Upload custom tonemapping parameters for HDR10 Cinema preset
 bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
+# Or upload custom tonemapping parameters to disable internal tonemapping entirely
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 100 4000 100 10000 100 -s
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration -s
 ```
 
 ### Writing Dolby Vision config file for USB upload
 
-- picture modes: 1 - DoVi Cinema Home, 2 - DoVi Cinema, 4 - DoVi Game
+- picture modes: dolby_cinema_bright - 1 (DoVi Cinema Home), dolby_cinema_dark - 2 (DoVi Cinema), dolby_game - 4 (DoVi Game)
 - primaries (in this order): xr, yr, xg, yg, xb, yb
 - config of 2018 models is different from the rest of the models
 
@@ -381,12 +405,6 @@ bscpylgtvcommand 192.168.1.18 toggle_itpg false 0 -s
 
 A collection of useful commands and scripts are available under [docs/utils](https://github.com/chros73/bscpylgtv/tree/master/docs/utils) directory to add support for new firmwares in the future and make PRs easier to do.
 
-We use [`pre-commit`](https://pre-commit.com) to keep a consistent code style, so ``pip install pre_commit`` and run
-```bash
-pre-commit install
-```
-to install the hooks.
-
 ### Unit testing
 
 Required extra packages:
@@ -396,7 +414,7 @@ pip install numpy pytest pytest-asyncio pytest-mock
 
 Running unit tests against the installed package:
 ```bash
-# Run all the tests in all files
+# Run all the tests in all files in tests/ directory
 pytest tests
 # Run all the tests in one file
 pytest tests/test_webos_client_lite.py
@@ -408,3 +426,13 @@ pytest tests/test_webos_client_calibration.py -k "test_set_ui_data_methods"
 ## Forum
 
 Forum [topic](https://forum.doom9.org/showthread.php?t=175007).
+
+
+## Acknowledgement
+
+Thanks to the following people:
+- [TheRealLink](https://github.com/TheRealLink/pylgtv) for the original implementation
+- [bendavid](https://github.com/bendavid/aiopylgtv) for lot of modification, especially with calibration functionality
+- [Maassoft](https://github.com/Maassoft/ColorControl) for useful ideas
+- Hifi4Vision for his invaluable calibration knowledge
+

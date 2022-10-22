@@ -2265,7 +2265,7 @@ class WebOsClient:
             self.check_calibration_support("lut1d", "Setting picture mode property")
             if command not in [cal.BACKLIGHT_UI_DATA, cal.CONTRAST_UI_DATA, cal.BRIGHTNESS_UI_DATA, cal.COLOR_UI_DATA]:
                 raise PyLGTVCmdException(f"Invalid UI Data command {command}.")
-            if value < 0 or value > 100:
+            if type(value) is not int or value < 0 or value > 100:
                 raise ValueError(f"Invalid value {value}, must be between 0. and 100.")
 
             data = np.array(value, dtype=np.uint16)
@@ -2365,27 +2365,33 @@ class WebOsClient:
         async def upload_3d_lut_bt2020_from_file(self, filename):
             return await self.upload_3d_lut_from_file(cal.UPLOAD_3D_LUT_BT2020, filename)
 
-        async def set_1d_en(self, command, value):
-            """1D LUT de-gamma flag (gamma -> linear space transformation)."""
+        async def set_1d_en(self, command, enable):
+            """Toggle 1D LUT de-gamma / re-gamma flags."""
             self.check_calibration_support("lut1d", "1d_en Upload")
             if command not in [cal.ENABLE_GAMMA_2_2_TRANSFORM, cal.ENABLE_GAMMA_0_45_TRANSFORM]:
                 raise PyLGTVCmdException(f"Invalid 1d_en Upload command {command}.")
-            if ((type(value) is list and len(value) != 0)
-                or (type(value) is int and (value < 0 or value > 1))):
-                raise ValueError(f"Invalid value {value}, must be between 0. and 1. or empty list.")
+            if not ((type(enable) is list and len(enable) == 0)
+                or (type(enable) is bool)):
+                raise ValueError(f"Invalid enable {enable}, must be bool or empty list.")
 
-            # Set or reset uploaded data
-            data = np.array(value, dtype=np.uint16)
-            dataOpt = 2 if type(value) is list and len(value) == 0 else 1
+            if type(enable) is list and len(enable) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.uint16)
+                dataOpt = 2
+            else:
+                value = 1 if enable else 0
+                data = np.array(value, dtype=np.uint16)
+                dataOpt = 1
+
             return await self.calibration_request(command, data, dataOpt)
 
-        async def set_1d_en_2_2(self, value=0):
-            """1D LUT de-gamma flag (gamma to linear space transformation)."""
-            return await self.set_1d_en(cal.ENABLE_GAMMA_2_2_TRANSFORM, value)
+        async def set_1d_en_2_2(self, enable=False):
+            """Toggle 1D LUT de-gamma flag (gamma to linear space transformation)."""
+            return await self.set_1d_en(cal.ENABLE_GAMMA_2_2_TRANSFORM, enable)
 
-        async def set_1d_en_0_45(self, value=0):
-            """1D LUT re-gamma flag (linear to gamma space transformation)."""
-            return await self.set_1d_en(cal.ENABLE_GAMMA_0_45_TRANSFORM, value)
+        async def set_1d_en_0_45(self, enable=False):
+            """Toggle 1D LUT re-gamma flag (linear to gamma space transformation)."""
+            return await self.set_1d_en(cal.ENABLE_GAMMA_0_45_TRANSFORM, enable)
 
         async def set_3by3_gamut_data(self, command, data):
             self.check_calibration_support("lut1d", "3by3 Gamut Data Upload")
@@ -2401,17 +2407,17 @@ class WebOsClient:
                     data = np.identity(3, dtype=np.float32)
                 else:
                     data = np.array(data, dtype=np.float32)
-                self.validateCalibrationData(data, (3, 3), np.float32, (0, 1))
+                self.validateCalibrationData(data, (3, 3), np.float32, (-1024, 1024))
                 dataOpt = 1
 
             return await self.calibration_request(command, data, dataOpt)
 
         async def set_3by3_gamut_data_bt709(self, data=None):
-            """BT709 slot 3x3 color matrix (color gamut space transformation in linear space)."""
+            """Set BT709 slot 3x3 color matrix (color gamut space transformation in linear space)."""
             return await self.set_3by3_gamut_data(cal.BT709_3BY3_GAMUT_DATA, data)
 
         async def set_3by3_gamut_data_bt2020(self, data=None):
-            """BT2020 slot 3x3 color matrix (color gamut space transformation in linear space)."""
+            """Set BT2020 slot 3x3 color matrix (color gamut space transformation in linear space)."""
             return await self.set_3by3_gamut_data(cal.BT2020_3BY3_GAMUT_DATA, data)
 
         async def set_bypass_modes_sdr(self, unity_1d_lut=False):

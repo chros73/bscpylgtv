@@ -324,6 +324,18 @@ bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_game [] -s
 bscpylgtvcommand 192.168.1.18 end_calibration -s
 ```
 
+#### Get calibration commands
+
+- NOTE: it's completely broken in newer models (>=2020)
+- they can be used inside or outside of calibration mode as well
+- they return the data of the currently active picture mode
+
+```
+get_1d_en_2_2, get_1d_en_0_45,
+get_3by3_gamut_data, get_3by3_gamut_data_hdr,
+get_1d_lut, get_3d_lut
+```
+
 #### Uploading custom tonemapping parameters for HDR10 presets
 
 - available only on supported models (>=2019)

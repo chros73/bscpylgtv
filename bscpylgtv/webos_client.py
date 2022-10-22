@@ -2216,7 +2216,7 @@ class WebOsClient:
                 model = self._system_info["modelName"]
                 raise PyLGTVCmdException(f"{message} not supported by tv model {model}.")
 
-        def validateCalibrationData(self, data, shape, dtype, range=None):
+        def validateCalibrationData(self, data, shape, dtype, range=None, count=None):
             if not isinstance(data, np.ndarray):
                 raise TypeError(f"data must be of type ndarray but is instead {type(data)}")
             if data.shape != shape:
@@ -2225,6 +2225,52 @@ class WebOsClient:
                 raise TypeError(f"numpy dtype should be {dtype} but is instead {data.dtype}")
             if isinstance(range, tuple) and len(range) == 2 and ((data >= range[0]).all() != (data <= range[1]).all()):
                 raise ValueError(f"values in data must be between {range[0]} and {range[1]}")
+            if isinstance(count, int) and data.size != count:
+                raise ValueError(f"data should have size {count} but instead has {data.size}")
+
+        async def get_calibration_data(self, command, shape):
+            self.check_calibration_support()
+            if command not in [cal.GET_GAMMA_2_2_TRANSFORM, cal.GET_GAMMA_0_45_TRANSFORM, cal.GET_3BY3_GAMUT_DATA, cal.GET_HDR_3BY3_GAMUT_DATA, cal.GET_1D_LUT, cal.GET_3D_LUT]:
+                raise PyLGTVCmdException(f"Invalid Get Calibration command {command}.")
+
+            response = await self.request(ep.GET_CALIBRATION, {"command": command})
+
+            encodedData = response.get("data")
+            dataCount = response.get("dataCount")
+            dataType = response.get("dataType")
+            type = [k for k, v in CALIBRATION_TYPE_MAP.items() if v == dataType]
+
+            if not encodedData or not dataCount or not dataType or not type:
+                raise PyLGTVCmdException(f"Invalid response {response}.")
+
+            npType = getattr(np, type[0])
+            data_bytes = base64.b64decode(encodedData.encode())
+            deserialized_bytes = np.frombuffer(data_bytes, dtype=npType)
+            data = np.reshape(deserialized_bytes, newshape=shape)
+            self.validateCalibrationData(data, shape, npType, None, dataCount)
+
+            return data if shape != (1, ) else data[0]
+
+        async def get_1d_en_2_2(self):
+            return await self.get_calibration_data(cal.GET_GAMMA_2_2_TRANSFORM, (1, ))
+
+        async def get_1d_en_0_45(self):
+            return await self.get_calibration_data(cal.GET_GAMMA_0_45_TRANSFORM, (1, ))
+
+        async def get_3by3_gamut_data(self):
+            return await self.get_calibration_data(cal.GET_3BY3_GAMUT_DATA, (3, 3))
+
+        async def get_3by3_gamut_data_hdr(self):
+            return await self.get_calibration_data(cal.GET_HDR_3BY3_GAMUT_DATA, (3, 3))
+
+        async def get_1d_lut(self):
+            return await self.get_calibration_data(cal.GET_1D_LUT, (3, 1024))
+
+        async def get_3d_lut(self):
+            self.check_calibration_support()
+            lut3d_size = self._calibration_info["lut3d_size"]
+            lut3d_shape = (lut3d_size, lut3d_size, lut3d_size, 3)
+            return await self.get_calibration_data(cal.GET_3D_LUT, lut3d_shape)
 
         async def calibration_request(self, command, data=None, dataOpt=1, picture_mode=None):
             # dataOpt: 0 - Apply, 1 - Apply and Save, 2 - Reset
@@ -2242,8 +2288,7 @@ class WebOsClient:
                 payload["picMode"] = picture_mode
 
             if data is not None:
-                dataenc = base64.b64encode(data.tobytes()).decode()
-                payload["data"] = dataenc
+                payload["data"] = base64.b64encode(data.tobytes()).decode()
                 payload["dataCount"] = data.size
                 payload["dataType"] = CALIBRATION_TYPE_MAP[data.dtype.name]
                 payload["dataOpt"] = dataOpt

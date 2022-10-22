@@ -1,6 +1,7 @@
 import pytest
 from datetime import date
 import os
+import numpy as np
 from bscpylgtv import WebOsClient
 from bscpylgtv import endpoints as ep
 from bscpylgtv import cal_commands as cal
@@ -39,6 +40,174 @@ class TestWebOsClientCalibration():
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
                 client.check_calibration_support(property, message)
+
+
+
+    data_get_1d_en_2_2_0_45 = [
+        ( "OLED65C6V",      "1d_en_2_2",    None,                           None,   -3 ),
+        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"datax": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},  -2 ),
+        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCountx": 1, "dataType": "unsigned integer16"},  -2 ),
+        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataTypex": "unsigned integer16"},   -2 ),
+        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer"},   -2 ),
+        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 2, "dataType": "unsigned integer16"},   -1 ),
+
+        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},   0 ),
+        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AQA=", "dataCount": 1, "dataType": "unsigned integer16"},   1 ),
+
+        ( "OLED65C6V",      "1d_en_0_45",   None,                           None,   -3 ),
+        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"datax": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},  -2 ),
+        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCountx": 1, "dataType": "unsigned integer16"},  -2 ),
+        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataTypex": "unsigned integer16"},   -2 ),
+        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer"},   -2 ),
+        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 2, "dataType": "unsigned integer16"},   -1 ),
+
+        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},   0 ),
+        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AQA=", "dataCount": 1, "dataType": "unsigned integer16"},   1 ),
+    ]
+
+    @pytest.mark.parametrize("model,methodName,command,data,expected", data_get_1d_en_2_2_0_45)
+    async def test_get_1d_en_2_2_0_45(self, mocker, model, methodName, command, data, expected):
+        mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
+
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : model}
+        method = getattr(client, f'get_{methodName}')
+
+        if expected >= 0:
+            res = await method()
+
+            assert expected == res
+            client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
+        elif expected == -1:
+            with pytest.raises(ValueError, match=r'data should have size .+$'):
+                await method()
+        elif expected == -2:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
+                await method()
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+                await method()
+
+
+
+    data_get_3by3_gamut_data = [
+        ( "OLED65C6V",      "3by3_gamut_data",      None,                       None,   None,   -2 ),
+        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
+        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
+        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
+        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
+        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
+
+        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
+
+        ( "OLED65C6V",      "3by3_gamut_data_hdr",  None,                           None,   None,   -2 ),
+        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
+        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
+        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
+        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
+        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
+
+        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
+    ]
+
+    @pytest.mark.parametrize("model,methodName,command,data,result,expected", data_get_3by3_gamut_data)
+    async def test_get_3by3_gamut_data(self, mocker, model, methodName, command, data, result, expected):
+        mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
+
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : model}
+        method = getattr(client, f'get_{methodName}')
+
+        if expected > 0:
+            res = await method()
+            result = np.array(result, np.float32)
+
+            assert np.array_equal(result, res)
+            client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
+        elif expected == 0:
+            with pytest.raises(ValueError, match=r'data should have size .+$'):
+                await method()
+        elif expected == -1:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
+                await method()
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+                await method()
+
+
+
+    data_get_1d_lut = [
+        ( "OLED65C6V",      None,           "1dlut_00.txt", None,   None,                   None,               -2 ),
+        ( "OLED65C26LA",    cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "foo",                  "1dlut_00.cube",    -1 ),
+        ( "OLED65C26LA",    cal.GET_1D_LUT, "1dlut_00.txt", 3073,   "unsigned integer16",   None,               0 ),
+        ( "OLED65C26LA",    cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "unsigned integer16",   "1dlut_00.cube",    1 ),
+    ]
+
+    @pytest.mark.parametrize("model,command,fileName,count,type,dataFile,expected", data_get_1d_lut)
+    async def test_get_1d_lut(self, mocker, model, command, fileName, count, type, dataFile, expected):
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(currentDir, TEST_DIR_DATA, fileName)) as f:
+                dataLut = f.read()
+        data = {"data": dataLut, "dataCount": count, "dataType": type}
+        mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
+
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : model}
+
+        if expected > 0:
+            res = await client.get_1d_lut()
+            result = np.loadtxt(os.path.join(currentDir, TEST_DIR_EXPECTED, dataFile), dtype=np.uint16)
+
+            assert np.array_equal(result, res)
+            client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
+        elif expected == 0:
+            with pytest.raises(ValueError, match=r'data should have size .+$'):
+                await client.get_1d_lut()
+        elif expected == -1:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
+                await client.get_1d_lut()
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+                await client.get_1d_lut()
+
+
+
+    data_get_1d_lut = [
+        ( "OLED65C6V",      None,           "3dlut_33pt_00.txt",    None,   None,                   None,                   -2 ),
+        ( "OLED65B8SLC",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "foo",                  "3dlut_17pt_00.npy",    -1 ),
+        ( "OLED65C26LA",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "foo",                  "3dlut_33pt_00.npy",    -1 ),
+        ( "OLED65B8SLC",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "unsigned integer16",   "3dlut_17pt_00.npy",    0 ),
+        ( "OLED65C26LA",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "unsigned integer16",   "3dlut_33pt_00.npy",    0 ),
+        ( "OLED65B8SLC",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14739,  "unsigned integer16",   "3dlut_17pt_00.npy",    1 ),
+        ( "OLED65C26LA",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107811, "unsigned integer16",   "3dlut_33pt_00.npy",    1 ),
+    ]
+
+    @pytest.mark.parametrize("model,command,fileName,count,type,dataFile,expected", data_get_1d_lut)
+    async def test_get_3d_lut(self, mocker, model, command, fileName, count, type, dataFile, expected):
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(currentDir, TEST_DIR_DATA, fileName)) as f:
+                dataLut = f.read()
+        data = {"data": dataLut, "dataCount": count, "dataType": type}
+        mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
+
+        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
+        client._system_info = {"modelName" : model}
+
+        if expected > 0:
+            res = await client.get_3d_lut()
+            result = np.load(os.path.join(currentDir, TEST_DIR_EXPECTED, dataFile))
+
+            assert np.array_equal(result, res)
+            client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
+        elif expected == 0:
+            with pytest.raises(ValueError, match=r'data should have size .+$'):
+                await client.get_3d_lut()
+        elif expected == -1:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
+                await client.get_3d_lut()
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+                await client.get_3d_lut()
 
 
 

@@ -1,5 +1,26 @@
 # Change Log
 
+## [v0.4.0](https://github.com/chros73/bscpylgtv/tree/v0.4.0) (2022-10-23)
+**Implemented enhancements:**
+
+- Modify `reboot_soft` method to support older WebOS as well
+- Add `get_attached_devices` and `eject_attached_device` methods (requires new permission)
+- Add `get_calibration_info` method
+
+Calibration:
+- Add support for newer OLED models
+- Refactor and clean up calibration methods
+- Rename `set_1d_en*` methods
+- Rename `set_3by3_gamut_data*` methods
+- Rename and split `ddc_reset` method into `set_bypass_modes_*` methods
+- Add `set_3by3_gamut_data_hdr` method (only used in 2019 models)
+- Add `get_*` get calibration methods
+- Add support for resetting factory calibration data uploaded via calibration API
+- Add Dolby Vision config file generation
+- Add support for internal Test Pattern Generator (iTPG)
+- Add unit tests
+- Update readme
+
 ## [v0.3.2](https://github.com/chros73/bscpylgtv/tree/v0.3.2) (2022-07-17)
 **Implemented enhancements:**
 

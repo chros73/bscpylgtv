@@ -201,10 +201,9 @@ LG 2021 Alpha 7 G4: OLED B1 A1
 LG 2020 Alpha 9 G3: OLED RX ZX WX GX CX
 LG 2020 Alpha 7 G3: OLED BX
 LG 2019 Alpha 9 G2: OLED R9 Z9 W9 W9S E9 C9 NanoCell SM99
-LG 2019 Alpha 7 G2: OLED B9
-LG 2019 Alpha 7 G2: NanoCell (8000 & higher model numbers)
-LG 2018 Alpha 9 G1: OLED C8 E8 G8 W8
-LG 2018 Alpha 7 G1: OLED B8
+LG 2019 Alpha 7 G2: OLED B9 NanoCell SM80-SM98
+LG 2018 Alpha 9 G1: OLED W8 G8 E8 C8
+LG 2018 Alpha 7 G1: OLED B8 NanoCell SK8 SK9
 LG 2018 Alpha 7 G1: Super UHD LED (8000 & higher model numbers)
 ```
 

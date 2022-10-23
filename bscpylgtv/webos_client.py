@@ -2191,8 +2191,8 @@ class WebOsClient:
                     else:
                         modeltype = model_name[2]
                         modelyear = model_name[3]
-                        modelseries = model_name[4]
-                        modelnumber = model_name[5]
+                        modelseries = int(model_name[4])
+                        modelnumber = int(model_name[5])
 
                         if modeltype == "S" and modelyear in ["K", "M"] and modelseries >= 8:
                             info["lut1d"] = True

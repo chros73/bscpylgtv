@@ -64,6 +64,7 @@ class TestWebOsClientLite():
         ( 'OLED65G26LA',    (True,  33,     True,   True,   2019) ),
         ( 'OLED77Z29LA',    (True,  33,     True,   True,   2019) ),
 
+        ( '42LX3QPUA',      (True,  33,     True,   True,   2019) ),
         ( '55LX1Q6LA',      (True,  33,     True,   True,   2019) ),
         ( '65ART90E6QA',    (True,  33,     True,   True,   2019) ),
 
@@ -82,6 +83,13 @@ class TestWebOsClientLite():
         ( 'OLED65A66LA',    (False, None,   False,  False,  None) ),
         ( 'OLED65B66LA',    (False, None,   False,  False,  None) ),
         ( 'OLED65C66LA',    (False, None,   False,  False,  None) ),
+
+        ( '55SK8100PLA',    (True,  17,     False,  False,  2018) ),
+        ( '65SK9500PUA',    (True,  17,     False,  False,  2018) ),
+
+        ( '55SM8050PLC',    (True,  17,     True,   True,   2019) ),
+        ( '65SM9800PLA',    (True,  17,     True,   True,   2019) ),
+        ( '75SM9900PLA',    (True,  33,     True,   True,   2019) ),
     ]
 
     @pytest.mark.parametrize("modelName,expected", data_calibration_support_info)

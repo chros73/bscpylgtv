@@ -626,7 +626,7 @@ class TestWebOsClientCalibration():
 
 
 
-    data_set_3by3_gamut_data_bt709_bt2020 = [
+    data_set_3by3_gamut_data_bt709_bt2020_hdr = [
         ( "OLED65C6V",      0,                                      "3by3_gamut_data_bt709",    None,   None,   None,   None,   -3 ),
 
         ( "OLED65C26LA",    "",                                     "3by3_gamut_data_bt709",    None,   None,   None,   None,   -2 ),
@@ -660,10 +660,27 @@ class TestWebOsClientCalibration():
         ( "OLED65C26LA",    [], "3by3_gamut_data_bt2020",   cal.BT2020_3BY3_GAMUT_DATA, "",     0,      2,      1 ),
         ( "OLED65C26LA",    0,  "3by3_gamut_data_bt2020",   cal.BT2020_3BY3_GAMUT_DATA, "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
         ( "OLED65C26LA",    [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_bt2020",    cal.BT2020_3BY3_GAMUT_DATA,  "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
+
+        ( "OLED65C6V",      0,                                      "3by3_gamut_data_hdr",      None,   None,   None,   None,   -3 ),
+
+        ( "OLED65C26LA",    "",                                     "3by3_gamut_data_hdr",      None,   None,   None,   None,   -2 ),
+
+        ( "OLED65C26LA",    [1025],                                 "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0, 1]],                            "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
+
+        ( "OLED65C26LA",    [[1, 1025, 0], [0, 1, 0], [0, 0, 1]],   "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, -1025], [0, 0, 1]],  "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, 0], [0, 0, 1025]],   "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
+
+        ( "OLED65C26LA",    [], "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,    "",     0,      2,      1 ),
+        ( "OLED65C26LA",    0,  "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,    "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
+        ( "OLED65C26LA",    [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,   "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
     ]
 
-    @pytest.mark.parametrize("model,value,methodName,command,data,dataCount,dataOpt,expected", data_set_3by3_gamut_data_bt709_bt2020)
-    async def test_set_3by3_gamut_data_bt709_bt2020(self, mocker, model, value, methodName, command, data, dataCount, dataOpt, expected):
+    @pytest.mark.parametrize("model,value,methodName,command,data,dataCount,dataOpt,expected", data_set_3by3_gamut_data_bt709_bt2020_hdr)
+    async def test_set_3by3_gamut_data_bt709_bt2020_hdr(self, mocker, model, value, methodName, command, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")

@@ -220,8 +220,10 @@ The following commands are supported:
 ```
 start_calibration, end_calibration,
 set_oled_light, set_contrast, set_brightness, set_color
-upload_1d_lut, upload_1d_lut_from_file, upload_3d_lut_bt709, upload_3d_lut_bt709_from_file, upload_3d_lut_bt2020, upload_3d_lut_bt2020_from_file, 
+upload_1d_lut, upload_1d_lut_from_file,
+upload_3d_lut_bt709, upload_3d_lut_bt709_from_file, upload_3d_lut_bt2020, upload_3d_lut_bt2020_from_file, 
 set_1d_en_2_2, set_1d_en_0_45, set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020,
+set_3by3_gamut_data_hdr (only used in 2019 models),
 set_tonemap_params (for HDR10 picture modes),
 set_dolby_vision_config_data (not recommended on >=2020 models!),
 ```
@@ -308,6 +310,7 @@ The following commands are supported via calibration API:
 ```
 upload_1d_lut, upload_3d_lut_bt709, upload_3d_lut_bt2020,
 set_1d_en_2_2, set_1d_en_0_45, set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020,
+set_3by3_gamut_data_hdr (only used in 2019 models),
 set_tonemap_params (for HDR10 picture modes),
 set_dolby_vision_config_data (not recommended on >=2020 models!)
 ```

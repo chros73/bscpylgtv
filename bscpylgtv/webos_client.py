@@ -2440,7 +2440,7 @@ class WebOsClient:
 
         async def set_3by3_gamut_data(self, command, data):
             self.check_calibration_support("lut1d", "3by3 Gamut Data Upload")
-            if command not in [cal.BT709_3BY3_GAMUT_DATA, cal.BT2020_3BY3_GAMUT_DATA]:
+            if command not in [cal.BT709_3BY3_GAMUT_DATA, cal.BT2020_3BY3_GAMUT_DATA, cal.HDR_3BY3_GAMUT_DATA]:
                 raise PyLGTVCmdException(f"Invalid 3by3 Gamut Data Upload command {command}.")
 
             if type(data) is list and len(data) == 0:
@@ -2464,6 +2464,10 @@ class WebOsClient:
         async def set_3by3_gamut_data_bt2020(self, data=None):
             """Set BT2020 slot 3x3 color matrix (color gamut space transformation in linear space)."""
             return await self.set_3by3_gamut_data(cal.BT2020_3BY3_GAMUT_DATA, data)
+
+        async def set_3by3_gamut_data_hdr(self, data=None):
+            """Set HDR 3x3 color matrix used only in 2019 models (color gamut space transformation in linear space)."""
+            return await self.set_3by3_gamut_data(cal.HDR_3BY3_GAMUT_DATA, data)
 
         async def set_bypass_modes_sdr(self, unity_1d_lut=False):
             """Set SDR bypass modes."""

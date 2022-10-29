@@ -19,6 +19,7 @@ from .exceptions import PyLGTVPairException, PyLGTVCmdException, PyLGTVCmdError,
 from .handshake import REGISTRATION_MESSAGE
 from .storage_proto import StorageProto
 from .storage_sqlitedict import StorageSqliteDict
+from .constants import LUT3D_SIZES, DV_CONFIG_TYPES
 
 if np:
     from . import cal_commands as cal
@@ -2142,67 +2143,36 @@ class WebOsClient:
 
     def calibration_support_info(self):
         if self._calibration_info is None:
-            if self._system_info is None:
-                raise PyLGTVCmdException(
-                    f"System info is not available, -s command line switch is required."
-                )
+            if self._software_info is None:
+                raise PyLGTVCmdException(f"Software info is not available, -s command line switch is required.")
+
             info = {
-                "lut3d_size": None,
-                "dv_config_type": None,
+                "lut3d":    None,
+                "dovi":     None,
             }
 
-            model_name = self._system_info["modelName"]
-            if model_name.startswith("OLED") and len(model_name) > 7:
-                model = model_name[6]
-                special_years = {"X": 10, "S": 12}
-                year = special_years[model_name[7]] if model_name[7] in special_years else int(model_name[7])
-                if year < 6:
-                    # 2021 is encoded as 1, later years will probably keep this pattern
-                    year += 10
-                if year >= 8:
-                    if model in ["A", "B"]:
-                        info["lut3d_size"] = 17
-                    else:
-                        info["lut3d_size"] = 33
-                if year == 8:
-                    info["dv_config_type"] = 2018
-                elif year >= 9:
-                    info["dv_config_type"] = 2019
-            elif len(model_name) > 5:
-                size = None
-                try:
-                    size = int(model_name[0:2])
-                except ValueError:
-                    pass
-                if size:
-                    if model_name[2:5] == "ART" or model_name[2:4] == "LX":
-                        # LG Objet Collection
-                        info["lut3d_size"] = 33
-                        info["dv_config_type"] = 2019
-                    else:
-                        modeltype = model_name[2]
-                        modelyear = model_name[3]
-                        modelseries = int(model_name[4])
-                        modelnumber = int(model_name[5])
+            model_name = self._software_info["model_name"]
+            if model_name.startswith("HE_DTV_") and len(model_name) >= 11:
+                chip_type = model_name[7:11]
 
-                        if modeltype == "S" and modelyear in ["K", "M"] and modelseries >= 8:
-                            if modelseries == 9 and modelnumber == 9:
-                                info["lut3d_size"] = 33
-                            else:
-                                info["lut3d_size"] = 17
-                            if modelyear == "K":
-                                info["dv_config_type"] = 2018
-                            elif modelyear == "M":
-                                info["dv_config_type"] = 2019
+                if chip_type in ["W18H", "W19H", "W20H", "W21H", "W22H"]:
+                    info["lut3d"] = LUT3D_SIZES["17pt"]
+                elif chip_type in ["W18O", "W19O", "W20O", "W21O", "W22O"]:
+                    info["lut3d"] = LUT3D_SIZES["33pt"]
+
+                if chip_type in ["W18H", "W18O"]:
+                    info["dovi"] = DV_CONFIG_TYPES["2018"]
+                elif chip_type in ["W19H", "W19O", "W20H", "W20O", "W21H", "W21O", "W22H", "W22O"]:
+                    info["dovi"] = DV_CONFIG_TYPES["2019"]
 
             self._calibration_info = info
 
     if np:
-        def check_calibration_support(self, property="lut3d_size", message="3D LUT Upload"):
+        def check_calibration_support(self, property="lut3d", message="3D LUT Upload"):
             self.calibration_support_info()
             if not self._calibration_info[property]:
-                model = self._system_info["modelName"]
-                raise PyLGTVCmdException(f"{message} not supported by tv model {model}.")
+                model = self._software_info["model_name"]
+                raise PyLGTVCmdException(f"{message} not supported by model {model}.")
 
         def validateCalibrationData(self, data, shape, dtype, range=None, count=None):
             if not isinstance(data, np.ndarray):
@@ -2256,8 +2226,8 @@ class WebOsClient:
             return await self.get_calibration_data(cal.GET_1D_LUT, (3, 1024))
 
         async def get_3d_lut(self):
-            self.check_calibration_support("lut3d_size", "3D LUT Upload")
-            lut3d_size = self._calibration_info["lut3d_size"]
+            self.check_calibration_support("lut3d", "3D LUT Upload")
+            lut3d_size = self._calibration_info["lut3d"]
             lut3d_shape = (lut3d_size, lut3d_size, lut3d_size, 3)
             return await self.get_calibration_data(cal.GET_3D_LUT, lut3d_shape)
 
@@ -2376,9 +2346,9 @@ class WebOsClient:
                 data = np.array([], dtype=np.uint16)
                 dataOpt = 2
             else:
-                self.check_calibration_support("lut3d_size", "3D LUT Upload")
+                self.check_calibration_support("lut3d", "3D LUT Upload")
 
-                lut3d_size = self._calibration_info["lut3d_size"]
+                lut3d_size = self._calibration_info["lut3d"]
                 if data is None:
                     data = await asyncio.get_running_loop().run_in_executor(
                         None, unity_lut_3d, lut3d_size
@@ -2598,13 +2568,13 @@ class WebOsClient:
                 data = np.array([], dtype=np.uint8)
                 dataOpt = 2
             else:
-                self.check_calibration_support("dv_config_type", "Dolby Vision Configuration Upload")
+                self.check_calibration_support("dovi", "Dolby Vision Configuration Upload")
 
                 config = await asyncio.get_running_loop().run_in_executor(
                     None,
                     functools.partial(
                         create_dolby_vision_config,
-                        version=self._calibration_info["dv_config_type"],
+                        version=self._calibration_info["dovi"],
                         picture_mode=picture_mode,
                         white_level=white_level,
                         black_level=black_level,
@@ -2620,7 +2590,7 @@ class WebOsClient:
         async def write_dolby_vision_config_file(self, data, apply_to_all_modes=False, full_path=""):
             """Writes Dolby Vision config file for USB upload."""
 
-            self.check_calibration_support("dv_config_type", "Dolby Vision Configuration Generation")
+            self.check_calibration_support("dovi", "Dolby Vision Configuration Generation")
             if not isinstance(apply_to_all_modes, bool):
                 raise TypeError(
                     f"apply_to_all_modes should be a bool, instead got {apply_to_all_modes} of type {type(apply_to_all_modes)}."
@@ -2647,7 +2617,7 @@ class WebOsClient:
                 functools.partial(
                     generate_dolby_vision_config,
                     data=data,
-                    version=self._calibration_info["dv_config_type"],
+                    version=self._calibration_info["dovi"],
                 ),
             )
 

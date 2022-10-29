@@ -76,8 +76,8 @@ def bscpylgtvcommand():
             dest="states",
             type=convert_arg,
             nargs="?",
-            const='["system_info"]',
-            help='optional setting states ("system_info" static state is required by some of the calibration commands)'
+            const='["software_info"]',
+            help='optional setting states ("software_info" static state is required by some of the calibration commands)'
         )
         parser.add_argument(
             "host", type=str, help="hostname or ip address of the TV to connect to"

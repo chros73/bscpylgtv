@@ -91,10 +91,10 @@ bscpylgtvcommand 192.168.1.18 power_off
 ## Optional command line switches
 
 ```bash
-# -s "[\"<state1>\", "\<state2>\"]" : set states ("system_info" static state is required by some of the calibration commands)
+# -s "[\"<state1>\", "\<state2>\"]" : set states ("software_info" static state is required by some of the calibration commands)
 #    values: ["system_info", "software_info", "power", "current_app", "muted", "volume", "apps", "inputs", "sound_output", "picture_settings"]
 bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
-bscpylgtvcommand -s "[\"system_info\"]" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
+bscpylgtvcommand -s "[\"software_info\"]" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
 # -o : getting hello info (e.g. to get unique deviceUUID)
 bscpylgtvcommand -o 192.168.1.18 get_hello_info true
 # -k <client_key> : specifying a client key
@@ -190,22 +190,7 @@ More useful examples can be found in [docs/scripts](https://github.com/chros73/b
 
 On supported models, upload to internal 1D/3D LUTs, resetting factory calibration data uploaded via calibration API, uploading custom tone mapping parameters (>=2019 models), using internal test pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
 
-Supported models (more can be added via PR once they are confirmed working well):
-```
-LG 2023-25 Alpha 9 Gx: OLED Rx Zx Gx Cx ARTx LXx
-LG 2023-25 Alpha 7 Gx: OLED Bx Ax
-LG 2022 Alpha 9 G5: OLED R2 Z2 G2 C2 CS ART90 LX1 LX3
-LG 2022 Alpha 7 G5: OLED B2 A2
-LG 2021 Alpha 9 G4: OLED R1 Z1 G1 C1
-LG 2021 Alpha 7 G4: OLED B1 A1
-LG 2020 Alpha 9 G3: OLED RX ZX WX GX CX
-LG 2020 Alpha 7 G3: OLED BX
-LG 2019 Alpha 9 G2: OLED R9 Z9 W9 W9S E9 C9 NanoCell SM99
-LG 2019 Alpha 7 G2: OLED B9 NanoCell SM80-SM98
-LG 2018 Alpha 9 G1: OLED W8 G8 E8 C8
-LG 2018 Alpha 7 G1: OLED B8 NanoCell SK8 SK9
-LG 2018 Alpha 7 G1: Super UHD LED (8000 & higher model numbers)
-```
+Supported models: LG OLED and LCD models with Alpha 7 and Alpha 9 chipsets
 
 ### Calibration commands
 
@@ -284,7 +269,7 @@ import asyncio
 from bscpylgtv import WebOsClient
 
 async def runloop():
-    client = await WebOsClient.create('192.168.1.18', states=["system_info"])
+    client = await WebOsClient.create('192.168.1.18', states=["software_info"])
     await client.connect()
 
     await client.set_input("HDMI_2")
@@ -421,6 +406,14 @@ bscpylgtvcommand 192.168.1.18 toggle_itpg false 0
 ## Development of `bscpylgtv`
 
 A collection of useful commands and scripts are available under [docs/utils](https://github.com/chros73/bscpylgtv/tree/master/docs/utils) directory to add support for new firmwares in the future and make PRs easier to do.
+
+### Adding new chip type
+
+Only 3D LUT and Dolby Vision config related calibration commands require chip type to be present to work properly, utilising `calibration_support_info` method.
+The `model_name` field of the response of `get_software_info` method contains the chip type:
+```bash
+bscpylgtvcommand 192.168.1.18 get_software_info true
+```
 
 ### Unit testing
 

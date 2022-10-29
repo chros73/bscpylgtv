@@ -16,23 +16,23 @@ TEST_DIR_EXPECTED = "expected"
 class TestWebOsClientCalibration():
 
     data_check_calibration_support = [
-        ( "OLED65C6V",      "lut3d_size",           "3D LUT Upload",                            False ),
-        ( "OLED65C6V",      "dv_config_type",       "Dolby Vision Configuration Upload",        False ),
+        ( "HE_DTV_W17H",    "lut3d",    "3D LUT Upload",                        False ),
+        ( "HE_DTV_W17H",    "dovi",     "Dolby Vision Configuration Upload",    False ),
 
-        ( "OLED65C26LA",    "lut3d_size",           "3D LUT Upload",                            True ),
-        ( "OLED65C26LA",    "dv_config_type",       "Dolby Vision Configuration Upload",        True ),
+        ( "HE_DTV_W22O",    "lut3d",    "3D LUT Upload",                        True ),
+        ( "HE_DTV_W22O",    "dovi",     "Dolby Vision Configuration Upload",    True ),
     ]
 
     @pytest.mark.parametrize("model,property,message,expected", data_check_calibration_support)
     async def test_check_calibration_support(self, model, property, message, expected):
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : model}
         
         if expected:
             client.check_calibration_support(property, message)
             assert expected == True
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by model .+$'):
                 client.check_calibration_support(property, message)
 
 
@@ -150,13 +150,13 @@ class TestWebOsClientCalibration():
 
 
     data_get_3d_lut = [
-        ( "OLED65C6V",      None,           "3dlut_33pt_00.txt",    None,   None,                   None,                   -2 ),
-        ( "OLED65B8SLC",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "foo",                  "3dlut_17pt_00.npy",    -1 ),
-        ( "OLED65C26LA",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "foo",                  "3dlut_33pt_00.npy",    -1 ),
-        ( "OLED65B8SLC",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "unsigned integer16",   "3dlut_17pt_00.npy",    0 ),
-        ( "OLED65C26LA",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "unsigned integer16",   "3dlut_33pt_00.npy",    0 ),
-        ( "OLED65B8SLC",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14739,  "unsigned integer16",   "3dlut_17pt_00.npy",    1 ),
-        ( "OLED65C26LA",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107811, "unsigned integer16",   "3dlut_33pt_00.npy",    1 ),
+        ( "HE_DTV_W17H",    None,           "3dlut_33pt_00.txt",    None,   None,                   None,                   -2 ),
+        ( "HE_DTV_W18H",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "foo",                  "3dlut_17pt_00.npy",    -1 ),
+        ( "HE_DTV_W22O",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "foo",                  "3dlut_33pt_00.npy",    -1 ),
+        ( "HE_DTV_W18H",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "unsigned integer16",   "3dlut_17pt_00.npy",    0 ),
+        ( "HE_DTV_W22O",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "unsigned integer16",   "3dlut_33pt_00.npy",    0 ),
+        ( "HE_DTV_W18H",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14739,  "unsigned integer16",   "3dlut_17pt_00.npy",    1 ),
+        ( "HE_DTV_W22O",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107811, "unsigned integer16",   "3dlut_33pt_00.npy",    1 ),
     ]
 
     @pytest.mark.parametrize("model,command,fileName,count,type,dataFile,expected", data_get_3d_lut)
@@ -167,8 +167,8 @@ class TestWebOsClientCalibration():
         data = {"data": dataLut, "dataCount": count, "dataType": type}
         mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : model}
 
         if expected > 0:
             res = await client.get_3d_lut()
@@ -183,7 +183,7 @@ class TestWebOsClientCalibration():
             with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
                 await client.get_3d_lut()
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by model .+$'):
                 await client.get_3d_lut()
 
 
@@ -214,7 +214,7 @@ class TestWebOsClientCalibration():
             with pytest.raises(PyLGTVCmdException, match=r'Invalid picture_mode .+$'):
                 await client.start_calibration(picMode)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by model .+$'):
                 await client.start_calibration(picMode)
 
 
@@ -384,21 +384,21 @@ class TestWebOsClientCalibration():
 
 
     data_upload_3d_lut = [
-        ( "OLED65C6V",     None,    cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   -2 ),
-        ( "OLED65C6V",     None,    None,                       None,                   None,   None,   -1 ),
-        ( "OLED65B8SLC",   None,    "foo",                      None,                   None,   None,   -1 ),
-        ( "OLED65B8SLC",   [3],     cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   0 ),
-        ( "OLED65B8SLC",   [],      cal.UPLOAD_3D_LUT_BT2020,   "",                     0,      2,      1 ),
-        ( "OLED65B8SLC",   None,    cal.UPLOAD_3D_LUT_BT709,    "3dlut_17pt_unity.txt", 14739,  1,      1 ),
-        ( "OLED65C26LA",   None,    cal.UPLOAD_3D_LUT_BT2020,   "3dlut_33pt_unity.txt", 107811, 1,      1 ),
+        ( "HE_DTV_W17H",   None,    cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   -2 ),
+        ( "HE_DTV_W17H",   None,    None,                       None,                   None,   None,   -1 ),
+        ( "HE_DTV_W18H",   None,    "foo",                      None,                   None,   None,   -1 ),
+        ( "HE_DTV_W18H",   [3],     cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   0 ),
+        ( "HE_DTV_W18H",   [],      cal.UPLOAD_3D_LUT_BT2020,   "",                     0,      2,      1 ),
+        ( "HE_DTV_W18H",   None,    cal.UPLOAD_3D_LUT_BT709,    "3dlut_17pt_unity.txt", 14739,  1,      1 ),
+        ( "HE_DTV_W22O",   None,    cal.UPLOAD_3D_LUT_BT2020,   "3dlut_33pt_unity.txt", 107811, 1,      1 ),
     ]
 
     @pytest.mark.parametrize("model,inputData,command,dataFile,dataCount,dataOpt,expected", data_upload_3d_lut)
     async def test_upload_3d_lut(self, mocker, model, inputData, command, dataFile, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : model}
 
         if expected > 0:
             await client.upload_3d_lut(command, inputData)
@@ -427,7 +427,7 @@ class TestWebOsClientCalibration():
             with pytest.raises(PyLGTVCmdException, match=r'Invalid 3D LUT Upload command .+$'):
                 await client.upload_3d_lut(command, inputData)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by model .+$'):
                 await client.upload_3d_lut(command, inputData)
 
 
@@ -442,8 +442,8 @@ class TestWebOsClientCalibration():
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut')
         
         data = []
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : "OLED65C26LA"}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : "HE_DTV_W22O"}
         method = getattr(client, f'upload_3d_lut_{methodName}')
         await method(data)
 
@@ -452,24 +452,24 @@ class TestWebOsClientCalibration():
 
 
     data_upload_3d_lut_from_file = [
-        ( "OLED65C6V",     "3dlut_17pt.cube",   cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   -5 ),
-        ( "OLED65B8SLC",   "3dlut.cal",         None,                       None,                   None,   None,   -4 ),
+        ( "HE_DTV_W17H",   "3dlut_17pt.cube",   cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   -5 ),
+        ( "HE_DTV_W18H",   "3dlut.cal",         None,                       None,                   None,   None,   -4 ),
 
-        ( "OLED65B8SLC",   "3dlut_11.cube",     None,                       None,                   None,   None,   -3 ),
-        ( "OLED65B8SLC",   "3dlut_12.cube",     None,                       None,                   None,   None,   -2 ),
-        ( "OLED65B8SLC",   "3dlut_13.cube",     None,                       None,                   None,   None,   -1 ),
-        ( "OLED65B8SLC",   "3dlut_14.cube",     cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   0 ),
+        ( "HE_DTV_W18H",   "3dlut_11.cube",     None,                       None,                   None,   None,   -3 ),
+        ( "HE_DTV_W18H",   "3dlut_12.cube",     None,                       None,                   None,   None,   -2 ),
+        ( "HE_DTV_W18H",   "3dlut_13.cube",     None,                       None,                   None,   None,   -1 ),
+        ( "HE_DTV_W18H",   "3dlut_14.cube",     cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   0 ),
 
-        ( "OLED65B8SLC",   "3dlut_17pt.cube",   cal.UPLOAD_3D_LUT_BT709,    "3dlut_17pt_01.txt",    14739,  1,      1 ),
-        ( "OLED65C26LA",   "3dlut_33pt.cube",   cal.UPLOAD_3D_LUT_BT2020,   "3dlut_33pt_01.txt",    107811, 1,      1 ),
+        ( "HE_DTV_W18H",   "3dlut_17pt.cube",   cal.UPLOAD_3D_LUT_BT709,    "3dlut_17pt_01.txt",    14739,  1,      1 ),
+        ( "HE_DTV_W22O",   "3dlut_33pt.cube",   cal.UPLOAD_3D_LUT_BT2020,   "3dlut_33pt_01.txt",    107811, 1,      1 ),
     ]
 
     @pytest.mark.parametrize("model,fileName,command,dataFile,dataCount,dataOpt,expected", data_upload_3d_lut_from_file)
     async def test_upload_3d_lut_from_file(self, mocker, model, fileName, command, dataFile, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : model}
         currentDir = os.path.dirname(os.path.realpath(__file__))
 
         if expected > 0:
@@ -505,7 +505,7 @@ class TestWebOsClientCalibration():
             with pytest.raises(ValueError, match=r'Unsupported file format .+$'):
                 await client.upload_3d_lut_from_file(command, fileName)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by model .+$'):
                 await client.upload_3d_lut_from_file(command, os.path.join(currentDir, TEST_DIR_DATA, fileName))
 
 
@@ -520,8 +520,8 @@ class TestWebOsClientCalibration():
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_from_file')
         
         fileName = f'3dlut_33pt_{methodName}.cube'
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : "OLED65C26LA"}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : "HE_DTV_W22O"}
         method = getattr(client, f'upload_3d_lut_{methodName}_from_file')
         await method(fileName)
 
@@ -685,8 +685,8 @@ class TestWebOsClientCalibration():
         if unity1dLut:
             mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
         
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : "OLED65C26LA"}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : "HE_DTV_W22O"}
         result = await client.set_bypass_modes_sdr(unity1dLut)
 
         client.set_1d_en_2_2.assert_called_once_with()
@@ -740,8 +740,8 @@ class TestWebOsClientCalibration():
             mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt709')
             mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt2020')
         
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : "OLED65C26LA"}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : "HE_DTV_W22O"}
         result = await client.set_bypass_modes_hdr10(unity_3d_lut)
 
         client.upload_1d_lut.assert_called_once_with()
@@ -870,31 +870,31 @@ class TestWebOsClientCalibration():
 
 
     data_set_dolby_vision_config_data = [
-        ( "OLED65C6V",      "dolby_game",   620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  -1 ),
+        ( "HE_DTV_W17H",    "dolby_game",   620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  -1 ),
 
-        ( "OLED65C8PLA",    "foo",          620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "expert1",      620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "dolby_game",   50,  0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "dolby_game",   4001,0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "dolby_game",   620, -1,     2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "dolby_game",   620, 1,      2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "dolby_game",   620, 0.0001, -1,  [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "dolby_game",   620, 0.0001, 10,  [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "dolby_game",   620, 0.0001, 2.2, [-0.0001, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
-        ( "OLED65C8PLA",    "dolby_game",   620, 0.0001, 2.2, [0.6796, 1.0001, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "foo",          620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "expert1",      620, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "dolby_game",   50,  0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "dolby_game",   4001,0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "dolby_game",   620, -1,     2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "dolby_game",   620, 1,      2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "dolby_game",   620, 0.0001, -1,  [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "dolby_game",   620, 0.0001, 10,  [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "dolby_game",   620, 0.0001, 2.2, [-0.0001, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
+        ( "HE_DTV_W18H",    "dolby_game",   620, 0.0001, 2.2, [0.6796, 1.0001, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], None,  None,    None,  0 ),
 
-        ( "OLED65C8PLA",    "dolby_game",   [],   None,   None,   None,   "", 0,  2,  1 ),
-        ( "OLED65C8PLA",    "dolby_cinema_dark",    710, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], "UGljdHVyZU1vZGUgPSAyDQpUbWF4ID0gNzEwLjAwMDANClRtaW4gPSAwLjAwMDENClRnYW1tYSA9IDIuMg0KQ29sb3JQcmltYXJpZXMgPSAwLjY3OTYgMC4zMTg3IDAuMjU5NSAwLjY4NDkgMC4xNDQ4IDAuMDQ5NCAwLjMxMjcgMC4zMjkwDQpUTE1TMlJHQm1hdCA9IDQuMTgyNzgzOTgzMjk0NTEgLTMuMzAwNDkyOTUxMDE5NDEgMC4xMTc3NDk4NzA5NTUzMjUgLTAuODgyNDY3MTQwNzYyNzUwIDIuMDE3MzQ1NDgyODExODMgLTAuMTM0ODY1ODY5Nzg0NTI3IDAuMDQzNzgyNzQ3MzA0ODQzMSAtMC4xMDc2NzAyODY3NTcwMjUgMS4wNjM5MTU1MTA2MDc1MA0K",  315,    1,  1 ),
-        ( "OLED65C26LA",    "dolby_game",   [],   None,   None,   None,   "", 0,  2,  1 ),
-        ( "OLED65C26LA",    "dolby_game",   820, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], "W1BpY3R1cmVNb2RlID0gNF0NClRtYXggPSA4MjAuMDAwMA0KVG1pbiA9IDAuMDAwMQ0KVGdhbW1hID0gMi4yDQpUUHJpbWFyaWVzID0gMC42Nzk2IDAuMzE4NyAwLjI1OTUgMC42ODQ5IDAuMTQ0OCAwLjA0OTQgMC4zMTI3IDAuMzI5MA0K",  135,    1,  1 ),
+        ( "HE_DTV_W18H",    "dolby_game",   [],   None,   None,   None,   "", 0,  2,  1 ),
+        ( "HE_DTV_W18H",    "dolby_cinema_dark",    710, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], "UGljdHVyZU1vZGUgPSAyDQpUbWF4ID0gNzEwLjAwMDANClRtaW4gPSAwLjAwMDENClRnYW1tYSA9IDIuMg0KQ29sb3JQcmltYXJpZXMgPSAwLjY3OTYgMC4zMTg3IDAuMjU5NSAwLjY4NDkgMC4xNDQ4IDAuMDQ5NCAwLjMxMjcgMC4zMjkwDQpUTE1TMlJHQm1hdCA9IDQuMTgyNzgzOTgzMjk0NTEgLTMuMzAwNDkyOTUxMDE5NDEgMC4xMTc3NDk4NzA5NTUzMjUgLTAuODgyNDY3MTQwNzYyNzUwIDIuMDE3MzQ1NDgyODExODMgLTAuMTM0ODY1ODY5Nzg0NTI3IDAuMDQzNzgyNzQ3MzA0ODQzMSAtMC4xMDc2NzAyODY3NTcwMjUgMS4wNjM5MTU1MTA2MDc1MA0K",  315,    1,  1 ),
+        ( "HE_DTV_W22O",    "dolby_game",   [],   None,   None,   None,   "", 0,  2,  1 ),
+        ( "HE_DTV_W22O",    "dolby_game",   820, 0.0001, 2.2, [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494, 0.3127, 0.3290], "W1BpY3R1cmVNb2RlID0gNF0NClRtYXggPSA4MjAuMDAwMA0KVG1pbiA9IDAuMDAwMQ0KVGdhbW1hID0gMi4yDQpUUHJpbWFyaWVzID0gMC42Nzk2IDAuMzE4NyAwLjI1OTUgMC42ODQ5IDAuMTQ0OCAwLjA0OTQgMC4zMTI3IDAuMzI5MA0K",  135,    1,  1 ),
     ]
 
     @pytest.mark.parametrize("model,picMode,whiteL,blackL,gamma,primaries,data,dataCount,dataOpt,expected", data_set_dolby_vision_config_data)
     async def test_set_dolby_vision_config_data(self, mocker, model, picMode, whiteL, blackL, gamma, primaries, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : model}
 
         if expected > 0:
             await client.set_dolby_vision_config_data(picMode, whiteL, blackL, gamma, primaries)
@@ -914,40 +914,40 @@ class TestWebOsClientCalibration():
             with pytest.raises(ValueError, match=r'Invalid .+$'):
                 await client.set_dolby_vision_config_data(picMode, whiteL, blackL, gamma, primaries)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by model .+$'):
                 await client.set_dolby_vision_config_data(picMode, whiteL, blackL, gamma, primaries)
 
 
 
     data_write_dolby_vision_config_file = [
-        ( "OLED65C6V",      [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   -3 ),
+        ( "HE_DTV_W17H",      [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   -3 ),
 
-        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,    None, None, -2 ),
+        ( "HE_DTV_W18H",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,    None, None, -2 ),
 
-        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   "false",    "", None,   -1 ),
+        ( "HE_DTV_W18H",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   "false",    "", None,   -1 ),
 
-        ( "OLED65C8PLA",    [{"picture_mode": "foo", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
-        ( "OLED65C26LA",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
-        ( "OLED65C8PLA",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False, "", None,   0 ),
-        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
-        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750}],   False, "", None,   0 ),
-        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448]}],   False,  "", None,   0 ),
-        ( "OLED65C8PLA",    [{}], False,  "", None, 0 ),
-        ( "OLED65C8PLA",    [],   False,  "", None, 0 ),
-        ( "OLED65C8PLA",    None, False,  "", None, 0 ),
+        ( "HE_DTV_W18H",    [{"picture_mode": "foo", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
+        ( "HE_DTV_W22O",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
+        ( "HE_DTV_W18H",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False, "", None,   0 ),
+        ( "HE_DTV_W18H",    [{"picture_mode": "dolby_cinema_dark", "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", None,   0 ),
+        ( "HE_DTV_W18H",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750}],   False, "", None,   0 ),
+        ( "HE_DTV_W18H",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448]}],   False,  "", None,   0 ),
+        ( "HE_DTV_W18H",    [{}], False,  "", None, 0 ),
+        ( "HE_DTV_W18H",    [],   False,  "", None, 0 ),
+        ( "HE_DTV_W18H",    None, False,  "", None, 0 ),
 
-        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2018_01.txt",   1 ),
-        ( "OLED65C8PLA",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   True,  "", "dv_cfg_2018_02.txt",   1 ),
-        ( "OLED65C8PLA",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2018_03.txt",   1 ),
-        ( "OLED65C26LA",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2019_01.txt",   1 ),
-        ( "OLED65C26LA",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   True,  "", "dv_cfg_2019_02.txt",   1 ),
-        ( "OLED65C26LA",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "d:\temp",    "dv_cfg_2019_03.txt",   1 ),
+        ( "HE_DTV_W18H",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2018_01.txt",   1 ),
+        ( "HE_DTV_W18H",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   True,  "", "dv_cfg_2018_02.txt",   1 ),
+        ( "HE_DTV_W18H",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2018_03.txt",   1 ),
+        ( "HE_DTV_W22O",    [{"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "", "dv_cfg_2019_01.txt",   1 ),
+        ( "HE_DTV_W22O",    [{"white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   True,  "", "dv_cfg_2019_02.txt",   1 ),
+        ( "HE_DTV_W22O",    [{"picture_mode": "dolby_cinema_bright", "white_level": 710, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_cinema_dark", "white_level": 750, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}, {"picture_mode": "dolby_game", "white_level": 680, "primaries": [0.6796, 0.3187, 0.2595, 0.6849, 0.1448, 0.0494]}],   False,  "d:\temp",    "dv_cfg_2019_03.txt",   1 ),
     ]
 
     @pytest.mark.parametrize("model,data,allModes,path,cfgFile,expected", data_write_dolby_vision_config_file)
     async def test_write_dolby_vision_config_file(self, mocker, model, data, allModes, path, cfgFile, expected):
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=["software_info"], client_key="x")
+        client._software_info = {"model_name" : model}
 
         if expected > 0:
             currentDir = os.path.dirname(os.path.realpath(__file__))
@@ -970,7 +970,7 @@ class TestWebOsClientCalibration():
             with pytest.raises(TypeError, match=r'^.+ should be a str, .+$'):
                 await client.write_dolby_vision_config_file(data, allModes, path)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by model .+$'):
                 await client.write_dolby_vision_config_file(data, allModes, path)
 
 

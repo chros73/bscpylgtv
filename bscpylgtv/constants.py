@@ -1,11 +1,21 @@
+from types import MappingProxyType
+
 try:
     import numpy as np
 except ImportError:
     np = None
 
-if np:
-    from types import MappingProxyType
+LUT3D_SIZES = MappingProxyType({
+    "17pt": 17,
+    "33pt": 33,
+})
 
+DV_CONFIG_TYPES = MappingProxyType({
+    "2018": 2018,
+    "2019": 2019,
+})
+
+if np:
     #  xr, yr, xg, yg, xb, yb, xw, yw
     BT2020_PRIMARIES = (0.708, 0.292, 0.170, 0.797, 0.131, 0.046, 0.3127, 0.3290)
 

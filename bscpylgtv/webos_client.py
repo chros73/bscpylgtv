@@ -2147,10 +2147,7 @@ class WebOsClient:
                     f"System info is not available, -s command line switch is required."
                 )
             info = {
-                "lut1d": False,
                 "lut3d_size": None,
-                "custom_tone_mapping": False,
-                "itpg": False,
                 "dv_config_type": None,
             }
 
@@ -2163,7 +2160,6 @@ class WebOsClient:
                     # 2021 is encoded as 1, later years will probably keep this pattern
                     year += 10
                 if year >= 8:
-                    info["lut1d"] = True
                     if model in ["A", "B"]:
                         info["lut3d_size"] = 17
                     else:
@@ -2171,8 +2167,6 @@ class WebOsClient:
                 if year == 8:
                     info["dv_config_type"] = 2018
                 elif year >= 9:
-                    info["custom_tone_mapping"] = True
-                    info["itpg"] = True
                     info["dv_config_type"] = 2019
             elif len(model_name) > 5:
                 size = None
@@ -2183,10 +2177,7 @@ class WebOsClient:
                 if size:
                     if model_name[2:5] == "ART" or model_name[2:4] == "LX":
                         # LG Objet Collection
-                        info["lut1d"] = True
                         info["lut3d_size"] = 33
-                        info["custom_tone_mapping"] = True
-                        info["itpg"] = True
                         info["dv_config_type"] = 2019
                     else:
                         modeltype = model_name[2]
@@ -2195,7 +2186,6 @@ class WebOsClient:
                         modelnumber = int(model_name[5])
 
                         if modeltype == "S" and modelyear in ["K", "M"] and modelseries >= 8:
-                            info["lut1d"] = True
                             if modelseries == 9 and modelnumber == 9:
                                 info["lut3d_size"] = 33
                             else:
@@ -2203,14 +2193,12 @@ class WebOsClient:
                             if modelyear == "K":
                                 info["dv_config_type"] = 2018
                             elif modelyear == "M":
-                                info["custom_tone_mapping"] = True
-                                info["itpg"] = True
                                 info["dv_config_type"] = 2019
 
             self._calibration_info = info
 
     if np:
-        def check_calibration_support(self, property="lut1d", message="Calibration commands"):
+        def check_calibration_support(self, property="lut3d_size", message="3D LUT Upload"):
             self.calibration_support_info()
             if not self._calibration_info[property]:
                 model = self._system_info["modelName"]
@@ -2229,7 +2217,6 @@ class WebOsClient:
                 raise ValueError(f"data should have size {count} but instead has {data.size}")
 
         async def get_calibration_data(self, command, shape):
-            self.check_calibration_support()
             if command not in [cal.GET_GAMMA_2_2_TRANSFORM, cal.GET_GAMMA_0_45_TRANSFORM, cal.GET_3BY3_GAMUT_DATA, cal.GET_HDR_3BY3_GAMUT_DATA, cal.GET_1D_LUT, cal.GET_3D_LUT]:
                 raise PyLGTVCmdException(f"Invalid Get Calibration command {command}.")
 
@@ -2267,7 +2254,7 @@ class WebOsClient:
             return await self.get_calibration_data(cal.GET_1D_LUT, (3, 1024))
 
         async def get_3d_lut(self):
-            self.check_calibration_support()
+            self.check_calibration_support("lut3d_size", "3D LUT Upload")
             lut3d_size = self._calibration_info["lut3d_size"]
             lut3d_shape = (lut3d_size, lut3d_size, lut3d_size, 3)
             return await self.get_calibration_data(cal.GET_3D_LUT, lut3d_shape)
@@ -2296,18 +2283,15 @@ class WebOsClient:
             return await self.request(ep.CALIBRATION, payload)
 
         async def start_calibration(self, picture_mode):
-            self.check_calibration_support()
             if not any(picture_mode in ls for ls in [SDR_PICTURE_MODES, HDR10_PICTURE_MODES, DV_PICTURE_MODES]):
                 raise PyLGTVCmdException(f"Invalid picture_mode {picture_mode}.")
 
             return await self.calibration_request(cal.CAL_START, None, 1, picture_mode)
 
         async def end_calibration(self):
-            self.check_calibration_support()
             return await self.calibration_request(cal.CAL_END)
 
         async def set_ui_data(self, command, value):
-            self.check_calibration_support("lut1d", "Setting picture mode property")
             if command not in [cal.BACKLIGHT_UI_DATA, cal.CONTRAST_UI_DATA, cal.BRIGHTNESS_UI_DATA, cal.COLOR_UI_DATA]:
                 raise PyLGTVCmdException(f"Invalid UI Data command {command}.")
             if type(value) is not int or value < 0 or value > 100:
@@ -2329,8 +2313,6 @@ class WebOsClient:
             return await self.set_ui_data(cal.COLOR_UI_DATA, value)
 
         async def upload_1d_lut(self, data=None):
-            self.check_calibration_support("lut1d", "1D LUT Upload")
-
             if type(data) is list and len(data) == 0:
                 # Reset uploaded data
                 data = np.array([], dtype=np.uint16)
@@ -2344,8 +2326,6 @@ class WebOsClient:
             return await self.calibration_request(cal.UPLOAD_1D_LUT, data, dataOpt)
 
         async def upload_1d_lut_from_file(self, filename):
-            self.check_calibration_support("lut1d", "1D LUT Upload")
-
             ext = filename.split(".")[-1].lower()
             if ext == "cal":
                 lut = await asyncio.get_running_loop().run_in_executor(
@@ -2364,7 +2344,6 @@ class WebOsClient:
 
         async def toggle_calibration_flag(self, command, enable):
             """Toggle various calibration flags."""
-            self.check_calibration_support("lut1d", "Calibration Flag")
             if command not in [cal.ENABLE_GAMMA_2_2_TRANSFORM, cal.ENABLE_GAMMA_0_45_TRANSFORM, cal.ENABLE_1D_LUT, cal.ENABLE_3BY3_GAMUT]:
                 raise PyLGTVCmdException(f"Invalid calibration flag command {command}.")
             if not ((type(enable) is list and len(enable) == 0)
@@ -2387,7 +2366,6 @@ class WebOsClient:
             return await self.toggle_calibration_flag(cal.ENABLE_1D_LUT, enable)
 
         async def upload_3d_lut(self, command, data):
-            self.check_calibration_support("lut3d_size", "3D LUT Upload")
             if command not in [cal.UPLOAD_3D_LUT_BT709, cal.UPLOAD_3D_LUT_BT2020]:
                 raise PyLGTVCmdException(f"Invalid 3D LUT Upload command {command}.")
 
@@ -2396,6 +2374,8 @@ class WebOsClient:
                 data = np.array([], dtype=np.uint16)
                 dataOpt = 2
             else:
+                self.check_calibration_support("lut3d_size", "3D LUT Upload")
+
                 lut3d_size = self._calibration_info["lut3d_size"]
                 if data is None:
                     data = await asyncio.get_running_loop().run_in_executor(
@@ -2414,8 +2394,6 @@ class WebOsClient:
             return await self.upload_3d_lut(cal.UPLOAD_3D_LUT_BT2020, data)
 
         async def upload_3d_lut_from_file(self, command, filename):
-            self.check_calibration_support("lut3d_size", "3D LUT Upload")
-
             ext = filename.split(".")[-1].lower()
             if ext == "cube":
                 lut = await asyncio.get_running_loop().run_in_executor(
@@ -2443,7 +2421,6 @@ class WebOsClient:
             return await self.toggle_calibration_flag(cal.ENABLE_GAMMA_0_45_TRANSFORM, enable)
 
         async def set_3by3_gamut_data(self, command, data):
-            self.check_calibration_support("lut1d", "3by3 Gamut Data Upload")
             if command not in [cal.BT709_3BY3_GAMUT_DATA, cal.BT2020_3BY3_GAMUT_DATA, cal.HDR_3BY3_GAMUT_DATA]:
                 raise PyLGTVCmdException(f"Invalid 3by3 Gamut Data Upload command {command}.")
 
@@ -2575,7 +2552,6 @@ class WebOsClient:
             rolloff_point_3=50,
         ):
             """Uploads custom HDR10 tone mapping parameters."""
-            self.check_calibration_support("custom_tone_mapping", "Custom tone mapping parameters Upload")
             if picture_mode not in HDR10_PICTURE_MODES:
                 raise PyLGTVCmdException(f"Invalid picture_mode {picture_mode}, must be an HDR10 one.")
             if ((type(luminance) is list and len(luminance) != 0)
@@ -2615,13 +2591,13 @@ class WebOsClient:
             """This method is NOT recommended since it uses the calibration API,
             use generate_dolby_vision_config method instead!"""
 
-            self.check_calibration_support("dv_config_type", "Dolby Vision Configuration Upload")
-
             if type(white_level) is list and len(white_level) == 0:
                 # Reset uploaded data
                 data = np.array([], dtype=np.uint8)
                 dataOpt = 2
             else:
+                self.check_calibration_support("dv_config_type", "Dolby Vision Configuration Upload")
+
                 config = await asyncio.get_running_loop().run_in_executor(
                     None,
                     functools.partial(
@@ -2696,7 +2672,6 @@ class WebOsClient:
 
             """
 
-            self.check_calibration_support("itpg", "iTPG")
             for value in [r, g, b]:
                 if value < 0 or value > 1023:
                     raise ValueError(f"Invalid fill color {value}, must be between 0. and 1023.")
@@ -2747,7 +2722,6 @@ class WebOsClient:
 
             """
 
-            self.check_calibration_support("itpg", "iTPG")
             if bar_id < 0 or bar_id > 3:
                 raise ValueError(f"Invalid bar_id {bar_id}, must be between 0. and 3.")
             if stride_size < 0 or stride_size > 7680:
@@ -2787,7 +2761,6 @@ class WebOsClient:
 
             """
 
-            self.check_calibration_support("itpg", "iTPG")
             if not isinstance(enable, bool):
                 raise TypeError(f"enable should be a bool, instead got {enable} of type {type(enable)}.")
             if numOfBox < 0 or numOfBox > 10:

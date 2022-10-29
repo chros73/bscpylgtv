@@ -16,16 +16,10 @@ TEST_DIR_EXPECTED = "expected"
 class TestWebOsClientCalibration():
 
     data_check_calibration_support = [
-        ( "OLED65C6V",      "lut1d",                "1D LUT Upload",                            False ),
         ( "OLED65C6V",      "lut3d_size",           "3D LUT Upload",                            False ),
-        ( "OLED65C6V",      "custom_tone_mapping",  "Custom tone mapping parameters Upload",    False ),
-        ( "OLED65C6V",      "itpg",                 "iTPG",                                     False ),
         ( "OLED65C6V",      "dv_config_type",       "Dolby Vision Configuration Upload",        False ),
 
-        ( "OLED65C26LA",    "lut1d",                "1D LUT Upload",                            True ),
         ( "OLED65C26LA",    "lut3d_size",           "3D LUT Upload",                            True ),
-        ( "OLED65C26LA",    "custom_tone_mapping",  "Custom tone mapping parameters Upload",    True ),
-        ( "OLED65C26LA",    "itpg",                 "iTPG",                                     True ),
         ( "OLED65C26LA",    "dv_config_type",       "Dolby Vision Configuration Upload",        True ),
     ]
 
@@ -44,33 +38,30 @@ class TestWebOsClientCalibration():
 
 
     data_get_1d_en_2_2_0_45 = [
-        ( "OLED65C6V",      "1d_en_2_2",    None,                           None,   -3 ),
-        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"datax": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},  -2 ),
-        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCountx": 1, "dataType": "unsigned integer16"},  -2 ),
-        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataTypex": "unsigned integer16"},   -2 ),
-        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer"},   -2 ),
-        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 2, "dataType": "unsigned integer16"},   -1 ),
-
-        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},   0 ),
-        ( "OLED65C26LA",    "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AQA=", "dataCount": 1, "dataType": "unsigned integer16"},   1 ),
-
-        ( "OLED65C6V",      "1d_en_0_45",   None,                           None,   -3 ),
-        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"datax": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},  -2 ),
-        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCountx": 1, "dataType": "unsigned integer16"},  -2 ),
-        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataTypex": "unsigned integer16"},   -2 ),
-        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer"},   -2 ),
-        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 2, "dataType": "unsigned integer16"},   -1 ),
-
-        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},   0 ),
-        ( "OLED65C26LA",    "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AQA=", "dataCount": 1, "dataType": "unsigned integer16"},   1 ),
+        ( "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"datax": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},  -2 ),
+        ( "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCountx": 1, "dataType": "unsigned integer16"},  -2 ),
+        ( "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataTypex": "unsigned integer16"},   -2 ),
+        ( "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer"},   -2 ),
+        ( "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 2, "dataType": "unsigned integer16"},   -1 ),
+          
+        ( "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},   0 ),
+        ( "1d_en_2_2",    cal.GET_GAMMA_2_2_TRANSFORM,    {"data": "AQA=", "dataCount": 1, "dataType": "unsigned integer16"},   1 ),
+          
+        ( "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"datax": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},  -2 ),
+        ( "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCountx": 1, "dataType": "unsigned integer16"},  -2 ),
+        ( "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataTypex": "unsigned integer16"},   -2 ),
+        ( "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer"},   -2 ),
+        ( "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 2, "dataType": "unsigned integer16"},   -1 ),
+          
+        ( "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AAA=", "dataCount": 1, "dataType": "unsigned integer16"},   0 ),
+        ( "1d_en_0_45",   cal.GET_GAMMA_0_45_TRANSFORM,   {"data": "AQA=", "dataCount": 1, "dataType": "unsigned integer16"},   1 ),
     ]
 
-    @pytest.mark.parametrize("model,methodName,command,data,expected", data_get_1d_en_2_2_0_45)
-    async def test_get_1d_en_2_2_0_45(self, mocker, model, methodName, command, data, expected):
+    @pytest.mark.parametrize("methodName,command,data,expected", data_get_1d_en_2_2_0_45)
+    async def test_get_1d_en_2_2_0_45(self, mocker, methodName, command, data, expected):
         mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
         method = getattr(client, f'get_{methodName}')
 
         if expected >= 0:
@@ -81,41 +72,35 @@ class TestWebOsClientCalibration():
         elif expected == -1:
             with pytest.raises(ValueError, match=r'data should have size .+$'):
                 await method()
-        elif expected == -2:
-            with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
-                await method()
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
                 await method()
 
 
 
     data_get_3by3_gamut_data = [
-        ( "OLED65C6V",      "3by3_gamut_data",      None,                       None,   None,   -2 ),
-        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
-        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
-        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
-        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
-        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
-
-        ( "OLED65C26LA",    "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
-
-        ( "OLED65C6V",      "3by3_gamut_data_hdr",  None,                           None,   None,   -2 ),
-        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
-        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
-        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
-        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
-        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
-
-        ( "OLED65C26LA",    "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
+        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
+        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
+        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
+        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
+        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
+          
+        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
+          
+        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
+        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
+        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
+        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
+        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
+          
+        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
     ]
 
-    @pytest.mark.parametrize("model,methodName,command,data,result,expected", data_get_3by3_gamut_data)
-    async def test_get_3by3_gamut_data(self, mocker, model, methodName, command, data, result, expected):
+    @pytest.mark.parametrize("methodName,command,data,result,expected", data_get_3by3_gamut_data)
+    async def test_get_3by3_gamut_data(self, mocker, methodName, command, data, result, expected):
         mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
         method = getattr(client, f'get_{methodName}')
 
         if expected > 0:
@@ -127,32 +112,27 @@ class TestWebOsClientCalibration():
         elif expected == 0:
             with pytest.raises(ValueError, match=r'data should have size .+$'):
                 await method()
-        elif expected == -1:
-            with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
-                await method()
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
                 await method()
 
 
 
     data_get_1d_lut = [
-        ( "OLED65C6V",      None,           "1dlut_00.txt", None,   None,                   None,               -2 ),
-        ( "OLED65C26LA",    cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "foo",                  "1dlut_00.cube",    -1 ),
-        ( "OLED65C26LA",    cal.GET_1D_LUT, "1dlut_00.txt", 3073,   "unsigned integer16",   None,               0 ),
-        ( "OLED65C26LA",    cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "unsigned integer16",   "1dlut_00.cube",    1 ),
+        ( cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "foo",                  "1dlut_00.cube",    -1 ),
+        ( cal.GET_1D_LUT, "1dlut_00.txt", 3073,   "unsigned integer16",   None,               0 ),
+        ( cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "unsigned integer16",   "1dlut_00.cube",    1 ),
     ]
 
-    @pytest.mark.parametrize("model,command,fileName,count,type,dataFile,expected", data_get_1d_lut)
-    async def test_get_1d_lut(self, mocker, model, command, fileName, count, type, dataFile, expected):
+    @pytest.mark.parametrize("command,fileName,count,type,dataFile,expected", data_get_1d_lut)
+    async def test_get_1d_lut(self, mocker, command, fileName, count, type, dataFile, expected):
         currentDir = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(currentDir, TEST_DIR_DATA, fileName)) as f:
                 dataLut = f.read()
         data = {"data": dataLut, "dataCount": count, "dataType": type}
         mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
 
         if expected > 0:
             res = await client.get_1d_lut()
@@ -163,16 +143,13 @@ class TestWebOsClientCalibration():
         elif expected == 0:
             with pytest.raises(ValueError, match=r'data should have size .+$'):
                 await client.get_1d_lut()
-        elif expected == -1:
+        else:
             with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
                 await client.get_1d_lut()
-        else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await client.get_1d_lut()
 
 
 
-    data_get_1d_lut = [
+    data_get_3d_lut = [
         ( "OLED65C6V",      None,           "3dlut_33pt_00.txt",    None,   None,                   None,                   -2 ),
         ( "OLED65B8SLC",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "foo",                  "3dlut_17pt_00.npy",    -1 ),
         ( "OLED65C26LA",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "foo",                  "3dlut_33pt_00.npy",    -1 ),
@@ -182,7 +159,7 @@ class TestWebOsClientCalibration():
         ( "OLED65C26LA",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107811, "unsigned integer16",   "3dlut_33pt_00.npy",    1 ),
     ]
 
-    @pytest.mark.parametrize("model,command,fileName,count,type,dataFile,expected", data_get_1d_lut)
+    @pytest.mark.parametrize("model,command,fileName,count,type,dataFile,expected", data_get_3d_lut)
     async def test_get_3d_lut(self, mocker, model, command, fileName, count, type, dataFile, expected):
         currentDir = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(currentDir, TEST_DIR_DATA, fileName)) as f:
@@ -212,17 +189,15 @@ class TestWebOsClientCalibration():
 
 
     data_start_calibration = [
-        ( "OLED65C6V",      "expert1",  None,           -1 ),
-        ( "OLED65C26LA",    "foo",      None,           0 ),
-        ( "OLED65C26LA",    "expert1",  cal.CAL_START,  1 ),
+        ( "foo",      None,           0 ),
+        ( "expert1",  cal.CAL_START,  1 ),
     ]
 
-    @pytest.mark.parametrize("model,picMode,command,expected", data_start_calibration)
-    async def test_start_calibration(self, mocker, model, picMode, command, expected):
+    @pytest.mark.parametrize("picMode,command,expected", data_start_calibration)
+    async def test_start_calibration(self, mocker, picMode, command, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
 
         if expected > 0:
             await client.start_calibration(picMode)
@@ -245,69 +220,58 @@ class TestWebOsClientCalibration():
 
 
     data_end_calibration = [
-        ( "OLED65C6V",      None,           0 ),
-        ( "OLED65C26LA",    cal.CAL_END,    1 ),
+        ( cal.CAL_END ),
     ]
 
-    @pytest.mark.parametrize("model,command,expected", data_end_calibration)
-    async def test_end_calibration(self, mocker, model, command, expected):
+    @pytest.mark.parametrize("command", data_end_calibration)
+    async def test_end_calibration(self, mocker, command):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
 
-        if expected > 0:
-            await client.end_calibration()
+        await client.end_calibration()
 
-            payload = {
-                "command":      command,
-                "profileNo":    0,
-                "programID":    1,
-            }
+        payload = {
+            "command":      command,
+            "profileNo":    0,
+            "programID":    1,
+        }
 
-            client.request.assert_called_once_with(ep.CALIBRATION, payload)
-        else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await client.end_calibration()
+        client.request.assert_called_once_with(ep.CALIBRATION, payload)
 
 
 
     data_set_ui_data_methods = [
-        ( "OLED65C6V",      39,     "oled_light",   None,                   None,   -1 ),
-        ( "OLED65C26LA",    "x",    "oled_light",   cal.BACKLIGHT_UI_DATA,  None,   0 ),
-        ( "OLED65C26LA",    4.5,    "oled_light",   cal.BACKLIGHT_UI_DATA,  None,   0 ),
-        ( "OLED65C26LA",    -1,     "oled_light",   cal.BACKLIGHT_UI_DATA,  None,   0 ),
-        ( "OLED65C26LA",    102,    "oled_light",   cal.BACKLIGHT_UI_DATA,  None,   0 ),
-        ( "OLED65C26LA",    39,     "oled_light",   cal.BACKLIGHT_UI_DATA,  "JwA=", 1 ),
-
-        ( "OLED65C6V",      39,     "contrast",     None,                   None,   -1 ),
-        ( "OLED65C26LA",    "x",    "contrast",     cal.CONTRAST_UI_DATA,   None,   0 ),
-        ( "OLED65C26LA",    4.5,    "contrast",     cal.CONTRAST_UI_DATA,   None,   0 ),
-        ( "OLED65C26LA",    -1,     "contrast",     cal.CONTRAST_UI_DATA,   None,   0 ),
-        ( "OLED65C26LA",    102,    "contrast",     cal.CONTRAST_UI_DATA,   None,   0 ),
-        ( "OLED65C26LA",    39,     "contrast",     cal.CONTRAST_UI_DATA,   "JwA=", 1 ),
-
-        ( "OLED65C6V",      39,     "brightness",   None,                   None,   -1 ),
-        ( "OLED65C26LA",    "x",   "brightness",   cal.BRIGHTNESS_UI_DATA, None,   0 ),
-        ( "OLED65C26LA",    4.5,    "brightness",   cal.BRIGHTNESS_UI_DATA, None,   0 ),
-        ( "OLED65C26LA",    -1,     "brightness",   cal.BRIGHTNESS_UI_DATA, None,   0 ),
-        ( "OLED65C26LA",    102,    "brightness",   cal.BRIGHTNESS_UI_DATA, None,   0 ),
-        ( "OLED65C26LA",    39,     "brightness",   cal.BRIGHTNESS_UI_DATA, "JwA=", 1 ),
-
-        ( "OLED65C6V",      39,     "color",        None,                   None,   -1 ),
-        ( "OLED65C26LA",    "x",    "color",        cal.COLOR_UI_DATA,      None,   0 ),
-        ( "OLED65C26LA",    4.5,    "color",        cal.COLOR_UI_DATA,      None,   0 ),
-        ( "OLED65C26LA",    -1,     "color",        cal.COLOR_UI_DATA,      None,   0 ),
-        ( "OLED65C26LA",    102,    "color",        cal.COLOR_UI_DATA,      None,   0 ),
-        ( "OLED65C26LA",    39,     "color",        cal.COLOR_UI_DATA,      "JwA=", 1 ),
+        ( "x",    "oled_light",   cal.BACKLIGHT_UI_DATA,  None,   0 ),
+        ( 4.5,    "oled_light",   cal.BACKLIGHT_UI_DATA,  None,   0 ),
+        ( -1,     "oled_light",   cal.BACKLIGHT_UI_DATA,  None,   0 ),
+        ( 102,    "oled_light",   cal.BACKLIGHT_UI_DATA,  None,   0 ),
+        ( 39,     "oled_light",   cal.BACKLIGHT_UI_DATA,  "JwA=", 1 ),
+          
+        ( "x",    "contrast",     cal.CONTRAST_UI_DATA,   None,   0 ),
+        ( 4.5,    "contrast",     cal.CONTRAST_UI_DATA,   None,   0 ),
+        ( -1,     "contrast",     cal.CONTRAST_UI_DATA,   None,   0 ),
+        ( 102,    "contrast",     cal.CONTRAST_UI_DATA,   None,   0 ),
+        ( 39,     "contrast",     cal.CONTRAST_UI_DATA,   "JwA=", 1 ),
+          
+        ( "x",   "brightness",   cal.BRIGHTNESS_UI_DATA, None,   0 ),
+        ( 4.5,    "brightness",   cal.BRIGHTNESS_UI_DATA, None,   0 ),
+        ( -1,     "brightness",   cal.BRIGHTNESS_UI_DATA, None,   0 ),
+        ( 102,    "brightness",   cal.BRIGHTNESS_UI_DATA, None,   0 ),
+        ( 39,     "brightness",   cal.BRIGHTNESS_UI_DATA, "JwA=", 1 ),
+          
+        ( "x",    "color",        cal.COLOR_UI_DATA,      None,   0 ),
+        ( 4.5,    "color",        cal.COLOR_UI_DATA,      None,   0 ),
+        ( -1,     "color",        cal.COLOR_UI_DATA,      None,   0 ),
+        ( 102,    "color",        cal.COLOR_UI_DATA,      None,   0 ),
+        ( 39,     "color",        cal.COLOR_UI_DATA,      "JwA=", 1 ),
     ]
 
-    @pytest.mark.parametrize("model,value,methodName,command,data,expected", data_set_ui_data_methods)
-    async def test_set_ui_data_methods(self, mocker, model, value, methodName, command, data, expected):
+    @pytest.mark.parametrize(",value,methodName,command,data,expected", data_set_ui_data_methods)
+    async def test_set_ui_data_methods(self, mocker, value, methodName, command, data, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
         method = getattr(client, f'set_{methodName}')
 
         if expected > 0:
@@ -324,28 +288,23 @@ class TestWebOsClientCalibration():
             }
 
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
-        elif expected == 0:
-            with pytest.raises(ValueError, match=r'Invalid .+$'):
-                await method(value)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(ValueError, match=r'Invalid .+$'):
                 await method(value)
 
 
 
     data_upload_1d_lut = [
-        ( "OLED65C6V",     None,    None,               None,   None,   -1 ),
-        ( "OLED65C26LA",   [3],     None,               None,   None,   0 ),
-        ( "OLED65C26LA",   [],      "",                 0,      2,      1 ),
-        ( "OLED65C26LA",   None,    "1dlut_unity.txt",  3072,   1,      1 ),
+        ( [3],     None,               None,   None,   0 ),
+        ( [],      "",                 0,      2,      1 ),
+        ( None,    "1dlut_unity.txt",  3072,   1,      1 ),
     ]
 
-    @pytest.mark.parametrize("model,inputData,dataFile,dataCount,dataOpt,expected", data_upload_1d_lut)
-    async def test_upload_1d_lut(self, mocker, model, inputData, dataFile, dataCount, dataOpt, expected):
+    @pytest.mark.parametrize("inputData,dataFile,dataCount,dataOpt,expected", data_upload_1d_lut)
+    async def test_upload_1d_lut(self, mocker, inputData, dataFile, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
 
         if expected > 0:
             await client.upload_1d_lut(inputData)
@@ -367,34 +326,29 @@ class TestWebOsClientCalibration():
             }
 
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
-        elif expected == 0:
-            with pytest.raises(TypeError, match=r'data must be of type ndarray .+$'):
-                await client.upload_1d_lut(inputData)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(TypeError, match=r'data must be of type ndarray .+$'):
                 await client.upload_1d_lut(inputData)
 
 
 
     data_upload_1d_lut_from_file = [
-        ( "OLED65C6V",     "1dlut.cal",     None,               None,   None,   -4 ),
-        ( "OLED65C26LA",   "1dlut.txt",     None,               None,   None,   -3 ),
-
-        ( "OLED65C26LA",   "1dlut_11.cal",  None,               None,   None,   -2 ),
-        ( "OLED65C26LA",   "1dlut_12.cube", None,               None,   None,   -1 ),
-        ( "OLED65C26LA",   "1dlut_13.cube", None,               None,   None,   0 ),
-
-        ( "OLED65C26LA",   "1dlut_01.cal",  "1dlut_01.txt",     3072,   1,      1 ),
-        ( "OLED65C26LA",   "1dlut_02.cal",  "1dlut_02.txt",     3072,   1,      1 ),
-        ( "OLED65C26LA",   "1dlut_03.cube", "1dlut_03.txt",     3072,   1,      1 ),
+        ( "1dlut.txt",     None,               None,   None,   -3 ),
+          
+        ( "1dlut_11.cal",  None,               None,   None,   -2 ),
+        ( "1dlut_12.cube", None,               None,   None,   -1 ),
+        ( "1dlut_13.cube", None,               None,   None,   0 ),
+          
+        ( "1dlut_01.cal",  "1dlut_01.txt",     3072,   1,      1 ),
+        ( "1dlut_02.cal",  "1dlut_02.txt",     3072,   1,      1 ),
+        ( "1dlut_03.cube", "1dlut_03.txt",     3072,   1,      1 ),
     ]
 
-    @pytest.mark.parametrize("model,fileName,dataFile,dataCount,dataOpt,expected", data_upload_1d_lut_from_file)
-    async def test_upload_1d_lut_from_file(self, mocker, model, fileName, dataFile, dataCount, dataOpt, expected):
+    @pytest.mark.parametrize("fileName,dataFile,dataCount,dataOpt,expected", data_upload_1d_lut_from_file)
+    async def test_upload_1d_lut_from_file(self, mocker, fileName, dataFile, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
         currentDir = os.path.dirname(os.path.realpath(__file__))
 
         if expected > 0:
@@ -423,17 +377,15 @@ class TestWebOsClientCalibration():
         elif expected == -2:
             with pytest.raises(ValueError, match=r'Some errors were detected .+'):
                 await client.upload_1d_lut_from_file(os.path.join(currentDir, TEST_DIR_DATA, fileName))
-        elif expected == -3:
-            with pytest.raises(ValueError, match=r'Unsupported file format .+$'):
-                await client.upload_1d_lut_from_file(fileName)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(ValueError, match=r'Unsupported file format .+$'):
                 await client.upload_1d_lut_from_file(fileName)
 
 
 
     data_upload_3d_lut = [
-        ( "OLED65C6V",     None,    None,                       None,                   None,   None,   -2 ),
+        ( "OLED65C6V",     None,    cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   -2 ),
+        ( "OLED65C6V",     None,    None,                       None,                   None,   None,   -1 ),
         ( "OLED65B8SLC",   None,    "foo",                      None,                   None,   None,   -1 ),
         ( "OLED65B8SLC",   [3],     cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   0 ),
         ( "OLED65B8SLC",   [],      cal.UPLOAD_3D_LUT_BT2020,   "",                     0,      2,      1 ),
@@ -500,8 +452,8 @@ class TestWebOsClientCalibration():
 
 
     data_upload_3d_lut_from_file = [
-        ( "OLED65C6V",     "3dlut.cal",         None,                       None,                   None,   None,   -5 ),
-        ( "OLED65B8SLC",   "3dlut.txt",         None,                       None,                   None,   None,   -4 ),
+        ( "OLED65C6V",     "3dlut_17pt.cube",   cal.UPLOAD_3D_LUT_BT709,    None,                   None,   None,   -5 ),
+        ( "OLED65B8SLC",   "3dlut.cal",         None,                       None,                   None,   None,   -4 ),
 
         ( "OLED65B8SLC",   "3dlut_11.cube",     None,                       None,                   None,   None,   -3 ),
         ( "OLED65B8SLC",   "3dlut_12.cube",     None,                       None,                   None,   None,   -2 ),
@@ -554,7 +506,7 @@ class TestWebOsClientCalibration():
                 await client.upload_3d_lut_from_file(command, fileName)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await client.upload_3d_lut_from_file(command, fileName)
+                await client.upload_3d_lut_from_file(command, os.path.join(currentDir, TEST_DIR_DATA, fileName))
 
 
 
@@ -578,45 +530,40 @@ class TestWebOsClientCalibration():
 
 
     data_set_1d_en_2_2_0_45_1d_lut_3by3_gamut = [
-        ( "OLED65C6V",      0,      "1d_en_2_2",    None,                           None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    "",     "1d_en_2_2",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    "x",    "1d_en_2_2",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    2,      "1d_en_2_2",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [],     "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "",     0,      2,      1 ),
-        ( "OLED65C26LA",    False,  "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AAA=", 1,      1,      1 ),
-        ( "OLED65C26LA",    True,   "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AQA=", 1,      1,      1 ),
-
-        ( "OLED65C6V",      0,      "1d_en_0_45",   None,                           None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    "",     "1d_en_0_45",   None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    "x",    "1d_en_0_45",   None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    2,      "1d_en_0_45",   None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [],     "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"",     0,      2,      1 ),
-        ( "OLED65C26LA",    False,  "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AAA=", 1,      1,      1 ),
-        ( "OLED65C26LA",    True,   "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AQA=", 1,      1,      1 ),
-
-        ( "OLED65C6V",      0,      "1d_lut_en",    None,                           None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    "",     "1d_lut_en",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    "x",    "1d_lut_en",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    2,      "1d_lut_en",    None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [],     "1d_lut_en",    cal.ENABLE_1D_LUT,              "",     0,      2,      1 ),
-        ( "OLED65C26LA",    False,  "1d_lut_en",    cal.ENABLE_1D_LUT,              "AAA=", 1,      1,      1 ),
-        ( "OLED65C26LA",    True,   "1d_lut_en",    cal.ENABLE_1D_LUT,              "AQA=", 1,      1,      1 ),
-
-        ( "OLED65C6V",      0,      "3by3_gamut_en",None,                           None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    "",     "3by3_gamut_en",None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    "x",    "3by3_gamut_en",None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    2,      "3by3_gamut_en",None,                           None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [],     "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "",     0,      2,      1 ),
-        ( "OLED65C26LA",    False,  "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "AAA=", 1,      1,      1 ),
-        ( "OLED65C26LA",    True,   "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "AQA=", 1,      1,      1 ),
+        ( "",     "1d_en_2_2",    None,                           None,   None,   None,   0 ),
+        ( "x",    "1d_en_2_2",    None,                           None,   None,   None,   0 ),
+        ( 2,      "1d_en_2_2",    None,                           None,   None,   None,   0 ),
+        ( [],     "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "",     0,      2,      1 ),
+        ( False,  "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AAA=", 1,      1,      1 ),
+        ( True,   "1d_en_2_2",    cal.ENABLE_GAMMA_2_2_TRANSFORM, "AQA=", 1,      1,      1 ),
+          
+        ( "",     "1d_en_0_45",   None,                           None,   None,   None,   0 ),
+        ( "x",    "1d_en_0_45",   None,                           None,   None,   None,   0 ),
+        ( 2,      "1d_en_0_45",   None,                           None,   None,   None,   0 ),
+        ( [],     "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"",     0,      2,      1 ),
+        ( False,  "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AAA=", 1,      1,      1 ),
+        ( True,   "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AQA=", 1,      1,      1 ),
+          
+        ( "",     "1d_lut_en",    None,                           None,   None,   None,   0 ),
+        ( "x",    "1d_lut_en",    None,                           None,   None,   None,   0 ),
+        ( 2,      "1d_lut_en",    None,                           None,   None,   None,   0 ),
+        ( [],     "1d_lut_en",    cal.ENABLE_1D_LUT,              "",     0,      2,      1 ),
+        ( False,  "1d_lut_en",    cal.ENABLE_1D_LUT,              "AAA=", 1,      1,      1 ),
+        ( True,   "1d_lut_en",    cal.ENABLE_1D_LUT,              "AQA=", 1,      1,      1 ),
+          
+        ( "",     "3by3_gamut_en",None,                           None,   None,   None,   0 ),
+        ( "x",    "3by3_gamut_en",None,                           None,   None,   None,   0 ),
+        ( 2,      "3by3_gamut_en",None,                           None,   None,   None,   0 ),
+        ( [],     "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "",     0,      2,      1 ),
+        ( False,  "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "AAA=", 1,      1,      1 ),
+        ( True,   "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "AQA=", 1,      1,      1 ),
     ]
 
-    @pytest.mark.parametrize("model,enable,methodName,command,data,dataCount,dataOpt,expected", data_set_1d_en_2_2_0_45_1d_lut_3by3_gamut)
-    async def test_set_1d_en_2_2_0_45_1d_lut_3by3_gamut(self, mocker, model, enable, methodName, command, data, dataCount, dataOpt, expected):
+    @pytest.mark.parametrize("enable,methodName,command,data,dataCount,dataOpt,expected", data_set_1d_en_2_2_0_45_1d_lut_3by3_gamut)
+    async def test_set_1d_en_2_2_0_45_1d_lut_3by3_gamut(self, mocker, enable, methodName, command, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
         method = getattr(client, f'set_{methodName}')
 
         if expected > 0:
@@ -633,74 +580,64 @@ class TestWebOsClientCalibration():
             }
 
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
-        elif expected == 0:
-            with pytest.raises(ValueError, match=r'Invalid .+$'):
-                await method(enable)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(ValueError, match=r'Invalid .+$'):
                 await method(enable)
 
 
 
     data_set_3by3_gamut_data_bt709_bt2020_hdr = [
-        ( "OLED65C6V",      0,                                      "3by3_gamut_data_bt709",    None,   None,   None,   None,   -3 ),
-
-        ( "OLED65C26LA",    "",                                     "3by3_gamut_data_bt709",    None,   None,   None,   None,   -2 ),
-
-        ( "OLED65C26LA",    [1025],                                 "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0, 1]],                            "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
-
-        ( "OLED65C26LA",    [[1, 1025, 0], [0, 1, 0], [0, 0, 1]],   "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, -1025], [0, 0, 1]],  "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, 0], [0, 0, 1025]],   "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
-
-        ( "OLED65C26LA",    [], "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "",     0,      2,      1 ),
-        ( "OLED65C26LA",    0,  "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
-        ( "OLED65C26LA",    [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
-
-        ( "OLED65C6V",      0,                                      "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -3 ),
-
-        ( "OLED65C26LA",    "",                                     "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -2 ),
-
-        ( "OLED65C26LA",    [1025],                                 "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0, 1]],                            "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
-
-        ( "OLED65C26LA",    [[1, 1025, 0], [0, 1, 0], [0, 0, 1]],   "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, -1025], [0, 0, 1]],  "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, 0], [0, 0, 1025]],   "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
-
-        ( "OLED65C26LA",    [], "3by3_gamut_data_bt2020",   cal.BT2020_3BY3_GAMUT_DATA, "",     0,      2,      1 ),
-        ( "OLED65C26LA",    0,  "3by3_gamut_data_bt2020",   cal.BT2020_3BY3_GAMUT_DATA, "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
-        ( "OLED65C26LA",    [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_bt2020",    cal.BT2020_3BY3_GAMUT_DATA,  "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
-
-        ( "OLED65C6V",      0,                                      "3by3_gamut_data_hdr",      None,   None,   None,   None,   -3 ),
-
-        ( "OLED65C26LA",    "",                                     "3by3_gamut_data_hdr",      None,   None,   None,   None,   -2 ),
-
-        ( "OLED65C26LA",    [1025],                                 "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0, 1]],                            "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
-        ( "OLED65C26LA",    [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
-
-        ( "OLED65C26LA",    [[1, 1025, 0], [0, 1, 0], [0, 0, 1]],   "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, -1025], [0, 0, 1]],  "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
-        ( "OLED65C26LA",    [[1, 0, 0], [0, 1, 0], [0, 0, 1025]],   "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
-
-        ( "OLED65C26LA",    [], "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,    "",     0,      2,      1 ),
-        ( "OLED65C26LA",    0,  "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,    "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
-        ( "OLED65C26LA",    [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,   "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
+        ( "",                                     "3by3_gamut_data_bt709",    None,   None,   None,   None,   -2 ),
+          
+        ( [1025],                                 "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
+        ( [[1, 0, 1]],                            "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
+        ( [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
+        ( [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_bt709",    None,   None,   None,   None,   -1 ),
+          
+        ( [[1, 1025, 0], [0, 1, 0], [0, 0, 1]],   "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
+        ( [[1, 0, 0], [0, 1, -1025], [0, 0, 1]],  "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
+        ( [[1, 0, 0], [0, 1, 0], [0, 0, 1025]],   "3by3_gamut_data_bt709",    None,   None,   None,   None,   0 ),
+          
+        ( [], "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "",     0,      2,      1 ),
+        ( 0,  "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
+        ( [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_bt709",    cal.BT709_3BY3_GAMUT_DATA,  "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
+          
+        ( "",                                     "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -2 ),
+          
+        ( [1025],                                 "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
+        ( [[1, 0, 1]],                            "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
+        ( [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
+        ( [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_bt2020",   None,   None,   None,   None,   -1 ),
+          
+        ( [[1, 1025, 0], [0, 1, 0], [0, 0, 1]],   "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
+        ( [[1, 0, 0], [0, 1, -1025], [0, 0, 1]],  "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
+        ( [[1, 0, 0], [0, 1, 0], [0, 0, 1025]],   "3by3_gamut_data_bt2020",   None,   None,   None,   None,   0 ),
+          
+        ( [], "3by3_gamut_data_bt2020",   cal.BT2020_3BY3_GAMUT_DATA, "",     0,      2,      1 ),
+        ( 0,  "3by3_gamut_data_bt2020",   cal.BT2020_3BY3_GAMUT_DATA, "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
+        ( [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_bt2020",    cal.BT2020_3BY3_GAMUT_DATA,  "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
+          
+        ( "",                                     "3by3_gamut_data_hdr",      None,   None,   None,   None,   -2 ),
+          
+        ( [1025],                                 "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
+        ( [[1, 0, 1]],                            "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
+        ( [[1, 0, 1], [0, 1, 0]],                 "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
+        ( [[1, 0], [0, 1], [0, 0]],               "3by3_gamut_data_hdr",      None,   None,   None,   None,   -1 ),
+          
+        ( [[1, 1025, 0], [0, 1, 0], [0, 0, 1]],   "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
+        ( [[1, 0, 0], [0, 1, -1025], [0, 0, 1]],  "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
+        ( [[1, 0, 0], [0, 1, 0], [0, 0, 1025]],   "3by3_gamut_data_hdr",      None,   None,   None,   None,   0 ),
+          
+        ( [], "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,    "",     0,      2,      1 ),
+        ( 0,  "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,    "AACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAAAAAIA/", 9,      1,      1 ),
+        ( [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]],    "3by3_gamut_data_hdr",      cal.HDR_3BY3_GAMUT_DATA,   "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", 9,  1,  1 ),
     ]
 
-    @pytest.mark.parametrize("model,value,methodName,command,data,dataCount,dataOpt,expected", data_set_3by3_gamut_data_bt709_bt2020_hdr)
-    async def test_set_3by3_gamut_data_bt709_bt2020_hdr(self, mocker, model, value, methodName, command, data, dataCount, dataOpt, expected):
+    @pytest.mark.parametrize("value,methodName,command,data,dataCount,dataOpt,expected", data_set_3by3_gamut_data_bt709_bt2020_hdr)
+    async def test_set_3by3_gamut_data_bt709_bt2020_hdr(self, mocker, value, methodName, command, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
         method = getattr(client, f'set_{methodName}')
 
         if expected > 0:
@@ -726,21 +663,18 @@ class TestWebOsClientCalibration():
         elif expected == -1:
             with pytest.raises(ValueError, match=r'data should have shape .+$'):
                 await method(value)
-        elif expected == -2:
+        else:
             with pytest.raises(ValueError, match=r'could not convert .+$'):
                 await method(value)
-        else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
-                await method(value)
 
 
 
-    data_set_bypass_modes = [
+    data_set_bypass_modes_sdr = [
         ( False ),
         ( True  ),
     ]
 
-    @pytest.mark.parametrize("unity1dLut", data_set_bypass_modes)
+    @pytest.mark.parametrize("unity1dLut", data_set_bypass_modes_sdr)
     async def test_set_bypass_modes_sdr(self, mocker, unity1dLut):
         mocker.patch('bscpylgtv.WebOsClient.set_1d_en_2_2')
         mocker.patch('bscpylgtv.WebOsClient.set_1d_en_0_45')
@@ -776,8 +710,7 @@ class TestWebOsClientCalibration():
         mocker.patch('bscpylgtv.WebOsClient.upload_3d_lut_bt2020')
         mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
         
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : "OLED65C26LA"}
+        client = await WebOsClient.create("x", states=[], client_key="x")
         result = await client.reset_factory_data_sdr()
 
         client.set_1d_en_2_2.assert_called_once_with([])
@@ -842,9 +775,7 @@ class TestWebOsClientCalibration():
         if tonemap_params:
             mocker.patch('bscpylgtv.WebOsClient.set_tonemap_params')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : "OLED65C26LA"}
-
+        client = await WebOsClient.create("x", states=[], client_key="x")
         result = await client.reset_factory_data_hdr10(picMode, tonemap_params)
 
         client.set_1d_en_2_2.assert_called_once_with([])
@@ -863,8 +794,7 @@ class TestWebOsClientCalibration():
     async def test_set_bypass_modes_dovi(self, mocker):
         mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
         
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : "OLED65C26LA"}
+        client = await WebOsClient.create("x", states=[], client_key="x")
         result = await client.set_bypass_modes_dovi()
 
         client.upload_1d_lut.assert_called_once_with()
@@ -880,14 +810,12 @@ class TestWebOsClientCalibration():
     ]
 
     @pytest.mark.parametrize("picMode,dovi_config", data_reset_factory_data_dovi)
-    async def test_reset_factory_data_hdr10(self, mocker, picMode, dovi_config):
+    async def test_reset_factory_data_dovi(self, mocker, picMode, dovi_config):
         mocker.patch('bscpylgtv.WebOsClient.upload_1d_lut')
         if dovi_config:
             mocker.patch('bscpylgtv.WebOsClient.set_dolby_vision_config_data')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : "OLED65C26LA"}
-
+        client = await WebOsClient.create("x", states=[], client_key="x")
         result = await client.reset_factory_data_dovi(picMode, dovi_config)
 
         client.upload_1d_lut.assert_called_once_with([])
@@ -898,28 +826,25 @@ class TestWebOsClientCalibration():
 
 
     data_set_tonemap_params = [
-        ( "OLED65C6V",      "hdr_cinema",   810,    1000,   75, None,                   None,   None,   -2 ),
-
-        ( "OLED65C26LA",    "foo",          810,    1000,   75, None,                   None,   None,   -1 ),
-        ( "OLED65C26LA",    "expert1",      810,    1000,   75, None,                   None,   None,   -1 ),
-
-        ( "OLED65C26LA",    "hdr_cinema",   99,     1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    "hdr_game",     4001,   1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    "hdr_cinema",   810,    99,     75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    "hdr_cinema",   810,    10001,  75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    "hdr_cinema",   810,    1000,   -1, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-        ( "OLED65C26LA",    "hdr_cinema",   810,    1000,   101,"KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
-
-        ( "OLED65C26LA",    "hdr_cinema",   [],     1000,   75, "",                     0,      2,      1 ),
-        ( "OLED65C26LA",    "hdr_game",     810,    1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      1 ),
+        ( "foo",          810,    1000,   75, None,                   None,   None,   -1 ),
+        ( "expert1",      810,    1000,   75, None,                   None,   None,   -1 ),
+          
+        ( "hdr_cinema",   99,     1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "hdr_game",     4001,   1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "hdr_cinema",   810,    99,     75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "hdr_cinema",   810,    10001,  75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "hdr_cinema",   810,    1000,   -1, "KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+        ( "hdr_cinema",   810,    1000,   101,"KgPoA0sAoA88ABAnMgA=", 7,      1,      0 ),
+          
+        ( "hdr_cinema",   [],     1000,   75, "",                     0,      2,      1 ),
+        ( "hdr_game",     810,    1000,   75, "KgPoA0sAoA88ABAnMgA=", 7,      1,      1 ),
     ]
 
-    @pytest.mark.parametrize("model,picMode,luminance,mp,rp,data,dataCount,dataOpt,expected", data_set_tonemap_params)
-    async def test_set_tonemap_params(self, mocker, model, picMode, luminance, mp, rp, data, dataCount, dataOpt, expected):
+    @pytest.mark.parametrize("picMode,luminance,mp,rp,data,dataCount,dataOpt,expected", data_set_tonemap_params)
+    async def test_set_tonemap_params(self, mocker, picMode, luminance, mp, rp, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
 
         if expected > 0:
             await client.set_tonemap_params(picMode, luminance, mp, rp)
@@ -938,11 +863,8 @@ class TestWebOsClientCalibration():
         elif expected == 0:
             with pytest.raises(ValueError, match=r'Invalid .+$'):
                 await client.set_tonemap_params(picMode, luminance, mp, rp)
-        elif expected == -1:
-            with pytest.raises(PyLGTVCmdException, match=r'Invalid picture_mode .+$'):
-                await client.set_tonemap_params(picMode, luminance, mp, rp)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid picture_mode .+$'):
                 await client.set_tonemap_params(picMode, luminance, mp, rp)
 
 
@@ -1054,31 +976,28 @@ class TestWebOsClientCalibration():
 
 
     data_set_itpg_patch_window = [
-        ( "OLED65C6V",      71, 81,     98, 1,  858,    482,    1491,   839,    -1 ),
-
-        ( "OLED65C26LA",    -1, 81,     98, 0,  858,    482,    1491,   839,    0 ),
-        ( "OLED65C26LA",    71, 1024,   98, 0,  858,    482,    1491,   839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, -1, 858,    482,    1491,   839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, 10, 858,    482,    1491,   839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, 0,  99,     482,    1491,   839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, 0,  858,    7681,   1491,   839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, 0,  858,    55,     1491,   839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, 0,  858,    4321,   1491,   839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, 0,  858,    482,    -1,     839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, 0,  858,    482,    7580,   839,    0 ),
-        ( "OLED65C26LA",    71, 81,     98, 0,  858,    482,    1491,   -1,     0 ),
-        ( "OLED65C26LA",    71, 81,     98, 0,  858,    482,    1491,   4264,   0 ),
-
-        ( "OLED65C26LA",    71, 81,     98, 0,  858,    482,    1491,   839,    1 ),
-        ( "OLED65C26LA",    71, 81,     98, 1,  858,    482,    1491,   839,    1 ),
+        ( -1, 81,     98, 0,  858,    482,    1491,   839,    0 ),
+        ( 71, 1024,   98, 0,  858,    482,    1491,   839,    0 ),
+        ( 71, 81,     98, -1, 858,    482,    1491,   839,    0 ),
+        ( 71, 81,     98, 10, 858,    482,    1491,   839,    0 ),
+        ( 71, 81,     98, 0,  99,     482,    1491,   839,    0 ),
+        ( 71, 81,     98, 0,  858,    7681,   1491,   839,    0 ),
+        ( 71, 81,     98, 0,  858,    55,     1491,   839,    0 ),
+        ( 71, 81,     98, 0,  858,    4321,   1491,   839,    0 ),
+        ( 71, 81,     98, 0,  858,    482,    -1,     839,    0 ),
+        ( 71, 81,     98, 0,  858,    482,    7580,   839,    0 ),
+        ( 71, 81,     98, 0,  858,    482,    1491,   -1,     0 ),
+        ( 71, 81,     98, 0,  858,    482,    1491,   4264,   0 ),
+          
+        ( 71, 81,     98, 0,  858,    482,    1491,   839,    1 ),
+        ( 71, 81,     98, 1,  858,    482,    1491,   839,    1 ),
     ]
 
-    @pytest.mark.parametrize("model,r,g,b,winId,w,h,sx,sy,expected", data_set_itpg_patch_window)
-    async def test_set_itpg_patch_window(self, mocker, model, r, g, b, winId, w, h, sx, sy, expected):
+    @pytest.mark.parametrize("r,g,b,winId,w,h,sx,sy,expected", data_set_itpg_patch_window)
+    async def test_set_itpg_patch_window(self, mocker, r, g, b, winId, w, h, sx, sy, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
 
         if expected > 0:
             await client.set_itpg_patch_window(r, g, b, winId, w, h, sx, sy)
@@ -1097,37 +1016,31 @@ class TestWebOsClientCalibration():
             }
 
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
-        elif expected == 0:
-            with pytest.raises(ValueError, match=r'Invalid .+$'):
-                await client.set_itpg_patch_window(r, g, b, winId, w, h, sx, sy)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(ValueError, match=r'Invalid .+$'):
                 await client.set_itpg_patch_window(r, g, b, winId, w, h, sx, sy)
 
 
 
     data_set_itpg_gradation_window = [
-        ( "OLED65C6V",      0,  3,      610,    520,    230,    1,  1,      1,  -1 ),
-
-        ( "OLED65C26LA",    -1, 3,      610,    520,    230,    1,  1,      1,  0 ),
-        ( "OLED65C26LA",    4,  3,      610,    520,    230,    1,  1,      1,  0 ),
-        ( "OLED65C26LA",    0,  -1,     610,    520,    230,    1,  1,      1,  0 ),
-        ( "OLED65C26LA",    0,  7681,   610,    520,    230,    1,  1,      1,  0 ),
-        ( "OLED65C26LA",    0,  3,      -1,     520,    230,    1,  1,      1,  0 ),
-        ( "OLED65C26LA",    0,  3,      610,    1024,   230,    1,  1,      1,  0 ),
-        ( "OLED65C26LA",    0,  3,      610,    520,    230,    -1, 1,      1,  0 ),
-        ( "OLED65C26LA",    0,  3,      610,    520,    230,    1,  513,    1,  0 ),
-
-        ( "OLED65C26LA",    0,  3,      610,    520,    230,    1,  1,      1,  1 ),
-        ( "OLED65C26LA",    1,  3,      610,    50,     23,     1,  1,      1,  1 ),
+        ( -1, 3,      610,    520,    230,    1,  1,      1,  0 ),
+        ( 4,  3,      610,    520,    230,    1,  1,      1,  0 ),
+        ( 0,  -1,     610,    520,    230,    1,  1,      1,  0 ),
+        ( 0,  7681,   610,    520,    230,    1,  1,      1,  0 ),
+        ( 0,  3,      -1,     520,    230,    1,  1,      1,  0 ),
+        ( 0,  3,      610,    1024,   230,    1,  1,      1,  0 ),
+        ( 0,  3,      610,    520,    230,    -1, 1,      1,  0 ),
+        ( 0,  3,      610,    520,    230,    1,  513,    1,  0 ),
+          
+        ( 0,  3,      610,    520,    230,    1,  1,      1,  1 ),
+        ( 1,  3,      610,    50,     23,     1,  1,      1,  1 ),
     ]
 
-    @pytest.mark.parametrize("model,id,ss,ar,ag,ab,er,eg,eb,expected", data_set_itpg_gradation_window)
-    async def test_set_itpg_gradation_window(self, mocker, model, id, ss, ar, ag, ab, er, eg, eb, expected):
+    @pytest.mark.parametrize("id,ss,ar,ag,ab,er,eg,eb,expected", data_set_itpg_gradation_window)
+    async def test_set_itpg_gradation_window(self, mocker, id, ss, ar, ag, ab, er, eg, eb, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
 
         if expected > 0:
             await client.set_itpg_gradation_window(id, ss, ar, ag, ab, er, eg, eb)
@@ -1146,39 +1059,33 @@ class TestWebOsClientCalibration():
             }
 
             client.request.assert_called_once_with(ep.CALIBRATION, payload)
-        elif expected == 0:
-            with pytest.raises(ValueError, match=r'Invalid .+$'):
-                await client.set_itpg_gradation_window(id, ss, ar, ag, ab, er, eg, eb)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(ValueError, match=r'Invalid .+$'):
                 await client.set_itpg_gradation_window(id, ss, ar, ag, ab, er, eg, eb)
 
 
 
     data_toggle_itpg = [
-        ( "OLED65C6V",      True,   2,  0,  True,  (True,       -2) ),
-
-        ( "OLED65C9PLA",    None,   2,  0,  False, (True,       -1) ),
-        ( "OLED65C9PLA",    True,   2,  0,  None,  (True,       -1) ),
-        ( "OLED65C9PLA",    True,   -1, 0,  False, (True,       0) ),
-        ( "OLED65C9PLA",    True,   11, 0,  False, (True,       0) ),
-        ( "OLED65C9PLA",    True,   2,  -1, False, (True,       0) ),
-        ( "OLED65C9PLA",    True,   2,  3,  False, (True,       0) ),
-
-        ( "OLED65C9PLA",    True,   2,  0,  False, (True,       1) ),
-        ( "OLED65C9PLA",    True,   2,  1,  False, (True,       1) ),
-        ( "OLED65C9PLA",    False,  0,  0,  False, (False,      1) ),
-        ( "OLED65C26LA",    True,   2,  0,  True,  ("true",     1) ),
-        ( "OLED65C26LA",    True,   2,  1,  True,  ("true",     1) ),
-        ( "OLED65C26LA",    False,  0,  0,  True,  ("false",    1) ),
+        ( None,   2,  0,  False, (True,       -1) ),
+        ( True,   2,  0,  None,  (True,       -1) ),
+        ( True,   -1, 0,  False, (True,       0) ),
+        ( True,   11, 0,  False, (True,       0) ),
+        ( True,   2,  -1, False, (True,       0) ),
+        ( True,   2,  3,  False, (True,       0) ),
+          
+        ( True,   2,  0,  False, (True,       1) ),
+        ( True,   2,  1,  False, (True,       1) ),
+        ( False,  0,  0,  False, (False,      1) ),
+        ( True,   2,  0,  True,  ("true",     1) ),
+        ( True,   2,  1,  True,  ("true",     1) ),
+        ( False,  0,  0,  True,  ("false",    1) ),
     ]
 
-    @pytest.mark.parametrize("model,enable,numOfBox,ptnType,fixEnable,expected", data_toggle_itpg)
-    async def test_toggle_itpg(self, mocker, model, enable, numOfBox, ptnType, fixEnable, expected):
+    @pytest.mark.parametrize("enable,numOfBox,ptnType,fixEnable,expected", data_toggle_itpg)
+    async def test_toggle_itpg(self, mocker, enable, numOfBox, ptnType, fixEnable, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
-        client = await WebOsClient.create("x", states=["system_info"], client_key="x")
-        client._system_info = {"modelName" : model}
+        client = await WebOsClient.create("x", states=[], client_key="x")
 
         if expected[1] > 0:
             await client.toggle_itpg(enable, numOfBox, ptnType, fixEnable)
@@ -1195,10 +1102,7 @@ class TestWebOsClientCalibration():
         elif expected[1] == 0:
             with pytest.raises(ValueError, match=r'Invalid .+$'):
                 await client.toggle_itpg(enable, numOfBox, ptnType, fixEnable)
-        elif expected[1] == -1:
-            with pytest.raises(TypeError, match=r'^.+ should be a bool, .+$'):
-                await client.toggle_itpg(enable, numOfBox, ptnType, fixEnable)
         else:
-            with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by tv model .+$'):
+            with pytest.raises(TypeError, match=r'^.+ should be a bool, .+$'):
                 await client.toggle_itpg(enable, numOfBox, ptnType, fixEnable)
 

@@ -64,7 +64,7 @@ async def runloop(screen_resolution, bfi_interval, patch_interval, patch_size):
     patch_size = await get_optional_argument(4, patch_size)
 
     # Connect to WebOS
-    client = await WebOsClient.create(LG_IP, states=["system_info"], key_file_path=DB_PATH)
+    client = await WebOsClient.create(LG_IP, states=[], key_file_path=DB_PATH)
     await client.connect()
 
     # Get full and patch window properties

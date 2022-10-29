@@ -214,6 +214,7 @@ Here is a simplified version of the [image processing pipeline](https://displayc
 Calibration commands can only be run while in calibration mode (controlled by `start_calibration` and `end_calibration`).
 Some of the calibration commands aren't used (question mark behind the name of the method) depending on the model/firmware.
 Most of the commands can be run in any mode, except for `set_tonemap_params` that is only for HDR10+HLG and `set_dolby_vision_config_data` that is only for Dolby Vision.
+Only 3D LUT and Dolby Vision config related commands require `-s` (states) flag.
 In general, `set_1d_en_*` (de-gamma, re-gamma) and `set_3by3_gamut_data_*`(3x3 color matrices) commands should only be used when using a unity/custom 3D LUT.
 
 The following commands are supported:
@@ -259,22 +260,22 @@ Calibration command line examples, modifying expert1 SDR preset (ISF Expert Brig
 # Switch to HDMI2 input
 bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration expert1 -s
+bscpylgtvcommand 192.168.1.18 start_calibration expert1
 # Set oled light to 39, contrast to 85, brightness and color to 50
-bscpylgtvcommand 192.168.1.18 set_oled_light 39 -s
-bscpylgtvcommand 192.168.1.18 set_contrast -s
-bscpylgtvcommand 192.168.1.18 set_brightness -s
-bscpylgtvcommand 192.168.1.18 set_color -s
+bscpylgtvcommand 192.168.1.18 set_oled_light 39
+bscpylgtvcommand 192.168.1.18 set_contrast
+bscpylgtvcommand 192.168.1.18 set_brightness
+bscpylgtvcommand 192.168.1.18 set_color
 # Set SDR bypass mode (also known as DDC reset) including uploading unity 1DLUT
 bscpylgtvcommand 192.168.1.18 set_bypass_modes_sdr true -s
 # Upload custom 1DLUT from file
-bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file "test.cal" -s
+bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file "test.cal"
 # Upload custom 3DLUT from file into BT709 slot
 bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt709_from_file "test3d-1.cube" -s
 # Upload custom 3DLUT from file into bt2020 slot
 bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file "test3d-2.cube" -s
 # End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration -s
+bscpylgtvcommand 192.168.1.18 end_calibration
 ```
 
 Same calibration session via scripting:
@@ -319,13 +320,13 @@ set_dolby_vision_config_data (not recommended on >=2020 models!)
 Example usage (all the supported commands have the same syntax except for those that require a `picture_mode`):
 ```bash
 # Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration hdr_game -s
+bscpylgtvcommand 192.168.1.18 start_calibration hdr_game
 # Restore factory 1DLUT after custom 1DLUT was uploaded (by specifying empty list)
-bscpylgtvcommand 192.168.1.18 upload_1d_lut [] -s
+bscpylgtvcommand 192.168.1.18 upload_1d_lut []
 # Restore factory tonemapping parameters after custom ones were uploaded (by specifying empty list)
-bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_game [] -s
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_game []
 # End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration -s
+bscpylgtvcommand 192.168.1.18 end_calibration
 ```
 
 #### Get calibration commands
@@ -347,13 +348,13 @@ get_1d_lut, get_3d_lut
 
 ```bash
 # Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema -s
+bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema
 # Upload custom tonemapping parameters for HDR10 Cinema preset
-bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50 -s
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 75 4000 60 10000 50
 # Or upload custom tonemapping parameters to disable internal tonemapping entirely
-bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 100 4000 100 10000 100 -s
+bscpylgtvcommand 192.168.1.18 set_tonemap_params hdr_cinema 760 1000 100 4000 100 10000 100
 # End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration -s
+bscpylgtvcommand 192.168.1.18 end_calibration
 ```
 
 ### Writing Dolby Vision config file for USB upload
@@ -382,38 +383,38 @@ bscpylgtvcommand 192.168.1.18 write_dolby_vision_config_file "[{\"picture_mode\"
 
 ```bash
 # Set full screen black window in the background
-bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 0 0 0 3840 2160 0 0 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 0 0 0 3840 2160 0 0
 # Set 5% window green patch on top of the background
-bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 1023 0 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 1023 0 1
 # Display the 2 set patches
-bscpylgtvcommand 192.168.1.18 toggle_itpg true 2 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 2
 # Disable the 2 set patches
-bscpylgtvcommand 192.168.1.18 toggle_itpg false 0 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg false 0
 
 # Or using "overlay" 5% window green patch on top of the content
-bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 1023 0 0 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_patch_window 0 1023 0 0
 # Display the set patch
-bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 1
 # Disable the set patch
-bscpylgtvcommand 192.168.1.18 toggle_itpg false 0 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg false 0
 ```
 
 Displaying gradation window:
 ```bash
 # Set black to white gradation window for vertical type
-bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 3 0 0 0 1 1 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 3 0 0 0 1 1 1
 # Display vertical gradation bars
-bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 1 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 1
 # Set black to white gradation window for horizontal type
-bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 1 0 0 0 1 1 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 1 0 0 0 1 1 1
 # Display horizontal gradation bars
-bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 2 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 1 2
 # Display 2 colored vertical gradation bars at the same time
-bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 3 610 520 230 1 1 1 -s
-bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 1 3 610 50 23 1 1 1 -s
-bscpylgtvcommand 192.168.1.18 toggle_itpg true 2 1 -s
+bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 0 3 610 520 230 1 1 1
+bscpylgtvcommand 192.168.1.18 set_itpg_gradation_window 1 3 610 50 23 1 1 1
+bscpylgtvcommand 192.168.1.18 toggle_itpg true 2 1
 # Disable gradation window
-bscpylgtvcommand 192.168.1.18 toggle_itpg false 0 -s
+bscpylgtvcommand 192.168.1.18 toggle_itpg false 0
 ```
 
 

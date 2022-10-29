@@ -95,6 +95,10 @@ bscpylgtvcommand 192.168.1.18 power_off
 #    values: ["system_info", "software_info", "power", "current_app", "muted", "volume", "apps", "inputs", "sound_output", "picture_settings"]
 bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube" -s
 bscpylgtvcommand -s "[\"software_info\"]" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
+# -c "{\"lut3d\": \"33pt\", \"dovi\": \"2019\"}" : set calibration_info for unsupported chip types (be careful!)
+#    values for "lut3d": "17pt", "33pt"
+#    values for "dovi": "2018", "2019"
+bscpylgtvcommand -c "{\"lut3d\": \"33pt\", \"dovi\": \"2019\"}" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
 # -o : getting hello info (e.g. to get unique deviceUUID)
 bscpylgtvcommand -o 192.168.1.18 get_hello_info true
 # -k <client_key> : specifying a client key
@@ -188,9 +192,7 @@ More useful examples can be found in [docs/scripts](https://github.com/chros73/b
 ## Calibration functionality (in full version)
 **WARNING:** *Messing with the calibration data COULD brick your TV in some circumstances, requiring a mainboard replacement. All of the currently implemented functions SHOULD be safe (although they have only been extensively tested for the 2018 Alpha 7/9, 2019/2021/2022 Alpha 9 models), but no guarantees.*
 
-On supported models, upload to internal 1D/3D LUTs, resetting factory calibration data uploaded via calibration API, uploading custom tone mapping parameters (>=2019 models), using internal test pattern generator (iTPG, >=2019 models) and writing Dolby Vision config file is supported.
-
-Supported models: LG OLED and LCD models with Alpha 7 and Alpha 9 chipsets
+On LG WebOS TVs with Alpha 7 and Alpha 9 chipsets, upload to internal 1D/3D LUTs, resetting factory calibration data uploaded via calibration API, uploading custom tone mapping parameters (>=2019 models), using internal test pattern generator (iTPG, >=2019 models), writing Dolby Vision config file and other calibration commands are supported.
 
 ### Calibration commands
 
@@ -199,8 +201,8 @@ Here is a simplified version of the [image processing pipeline](https://displayc
 Calibration commands can only be run while in calibration mode (controlled by `start_calibration` and `end_calibration`).
 Some of the calibration commands aren't used (question mark behind the name of the method) depending on the model/firmware.
 Most of the commands can be run in any mode, except for `set_tonemap_params` that is only for HDR10+HLG and `set_dolby_vision_config_data` that is only for Dolby Vision.
-Only 3D LUT and Dolby Vision config related commands require `-s` (states) flag.
-In general, `set_1d_en_*` (de-gamma, re-gamma) and `set_3by3_gamut_data_*`(3x3 color matrices) commands should only be used when using a unity/custom 3D LUT.
+Only 3D LUT and Dolby Vision config related commands require `-s` (states) command line switch (or the use of `-c` (calibration_info) instead for unsuppported chip types if other calibration commands work fine, but be very careful!).
+In general, `set_1d_en_*` (de-gamma, re-gamma) and `set_3by3_gamut_data_*` (3x3 color matrices) commands should only be used with unity/custom 3D LUT.
 
 The following commands are supported:
 ```
@@ -405,6 +407,8 @@ bscpylgtvcommand 192.168.1.18 toggle_itpg false 0
 
 ## Development of `bscpylgtv`
 
+### Adding available settings for newer models
+
 A collection of useful commands and scripts are available under [docs/utils](https://github.com/chros73/bscpylgtv/tree/master/docs/utils) directory to add support for new firmwares in the future and make PRs easier to do.
 
 ### Adding new chip type
@@ -429,7 +433,7 @@ pytest tests
 # Run all the tests in one file
 pytest tests/test_webos_client_lite.py
 # Run a specific test in one file
-pytest tests/test_webos_client_calibration.py -k "test_set_ui_data_methods"
+pytest tests/test_webos_client_calibration.py -k test_set_ui_data_methods
 ```
 
 

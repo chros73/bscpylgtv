@@ -60,6 +60,7 @@ class WebOsClient:
         get_hello_info=False,
         states=["system_info", "software_info", "power", "current_app", "muted",
                 "volume", "apps", "inputs", "sound_output", "picture_settings"],
+        calibration_info=None,
         storage: StorageProto=None,
     ):
         """Initialize the client."""
@@ -92,7 +93,7 @@ class WebOsClient:
         self._system_info = None
         self._software_info = None
         self._hello_info = None
-        self._calibration_info = None
+        self._calibration_info = {}
         self._sound_output = None
         self._picture_settings = None
         self.state_update_callbacks = []
@@ -104,6 +105,11 @@ class WebOsClient:
             else None
         )
         self.states = (set(states) if isinstance(states, list) else set())
+        if calibration_info and isinstance(calibration_info, dict):
+            if "lut3d" in calibration_info and calibration_info["lut3d"] in LUT3D_SIZES:
+                self._calibration_info['lut3d'] = LUT3D_SIZES[calibration_info["lut3d"]]
+            if "dovi" in calibration_info and calibration_info["dovi"] in DV_CONFIG_TYPES:
+                self._calibration_info['dovi'] = DV_CONFIG_TYPES[calibration_info["dovi"]]
 
     @classmethod
     async def create(cls, *args, **kwargs):
@@ -2142,7 +2148,7 @@ class WebOsClient:
     # Calibration
 
     def calibration_support_info(self):
-        if self._calibration_info is None:
+        if not self._calibration_info:
             if self._software_info is None:
                 raise PyLGTVCmdException(f"Software info is not available, -s command line switch is required.")
 

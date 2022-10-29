@@ -2362,6 +2362,30 @@ class WebOsClient:
 
             return await self.upload_1d_lut(lut)
 
+        async def toggle_calibration_flag(self, command, enable):
+            """Toggle various calibration flags."""
+            self.check_calibration_support("lut1d", "Calibration Flag")
+            if command not in [cal.ENABLE_GAMMA_2_2_TRANSFORM, cal.ENABLE_GAMMA_0_45_TRANSFORM, cal.ENABLE_1D_LUT, cal.ENABLE_3BY3_GAMUT]:
+                raise PyLGTVCmdException(f"Invalid calibration flag command {command}.")
+            if not ((type(enable) is list and len(enable) == 0)
+                or (type(enable) is bool)):
+                raise ValueError(f"Invalid enable {enable}, must be bool or empty list.")
+
+            if type(enable) is list and len(enable) == 0:
+                # Reset uploaded data
+                data = np.array([], dtype=np.uint16)
+                dataOpt = 2
+            else:
+                value = 1 if enable else 0
+                data = np.array(value, dtype=np.uint16)
+                dataOpt = 1
+
+            return await self.calibration_request(command, data, dataOpt)
+
+        async def set_1d_lut_en(self, enable=False):
+            """Toggle 1D LUT flag."""
+            return await self.toggle_calibration_flag(cal.ENABLE_1D_LUT, enable)
+
         async def upload_3d_lut(self, command, data):
             self.check_calibration_support("lut3d_size", "3D LUT Upload")
             if command not in [cal.UPLOAD_3D_LUT_BT709, cal.UPLOAD_3D_LUT_BT2020]:
@@ -2410,33 +2434,13 @@ class WebOsClient:
         async def upload_3d_lut_bt2020_from_file(self, filename):
             return await self.upload_3d_lut_from_file(cal.UPLOAD_3D_LUT_BT2020, filename)
 
-        async def set_1d_en(self, command, enable):
-            """Toggle 1D LUT de-gamma / re-gamma flags."""
-            self.check_calibration_support("lut1d", "1d_en Upload")
-            if command not in [cal.ENABLE_GAMMA_2_2_TRANSFORM, cal.ENABLE_GAMMA_0_45_TRANSFORM]:
-                raise PyLGTVCmdException(f"Invalid 1d_en Upload command {command}.")
-            if not ((type(enable) is list and len(enable) == 0)
-                or (type(enable) is bool)):
-                raise ValueError(f"Invalid enable {enable}, must be bool or empty list.")
-
-            if type(enable) is list and len(enable) == 0:
-                # Reset uploaded data
-                data = np.array([], dtype=np.uint16)
-                dataOpt = 2
-            else:
-                value = 1 if enable else 0
-                data = np.array(value, dtype=np.uint16)
-                dataOpt = 1
-
-            return await self.calibration_request(command, data, dataOpt)
-
         async def set_1d_en_2_2(self, enable=False):
             """Toggle 1D LUT de-gamma flag (gamma to linear space transformation)."""
-            return await self.set_1d_en(cal.ENABLE_GAMMA_2_2_TRANSFORM, enable)
+            return await self.toggle_calibration_flag(cal.ENABLE_GAMMA_2_2_TRANSFORM, enable)
 
         async def set_1d_en_0_45(self, enable=False):
             """Toggle 1D LUT re-gamma flag (linear to gamma space transformation)."""
-            return await self.set_1d_en(cal.ENABLE_GAMMA_0_45_TRANSFORM, enable)
+            return await self.toggle_calibration_flag(cal.ENABLE_GAMMA_0_45_TRANSFORM, enable)
 
         async def set_3by3_gamut_data(self, command, data):
             self.check_calibration_support("lut1d", "3by3 Gamut Data Upload")
@@ -2468,6 +2472,10 @@ class WebOsClient:
         async def set_3by3_gamut_data_hdr(self, data=None):
             """Set HDR 3x3 color matrix used only in 2019 models (color gamut space transformation in linear space)."""
             return await self.set_3by3_gamut_data(cal.HDR_3BY3_GAMUT_DATA, data)
+
+        async def set_3by3_gamut_en(self, enable=False):
+            """Toggle 3x3 color matrix flag (color gamut space transformation in linear space)."""
+            return await self.toggle_calibration_flag(cal.ENABLE_3BY3_GAMUT, enable)
 
         async def set_bypass_modes_sdr(self, unity_1d_lut=False):
             """Set SDR bypass modes."""

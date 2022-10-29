@@ -33,7 +33,7 @@ class TestWebOsClientCalibration():
     async def test_check_calibration_support(self, model, property, message, expected):
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")
         client._system_info = {"modelName" : model}
-
+        
         if expected:
             client.check_calibration_support(property, message)
             assert expected == True
@@ -577,7 +577,7 @@ class TestWebOsClientCalibration():
 
 
 
-    data_set_1d_en_2_2_0_45 = [
+    data_set_1d_en_2_2_0_45_1d_lut_3by3_gamut = [
         ( "OLED65C6V",      0,      "1d_en_2_2",    None,                           None,   None,   None,   -1 ),
         ( "OLED65C26LA",    "",     "1d_en_2_2",    None,                           None,   None,   None,   0 ),
         ( "OLED65C26LA",    "x",    "1d_en_2_2",    None,                           None,   None,   None,   0 ),
@@ -593,10 +593,26 @@ class TestWebOsClientCalibration():
         ( "OLED65C26LA",    [],     "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"",     0,      2,      1 ),
         ( "OLED65C26LA",    False,  "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AAA=", 1,      1,      1 ),
         ( "OLED65C26LA",    True,   "1d_en_0_45",   cal.ENABLE_GAMMA_0_45_TRANSFORM,"AQA=", 1,      1,      1 ),
+
+        ( "OLED65C6V",      0,      "1d_lut_en",    None,                           None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    "",     "1d_lut_en",    None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    "x",    "1d_lut_en",    None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    2,      "1d_lut_en",    None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [],     "1d_lut_en",    cal.ENABLE_1D_LUT,              "",     0,      2,      1 ),
+        ( "OLED65C26LA",    False,  "1d_lut_en",    cal.ENABLE_1D_LUT,              "AAA=", 1,      1,      1 ),
+        ( "OLED65C26LA",    True,   "1d_lut_en",    cal.ENABLE_1D_LUT,              "AQA=", 1,      1,      1 ),
+
+        ( "OLED65C6V",      0,      "3by3_gamut_en",None,                           None,   None,   None,   -1 ),
+        ( "OLED65C26LA",    "",     "3by3_gamut_en",None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    "x",    "3by3_gamut_en",None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    2,      "3by3_gamut_en",None,                           None,   None,   None,   0 ),
+        ( "OLED65C26LA",    [],     "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "",     0,      2,      1 ),
+        ( "OLED65C26LA",    False,  "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "AAA=", 1,      1,      1 ),
+        ( "OLED65C26LA",    True,   "3by3_gamut_en",cal.ENABLE_3BY3_GAMUT,          "AQA=", 1,      1,      1 ),
     ]
 
-    @pytest.mark.parametrize("model,enable,methodName,command,data,dataCount,dataOpt,expected", data_set_1d_en_2_2_0_45)
-    async def test_set_1d_en_2_2_0_45(self, mocker, model, enable, methodName, command, data, dataCount, dataOpt, expected):
+    @pytest.mark.parametrize("model,enable,methodName,command,data,dataCount,dataOpt,expected", data_set_1d_en_2_2_0_45_1d_lut_3by3_gamut)
+    async def test_set_1d_en_2_2_0_45_1d_lut_3by3_gamut(self, mocker, model, enable, methodName, command, data, dataCount, dataOpt, expected):
         mocker.patch('bscpylgtv.WebOsClient.request')
 
         client = await WebOsClient.create("x", states=["system_info"], client_key="x")

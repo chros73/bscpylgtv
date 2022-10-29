@@ -212,6 +212,7 @@ LG 2018 Alpha 7 G1: Super UHD LED (8000 & higher model numbers)
 Here is a simplified version of the [image processing pipeline](https://displaycalibrations.com/images/LG_OLED_Video_Signal_Chain_Diagram_Picture.png) (there may be other not fully known/understood changes).
 
 Calibration commands can only be run while in calibration mode (controlled by `start_calibration` and `end_calibration`).
+Some of the calibration commands aren't used (question mark behind the name of the method) depending on the model/firmware.
 Most of the commands can be run in any mode, except for `set_tonemap_params` that is only for HDR10+HLG and `set_dolby_vision_config_data` that is only for Dolby Vision.
 In general, `set_1d_en_*` (de-gamma, re-gamma) and `set_3by3_gamut_data_*`(3x3 color matrices) commands should only be used when using a unity/custom 3D LUT.
 
@@ -219,12 +220,13 @@ The following commands are supported:
 ```
 start_calibration, end_calibration,
 set_oled_light, set_contrast, set_brightness, set_color
-upload_1d_lut, upload_1d_lut_from_file,
+upload_1d_lut, upload_1d_lut_from_file, set_1d_lut_en (?),
 upload_3d_lut_bt709, upload_3d_lut_bt709_from_file, upload_3d_lut_bt2020, upload_3d_lut_bt2020_from_file, 
-set_1d_en_2_2, set_1d_en_0_45, set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020,
+set_1d_en_2_2, set_1d_en_0_45,
+set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020, set_3by3_gamut_en (?),
 set_3by3_gamut_data_hdr (only used in 2019 models),
 set_tonemap_params (for HDR10 picture modes),
-set_dolby_vision_config_data (not recommended on >=2020 models!),
+set_dolby_vision_config_data (not recommended on >=2020 models!)
 ```
 
 Combined commands for setting bypass modes and resetting factory data:

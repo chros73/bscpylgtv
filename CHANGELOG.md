@@ -1,5 +1,19 @@
 # Change Log
 
+## [v0.4.1](https://github.com/chros73/bscpylgtv/tree/v0.4.1) (2022-10-29)
+**Implemented enhancements:**
+
+- Add `set_1d_lut_en` and `set_3by3_gamut_en` calibration methods
+- Speed up most of the calibration commands by removing checking for calibration support from them:
+    - only 3D LUT and Dolby Vision config related commands require `-s` (states) flag
+- Modify `calibration_support_info` method to use chip type instead of model name
+- Add optional `-c` command line parameter for overriding calibration_info for unsupported chip types
+- Update readme
+
+**Fixed bugs:**
+
+- Fix truncated large arrays with get calibration commands during printing
+
 ## [v0.4.0](https://github.com/chros73/bscpylgtv/tree/v0.4.0) (2022-10-23)
 **Implemented enhancements:**
 

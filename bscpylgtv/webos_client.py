@@ -2213,8 +2213,8 @@ class WebOsClient:
             self.validateCalibrationData(data, shape, npType, None, dataCount)
 
             # print the full numpy array
-            with np.printoptions(threshold=np.inf):
-                return data if shape != (1, ) else data[0]
+            np.set_printoptions(threshold=np.inf)
+            return data if shape != (1, ) else data[0]
 
         async def get_1d_en_2_2(self):
             return await self.get_calibration_data(cal.GET_GAMMA_2_2_TRANSFORM, (1, ))

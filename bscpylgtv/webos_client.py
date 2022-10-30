@@ -308,7 +308,7 @@ class WebOsClient:
             self._system_info = None
             self._software_info = None
             self._hello_info = None
-            self._calibration_info = None
+            self._calibration_info = {}
             self._sound_output = None
             self._picture_settings = None
 

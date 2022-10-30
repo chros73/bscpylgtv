@@ -6,7 +6,7 @@ Library to control webOS based LG TV devices. Enhanced and faster version of
 ## Requirements
 - Python >= 3.8
 
-## Install from package
+### Install from package
 ```bash
 # Install lite package without calibration functionality
 pip install bscpylgtv
@@ -14,7 +14,7 @@ pip install bscpylgtv
 pip install bscpylgtv[with_calibration]
 ```
 
-## Install from Source
+### Install from Source
 Run the following command inside this folder:
 ```bash
 # Install lite package without calibration functionality
@@ -23,11 +23,13 @@ pip install --upgrade .
 pip install --upgrade .[with_calibration]
 ```
 
-## Windows binaries
+### Windows binaries
 Portable Windows binaries can be found under [releases](https://github.com/chros73/bscpylgtv/releases).
 
 ## Examples
-Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory.
+Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory, also available [buttons](https://github.com/chros73/bscpylgtv/tree/master/bscpylgtv/buttons.py).
+They can even be more useful when they are paired with other frontend utilities that can run batch files (e.g. [madvr-js-remote](https://github.com/chros73/madvr-js-remote) or [HTWebRemote
+](https://github.com/nicko88/HTWebRemote) on Windows).
 ```bash
 # Get list of apps (including hidden ones as well)
 bscpylgtvcommand 192.168.1.18 get_apps_all true
@@ -88,7 +90,7 @@ bscpylgtvcommand 192.168.1.18 reboot_soft
 bscpylgtvcommand 192.168.1.18 power_off
 ```
 
-## Optional command line switches
+### Optional command line switches
 
 ```bash
 # -s "[\"<state1>\", "\<state2>\"]" : set states ("software_info" static state is required by some of the calibration commands)
@@ -130,7 +132,7 @@ async def runloop():
 asyncio.run(runloop())
 ```
 
-## Subscribed State Updates Example
+### Subscribed State Updates Example
 
 ```python
 import asyncio
@@ -167,7 +169,7 @@ async def runloop():
 asyncio.run(runloop())
 ```
 
-## Using external storage class via scripting
+### Using external storage class via scripting
 
 Replacing built-in `StorageSqliteDict` key storage with custom `StorageMy` class that implements [methods](https://github.com/chros73/bscpylgtv/tree/master/bscpylgtv/storage_proto.py) of `StorageProto` class:
 ```python
@@ -204,15 +206,14 @@ Most of the commands can be run in any mode, except for `set_tonemap_params` tha
 Only 3D LUT and Dolby Vision config related commands require `-s` (states) command line switch (or the use of `-c` (calibration_info) instead for unsuppported chip types if other calibration commands work fine, but be very careful!).
 In general, `set_1d_en_*` (de-gamma, re-gamma) and `set_3by3_gamut_data_*` (3x3 color matrices) commands should only be used with unity/custom 3D LUT.
 
-The following commands are supported:
+The following commands are supported via calibration API:
 ```
 start_calibration, end_calibration,
 set_oled_light, set_contrast, set_brightness, set_color
 upload_1d_lut, upload_1d_lut_from_file, set_1d_lut_en (?),
 upload_3d_lut_bt709, upload_3d_lut_bt709_from_file, upload_3d_lut_bt2020, upload_3d_lut_bt2020_from_file, 
 set_1d_en_2_2, set_1d_en_0_45,
-set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020, set_3by3_gamut_en (?),
-set_3by3_gamut_data_hdr (only used in 2019 models),
+set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020, set_3by3_gamut_data_hdr (only used in 2019 models), set_3by3_gamut_en (?),
 set_tonemap_params (for HDR10 picture modes),
 set_dolby_vision_config_data (not recommended on >=2020 models!)
 ```
@@ -242,7 +243,9 @@ Models with Alpha 9 use 33 point 3D LUTs, while those with Alpha 7 use 17 points
 When uploading any 1D LUT data, service menu white balance settings are ignored, and gamma, colorspace, and white balance settings in the user menu are greyed out and inaccessible. From 2019 models white balance 2pt values can be set.
 While in calibration mode for HDR10 tone mapping is bypassed.
 
-Calibration command line examples, modifying expert1 SDR preset (ISF Expert Bright Room):
+#### Calibration examples
+
+Modifying expert1 SDR preset (ISF Expert Bright Room):
 ```bash
 # Switch to HDMI2 input
 bscpylgtvcommand 192.168.1.18 set_input HDMI_2
@@ -291,15 +294,36 @@ async def runloop():
 asyncio.run(runloop())
 ```
 
+#### Uploading bypass values (also known as DDC reset)
+
+The following commands are supported via calibration API beside of the the combined `set_bypass_modes_*` commands:
+```
+upload_1d_lut,
+upload_3d_lut_bt709, upload_3d_lut_bt2020,
+set_1d_en_2_2, set_1d_en_0_45, set_1d_lut_en (?),
+set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020, set_3by3_gamut_data_hdr (only used in 2019 models), set_3by3_gamut_en (?),
+```
+
+Example usage (all the supported commands have the same syntax):
+```bash
+# Start calibration mode
+bscpylgtvcommand 192.168.1.18 start_calibration hdr_game
+# Upload unity 1DLUT (no extra parameter is required)
+bscpylgtvcommand 192.168.1.18 upload_1d_lut
+# End calibration mode
+bscpylgtvcommand 192.168.1.18 end_calibration
+```
+
 #### Resetting factory calibration data uploaded via calibration API
 
 It's possible to reset individual factory calibration data (previously a picture preset reset or factory reset was required for this)
-or reset all/most of them with `reset_factory_data_*` commands.
+or reset all/most of them with the combined `reset_factory_data_*` commands.
 The following commands are supported via calibration API:
 ```
-upload_1d_lut, upload_3d_lut_bt709, upload_3d_lut_bt2020,
-set_1d_en_2_2, set_1d_en_0_45, set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020,
-set_3by3_gamut_data_hdr (only used in 2019 models),
+upload_1d_lut,
+upload_3d_lut_bt709, upload_3d_lut_bt2020,
+set_1d_en_2_2, set_1d_en_0_45, set_1d_lut_en (?),
+set_3by3_gamut_data_bt709, set_3by3_gamut_data_bt2020, set_3by3_gamut_data_hdr (only used in 2019 models), set_3by3_gamut_en (?),
 set_tonemap_params (for HDR10 picture modes),
 set_dolby_vision_config_data (not recommended on >=2020 models!)
 ```
@@ -322,10 +346,21 @@ bscpylgtvcommand 192.168.1.18 end_calibration
 - they can be used inside or outside of calibration mode as well
 - they return the data of the currently active picture mode
 
+The following commands are supported via calibration API:
 ```
 get_1d_en_2_2, get_1d_en_0_45,
 get_3by3_gamut_data, get_3by3_gamut_data_hdr,
 get_1d_lut, get_3d_lut
+```
+
+Example usage (all the supported commands have the same syntax):
+```bash
+# Start calibration mode
+bscpylgtvcommand 192.168.1.18 start_calibration hdr_game
+# Get 3x3 color matrix (no extra parameter is required)
+bscpylgtvcommand 192.168.1.18 get_3by3_gamut_data
+# End calibration mode
+bscpylgtvcommand 192.168.1.18 end_calibration
 ```
 
 #### Uploading custom tonemapping parameters for HDR10 presets
@@ -348,7 +383,7 @@ bscpylgtvcommand 192.168.1.18 end_calibration
 
 - picture modes: dolby_cinema_bright - 1 (DoVi Cinema Home), dolby_cinema_dark - 2 (DoVi Cinema), dolby_game - 4 (DoVi Game)
 - primaries (in this order): xr, yr, xg, yg, xb, yb
-- config of 2018 models is different from the rest of the models
+- config of 2018 models is different from newer models (>=2019)
 
 ```bash
 # Writing DoVi config for one preset (DoVi Cinema)

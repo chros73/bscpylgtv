@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.4.2](https://github.com/chros73/bscpylgtv/tree/v0.4.2) (2022-11-01)
+
+**Fixed bugs:**
+
+- Fix truncated large arrays with get calibration commands during returning
+
 ## [v0.4.1](https://github.com/chros73/bscpylgtv/tree/v0.4.1) (2022-10-29)
 **Implemented enhancements:**
 

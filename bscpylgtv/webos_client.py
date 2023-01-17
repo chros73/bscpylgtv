@@ -4,6 +4,7 @@ import copy
 import functools
 import json
 import os
+import ssl
 from datetime import timedelta
 
 try:
@@ -61,11 +62,13 @@ class WebOsClient:
         states=["system_info", "software_info", "power", "current_app", "muted",
                 "volume", "apps", "inputs", "sound_output", "picture_settings"],
         calibration_info=None,
+        without_ssl=False,
         storage: StorageProto=None,
     ):
         """Initialize the client."""
         self.ip = ip
-        self.port = 3000
+        self.port = (3000 if without_ssl else 3001)
+        self.proto = ('ws' if without_ssl else 'wss')
         self.key_file_path = key_file_path
         self.client_key = client_key
         self.command_count = 0
@@ -94,6 +97,7 @@ class WebOsClient:
         self._software_info = None
         self._hello_info = None
         self._calibration_info = {}
+        self._ssl_context = None
         self._sound_output = None
         self._picture_settings = None
         self.state_update_callbacks = []
@@ -110,6 +114,10 @@ class WebOsClient:
                 self._calibration_info['lut3d'] = LUT3D_SIZES[calibration_info["lut3d"]]
             if "dovi" in calibration_info and calibration_info["dovi"] in DV_CONFIG_TYPES:
                 self._calibration_info['dovi'] = DV_CONFIG_TYPES[calibration_info["dovi"]]
+        if not without_ssl:
+            self._ssl_context = ssl.create_default_context()
+            self._ssl_context.check_hostname = False
+            self._ssl_context.verify_mode = ssl.CERT_NONE
 
     @classmethod
     async def create(cls, *args, **kwargs):
@@ -161,10 +169,11 @@ class WebOsClient:
         try:
             ws = await asyncio.wait_for(
                 websockets.connect(
-                    f"ws://{self.ip}:{self.port}",
+                    f"{self.proto}://{self.ip}:{self.port}",
                     ping_interval=None,
                     close_timeout=self.timeout_connect,
                     max_size=None,
+                    ssl=self._ssl_context,
                 ),
                 timeout=self.timeout_connect,
             )
@@ -690,6 +699,7 @@ class WebOsClient:
                         inputsockpath,
                         ping_interval=None,
                         close_timeout=self.timeout_connect,
+                        ssl=self._ssl_context,
                     ),
                     timeout=self.timeout_connect,
                 )

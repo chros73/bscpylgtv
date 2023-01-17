@@ -103,6 +103,8 @@ bscpylgtvcommand -s "[\"software_info\"]" 192.168.1.18 upload_3d_lut_bt2020_from
 bscpylgtvcommand -c "{\"lut3d\": \"33pt\", \"dovi\": \"2019\"}" 192.168.1.18 upload_3d_lut_bt2020_from_file expert1 "test3d-2.cube"
 # -o : getting hello info (e.g. to get unique deviceUUID)
 bscpylgtvcommand -o 192.168.1.18 get_hello_info true
+# -w : connecting without SSL
+bscpylgtvcommand -w 192.168.1.18 button INFO
 # -k <client_key> : specifying a client key
 bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 button INFO
 # -p <path_to_key_file> : specifying path to key file

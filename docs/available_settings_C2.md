@@ -1,4 +1,4 @@
-### OLED C2 (2022) webOS v7.1.0
+### OLED C2 (2022) webOS v7.3.0
 Available settings per category that can be used with various methods.
 
 #### Inputs
@@ -73,6 +73,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
         0
     ],
     "ambientLightCompensation": "off",
+    "applyToAllInput": "done",
     "backlight": "80",
     "blackLevel": {
         "ntsc": "auto",
@@ -109,6 +110,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "colorManagementSaturationYellow": "0",
     "colorTemperature": "-50",
     "contrast": "80",
+    "dolbyPrecisionDetail": "off",
     "dynamicColor": "off",
     "dynamicContrast": "off",
     "edgeEnhancer": "on",
@@ -289,6 +291,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
         "driveId": ""
     },
     "appUpdateMode": "manual",
+    "artisticDisplayTimer": "off",
     "audioGuidance": "off",
     "audioGuidancePitch": "medium",
     "audioGuidanceSpeed": "medium",
@@ -321,6 +324,61 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "countryGroup": "UNDEFINED",
     "countryRegion": "other",
     "curDemoFile": "undefined",
+    "curvature": {
+        "curvatureList": [
+            {
+                "disable": false,
+                "selected": true,
+                "type": "flat",
+                "user": false,
+                "value": "0%"
+            },
+            {
+                "disable": false,
+                "selected": false,
+                "type": "curvature1",
+                "user": false,
+                "value": "50%"
+            },
+            {
+                "disable": false,
+                "selected": false,
+                "type": "curvature2",
+                "user": false,
+                "value": "100%"
+            },
+            {
+                "disable": true,
+                "selected": false,
+                "type": "curvature3",
+                "user": false,
+                "value": "100%"
+            }
+        ],
+        "valueList": [
+            "0%",
+            "5%",
+            "10%",
+            "15%",
+            "20%",
+            "25%",
+            "30%",
+            "35%",
+            "40%",
+            "45%",
+            "50%",
+            "55%",
+            "60%",
+            "65%",
+            "70%",
+            "75%",
+            "80%",
+            "85%",
+            "90%",
+            "95%",
+            "100%"
+        ]
+    },
     "dataService": "mheg",
     "dbgLogUpload": false,
     "demoFileList": "undefined",
@@ -359,6 +417,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
         "voice": true
     },
     "interactive-service": "off",
+    "interactive-service-hdmi": "off",
+    "interactive-service-id": "",
     "interactivity": "off",
     "irBlaster": "off",
     "ismMethod": "normal",
@@ -419,6 +479,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "from": "magicNum"
         }
     },
+    "magicNumFvp": false,
     "magicNumHelpShow": true,
     "menuLanguage": "eng",
     "menuTransparency": "on",
@@ -447,10 +508,12 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "promotionStreamer": "off",
     "pstreamerUser": "off",
     "quickStartMode": "off",
+    "restoreCurve": "on",
     "screenOff": "off",
     "screenOffTime": "5",
     "screenRotation": "off",
     "searchAppTTS": "off",
+    "serviceCountryForMagicNum": "",
     "setId": 1,
     "smartServiceCountryCode2": "other",
     "smartServiceCountryCode3": "other",
@@ -480,6 +543,13 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "voiceRecognitionLanguage": "eng",
     "vsn": "N/A",
     "wakeUpword": "LGTV",
+    "wallPaperSettings": {
+        "artisticDisplayTheme": "default",
+        "artisticDisplayThemeVersion": 0,
+        "homeImageVersion": 0,
+        "imageLimit": 0,
+        "isFullView": false
+    },
     "watchedListCollection": "on",
     "webOSPromotionVideo": "on",
     "yourMomentsVersion": "0",
@@ -488,8 +558,11 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
 
 #### `other` category - default settings (used by `set_other_settings` method)
 ```json
+    "activeArtisticDisplayScreenSaver": false,
     "amazonHotkeyIsActive": true,
     "appReturn": "",
+    "battery25PercentMode": "off",
+    "batteryInstopProtect": "on",
     "blackStabilizer": 13,
     "blueLight": "off",
     "care365": {
@@ -531,6 +604,15 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "freesyncOLEDHDMI4": "off",
     "freesyncSupport": "off",
     "freeviewTnCPopup": "off",
+    "gameAdjustContrast": 95,
+    "gameBlackLevel": 50,
+    "gameColorDepth": 55,
+    "gameDashboardStatusList": [
+        "fps",
+        "vrr_aiGameSound_whiteStabilizer",
+        "blackStabilizer",
+        "lowLatency"
+    ],
     "gameGenre": "Standard",
     "gameMode": {
         "hdmi1": "off",
@@ -545,13 +627,28 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "gameOptimizationHDMI4": "on",
     "gameScreenPosition": "middle",
     "gameScreenRatio": "16:9",
+    "gameScreenSize": "full",
+    "gameSettingModified": {
+        "FPS": false,
+        "RPG": false,
+        "RTS": false,
+        "Sports": false,
+        "Standard": false,
+        "USER": false
+    },
+    "gameSharpness": 10,
     "gameUIColor": "violet",
+    "gameWallpaper": {
+        "folderUpdateVersion": 0,
+        "imgSrc": ""
+    },
     "hdmiPcMode": {
         "hdmi1": false,
         "hdmi2": false,
         "hdmi3": false,
         "hdmi4": false
     },
+    "homeAppLaunched": "off",
     "homeEffectVersion": [
         {
             "id": "Christmas",
@@ -567,7 +664,11 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "isFirstCapture": "true",
     "isfUpdated": "false",
     "lgLogoDisplay": "on",
+    "lightingBrightness": 8,
+    "lightingEnable": "off",
+    "lightingMode": "dynamic",
     "lowLevelAdjustment": 0,
+    "lowPowerMode": "off",
     "mapping_info": [
         {
             "movies": {
@@ -707,6 +808,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "newKey": "on",
     "oledCareMode": "off",
     "oledCareRecommendation": "off",
+    "playbackThreshold": 200,
+    "pseudoTouchMode": "on",
     "quickSettingsMenuList": [
         "QuickSettings_picture_button",
         "QuickSettings_soundMode_button",
@@ -722,8 +825,17 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "screenRemotePosition": "right",
     "simplinkAutoPowerOn": "on",
     "simplinkEnable": "off",
+    "soundSyncModeColor": "auto",
+    "soundSyncModeDisplayMode": "bar",
+    "soundSyncModeFrequency": "mid",
+    "soundSyncModeStaticColor": 35,
+    "staticModeColor1": 35,
+    "staticModeColor2": 1,
+    "staticModeColor3": 12,
+    "staticModeColor4": 0,
     "supportAirplay": false,
     "supportBnoModel": false,
+    "touchRemoteLaunchMode": "edgeSwipe",
     "ueiEnable": "off",
     "uhdDeepColor": "off",
     "uhdDeepColor8kHDMI1": "off",
@@ -768,7 +880,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "localeCountryGroup",
             "japanCitySelection",
             "countryBroadcastSystem",
-            "yourMomentsVersion"
+            "yourMomentsVersion",
+            "wallPaperSettings"
     ],
     "time": [
             "onTimerVolume",
@@ -789,7 +902,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     ],
     "other": [
             "simplinkEnable",
-            "ueiEnable"
+            "ueiEnable",
+            "gameWallpaper"
     ],
     "sound": [
             "avSync",
@@ -819,6 +933,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
 #### `config` keys (used by `get_configs` and `set_configs` methods)
 ```
 airplay.*
+amazon-alexa-adapter.*
 amazon.*
 audio.*
 broadcast.*
@@ -827,6 +942,7 @@ com.palm.app.settings.*
 com.palm.app.store-demo.*
 com.webos.app.connectionwizard.*
 com.webos.app.factorywin.*
+com.webos.app.familycare.*
 com.webos.app.favshows.*
 com.webos.app.home.*
 com.webos.app.igallery.*
@@ -839,15 +955,15 @@ com.webos.applicationManager.*
 com.webos.authenticationMethods.*
 com.webos.keyaction.*
 com.webos.memorymanager.*
-com.webos.service.alwayready.*
 com.webos.service.airplay.*
+com.webos.service.alwayready.*
 com.webos.service.arccontroller.*
 com.webos.service.attachedstoragemanager.*
 com.webos.service.bthidmanager.*
 com.webos.service.camera.*
 com.webos.service.cbox.*
-com.webos.service.datamigrator.*
 com.webos.service.config.*
+com.webos.service.datamigrator.*
 com.webos.service.eim.*
 com.webos.service.favoriteservice.*
 com.webos.service.fepg.*
@@ -863,8 +979,10 @@ com.webos.service.msc.*
 com.webos.service.nlpmanager.*
 com.webos.service.nop.*
 com.webos.service.nudge.*
+com.webos.service.pbsw.*
 com.webos.service.pdm.*
 com.webos.service.photorenderer.*
+com.webos.service.pqcontroller.*
 com.webos.service.preloadmanager.*
 com.webos.service.rollingscreen.*
 com.webos.service.scd.*
@@ -882,6 +1000,7 @@ inputMap.*
 mediaCapability.*
 miracast.*
 multiview.*
+profile.*
 system.*
 tv.config.*
 tv.conti.*
@@ -889,6 +1008,7 @@ tv.hw.*
 tv.model.*
 tv.nyx.*
 tv.rmm.*
+wee.*
 ```
 
 

@@ -1237,6 +1237,7 @@ class WebOsClient:
             0
         ],
         "ambientLightCompensation": "off",
+        "applyToAllInput": "done",
         "backlight": "80",
         "blackLevel": {
             "ntsc": "auto",
@@ -1273,6 +1274,7 @@ class WebOsClient:
         "colorManagementSaturationYellow": "0",
         "colorTemperature": "-50",
         "contrast": "80",
+        "dolbyPrecisionDetail": "off",
         "dynamicColor": "off",
         "dynamicContrast": "off",
         "edgeEnhancer": "on",
@@ -1456,8 +1458,11 @@ class WebOsClient:
         (not all settings are applicable for all tv models/firmwares):
         /etc/palm/defaultSettings.json
 
+        "activeArtisticDisplayScreenSaver": false,
         "amazonHotkeyIsActive": true,
         "appReturn": "",
+        "battery25PercentMode": "off",
+        "batteryInstopProtect": "on",
         "blackStabilizer": 13,
         "blueLight": "off",
         "care365": {
@@ -1499,6 +1504,15 @@ class WebOsClient:
         "freesyncOLEDHDMI4": "off",
         "freesyncSupport": "off",
         "freeviewTnCPopup": "off",
+        "gameAdjustContrast": 95,
+        "gameBlackLevel": 50,
+        "gameColorDepth": 55,
+        "gameDashboardStatusList": [
+            "fps",
+            "vrr_aiGameSound_whiteStabilizer",
+            "blackStabilizer",
+            "lowLatency"
+        ],
         "gameGenre": "Standard",
         "gameMode": {
             "hdmi1": "off",
@@ -1513,13 +1527,28 @@ class WebOsClient:
         "gameOptimizationHDMI4": "on",
         "gameScreenPosition": "middle",
         "gameScreenRatio": "16:9",
+        "gameScreenSize": "full",
+        "gameSettingModified": {
+            "FPS": false,
+            "RPG": false,
+            "RTS": false,
+            "Sports": false,
+            "Standard": false,
+            "USER": false
+        },
+        "gameSharpness": 10,
         "gameUIColor": "violet",
+        "gameWallpaper": {
+            "folderUpdateVersion": 0,
+            "imgSrc": ""
+        },
         "hdmiPcMode": {
             "hdmi1": false,
             "hdmi2": false,
             "hdmi3": false,
             "hdmi4": false
         },
+        "homeAppLaunched": "off",
         "homeEffectVersion": [
             {
                 "id": "Christmas",
@@ -1535,7 +1564,11 @@ class WebOsClient:
         "isFirstCapture": "true",
         "isfUpdated": "false",
         "lgLogoDisplay": "on",
+        "lightingBrightness": 8,
+        "lightingEnable": "off",
+        "lightingMode": "dynamic",
         "lowLevelAdjustment": 0,
+        "lowPowerMode": "off",
         "mapping_info": [
             {
                 "movies": {
@@ -1675,6 +1708,8 @@ class WebOsClient:
         "newKey": "on",
         "oledCareMode": "off",
         "oledCareRecommendation": "off",
+        "playbackThreshold": 200,
+        "pseudoTouchMode": "on",
         "quickSettingsMenuList": [
             "QuickSettings_picture_button",
             "QuickSettings_soundMode_button",
@@ -1690,8 +1725,17 @@ class WebOsClient:
         "screenRemotePosition": "right",
         "simplinkAutoPowerOn": "on",
         "simplinkEnable": "off",
+        "soundSyncModeColor": "auto",
+        "soundSyncModeDisplayMode": "bar",
+        "soundSyncModeFrequency": "mid",
+        "soundSyncModeStaticColor": 35,
+        "staticModeColor1": 35,
+        "staticModeColor2": 1,
+        "staticModeColor3": 12,
+        "staticModeColor4": 0,
         "supportAirplay": false,
         "supportBnoModel": false,
+        "touchRemoteLaunchMode": "edgeSwipe",
         "ueiEnable": "off",
         "uhdDeepColor": "off",
         "uhdDeepColor8kHDMI1": "off",
@@ -1741,6 +1785,7 @@ class WebOsClient:
             "driveId": ""
         },
         "appUpdateMode": "manual",
+        "artisticDisplayTimer": "off",
         "audioGuidance": "off",
         "audioGuidancePitch": "medium",
         "audioGuidanceSpeed": "medium",
@@ -1773,6 +1818,61 @@ class WebOsClient:
         "countryGroup": "UNDEFINED",
         "countryRegion": "other",
         "curDemoFile": "undefined",
+        "curvature": {
+            "curvatureList": [
+                {
+                    "disable": false,
+                    "selected": true,
+                    "type": "flat",
+                    "user": false,
+                    "value": "0%"
+                },
+                {
+                    "disable": false,
+                    "selected": false,
+                    "type": "curvature1",
+                    "user": false,
+                    "value": "50%"
+                },
+                {
+                    "disable": false,
+                    "selected": false,
+                    "type": "curvature2",
+                    "user": false,
+                    "value": "100%"
+                },
+                {
+                    "disable": true,
+                    "selected": false,
+                    "type": "curvature3",
+                    "user": false,
+                    "value": "100%"
+                }
+            ],
+            "valueList": [
+                "0%",
+                "5%",
+                "10%",
+                "15%",
+                "20%",
+                "25%",
+                "30%",
+                "35%",
+                "40%",
+                "45%",
+                "50%",
+                "55%",
+                "60%",
+                "65%",
+                "70%",
+                "75%",
+                "80%",
+                "85%",
+                "90%",
+                "95%",
+                "100%"
+            ]
+        },
         "dataService": "mheg",
         "dbgLogUpload": false,
         "demoFileList": "undefined",
@@ -1811,6 +1911,8 @@ class WebOsClient:
             "voice": true
         },
         "interactive-service": "off",
+        "interactive-service-hdmi": "off",
+        "interactive-service-id": "",
         "interactivity": "off",
         "irBlaster": "off",
         "ismMethod": "normal",
@@ -1871,6 +1973,7 @@ class WebOsClient:
                 "from": "magicNum"
             }
         },
+        "magicNumFvp": false,
         "magicNumHelpShow": true,
         "menuLanguage": "eng",
         "menuTransparency": "on",
@@ -1899,10 +2002,12 @@ class WebOsClient:
         "promotionStreamer": "off",
         "pstreamerUser": "off",
         "quickStartMode": "off",
+        "restoreCurve": "on",
         "screenOff": "off",
         "screenOffTime": "5",
         "screenRotation": "off",
         "searchAppTTS": "off",
+        "serviceCountryForMagicNum": "",
         "setId": 1,
         "smartServiceCountryCode2": "other",
         "smartServiceCountryCode3": "other",
@@ -1932,6 +2037,13 @@ class WebOsClient:
         "voiceRecognitionLanguage": "eng",
         "vsn": "N/A",
         "wakeUpword": "LGTV",
+        "wallPaperSettings": {
+            "artisticDisplayTheme": "default",
+            "artisticDisplayThemeVersion": 0,
+            "homeImageVersion": 0,
+            "imageLimit": 0,
+            "isFullView": false
+        },
         "watchedListCollection": "on",
         "webOSPromotionVideo": "on",
         "yourMomentsVersion": "0",
@@ -1950,6 +2062,7 @@ class WebOsClient:
         /etc/configd/layers
 
         airplay.*
+        amazon-alexa-adapter.*
         amazon.*
         audio.*
         broadcast.*
@@ -1958,6 +2071,7 @@ class WebOsClient:
         com.palm.app.store-demo.*
         com.webos.app.connectionwizard.*
         com.webos.app.factorywin.*
+        com.webos.app.familycare.*
         com.webos.app.favshows.*
         com.webos.app.home.*
         com.webos.app.igallery.*
@@ -1970,15 +2084,15 @@ class WebOsClient:
         com.webos.authenticationMethods.*
         com.webos.keyaction.*
         com.webos.memorymanager.*
-        com.webos.service.alwayready.*
         com.webos.service.airplay.*
+        com.webos.service.alwayready.*
         com.webos.service.arccontroller.*
         com.webos.service.attachedstoragemanager.*
         com.webos.service.bthidmanager.*
         com.webos.service.camera.*
         com.webos.service.cbox.*
-        com.webos.service.datamigrator.*
         com.webos.service.config.*
+        com.webos.service.datamigrator.*
         com.webos.service.eim.*
         com.webos.service.favoriteservice.*
         com.webos.service.fepg.*
@@ -1994,8 +2108,10 @@ class WebOsClient:
         com.webos.service.nlpmanager.*
         com.webos.service.nop.*
         com.webos.service.nudge.*
+        com.webos.service.pbsw.*
         com.webos.service.pdm.*
         com.webos.service.photorenderer.*
+        com.webos.service.pqcontroller.*
         com.webos.service.preloadmanager.*
         com.webos.service.rollingscreen.*
         com.webos.service.scd.*
@@ -2013,6 +2129,7 @@ class WebOsClient:
         mediaCapability.*
         miracast.*
         multiview.*
+        profile.*
         system.*
         tv.config.*
         tv.conti.*
@@ -2020,6 +2137,7 @@ class WebOsClient:
         tv.model.*
         tv.nyx.*
         tv.rmm.*
+        wee.*
 
         """
 
@@ -2087,7 +2205,8 @@ class WebOsClient:
                 "localeCountryGroup",
                 "japanCitySelection",
                 "countryBroadcastSystem",
-                "yourMomentsVersion"
+                "yourMomentsVersion",
+                "wallPaperSettings"
         ],
         "time": [
                 "onTimerVolume",
@@ -2108,7 +2227,8 @@ class WebOsClient:
         ],
         "other": [
                 "simplinkEnable",
-                "ueiEnable"
+                "ueiEnable",
+                "gameWallpaper"
         ],
         "sound": [
                 "avSync",

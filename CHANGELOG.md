@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.4.3](https://github.com/chros73/bscpylgtv/tree/v0.4.3) (2023-01-19)
+**Implemented enhancements:**
+
+- Use SSL for WebSocket connection by default (required by 2022 models)
+- Add optional `-w` command line parameter for connecting without SSL
+- Update available settings doc of 2022 models
+
 ## [v0.4.2](https://github.com/chros73/bscpylgtv/tree/v0.4.2) (2022-11-01)
 
 **Fixed bugs:**

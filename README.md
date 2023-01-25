@@ -84,6 +84,8 @@ bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]" true
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED Motion Pro\"}"
 # Display Total Power On Time under TV Information on EU models where it's hidden (using JSON)
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.conti.supportUsedTime\": true}"
+# Take screenshot
+bscpylgtvcommand 192.168.1.18 take_screenshot
 # Soft reboot the TV in case it is malfunctioning: reboot_soft [webos_version] (e.g. for older WebOS: reboot_soft 4)
 bscpylgtvcommand 192.168.1.18 reboot_soft
 # Turn the TV off (standby)

@@ -157,6 +157,62 @@ if np:
         return lut
 
 
+    def backup_lut_into_file(filename, data):
+        if data.shape == (3,3):
+            np.savetxt(filename, data, fmt='%f')
+        elif data.shape == (3,1024):
+            np.savetxt(filename, data, fmt='%i')
+        else:
+            with open(filename, 'w') as outfile:
+                outfile.write('# Array shape: {0}\n'.format(data.shape))
+                for data_slice in data:
+                    outfile.write('# New slice\n')
+                    for sub_slice in data_slice:
+                        outfile.write('# New sub slice\n')
+                        np.savetxt(outfile, sub_slice, fmt='%i')
+
+        return True
+
+
+    def read_3by3_gamut_file(filename):
+        lut = np.loadtxt(filename, dtype=np.float32)
+        shape = (3,3)
+        range = (-1024, 1024)
+
+        if not isinstance(lut, np.ndarray) or lut.shape != shape:
+            raise ValueError(f"3by3 Gamut should have shape {shape} but instead has {lut.shape}")
+        if ((lut >= range[0]).all() != (lut <= range[1]).all()):
+            raise ValueError(f"values in 3by3 Gamut must be between {range[0]} and {range[1]}")
+
+        return lut
+
+
+    def read_1dlut_file(filename):
+        lut = np.loadtxt(filename, dtype=np.uint16)
+        shape = (3,1024)
+        range = (0,32767)
+
+        if not isinstance(lut, np.ndarray) or lut.shape != shape:
+            raise ValueError(f"1D LUT should have shape {shape} but instead has {lut.shape}")
+        if ((lut >= range[0]).all() != (lut <= range[1]).all()):
+            raise ValueError(f"values in 1D LUT must be between {range[0]} and {range[1]}")
+
+        return lut
+
+
+    def read_3dlut_file(filename, lut3d_size):
+        shape = (lut3d_size, lut3d_size, lut3d_size, 3)
+        range = (0, 4095)
+        lut = np.loadtxt(filename, dtype=np.uint16).reshape(shape)
+
+        if not isinstance(lut, np.ndarray) or lut.shape != shape:
+            raise ValueError(f"3D LUT should have shape {shape} but instead has {lut.shape}")
+        if ((lut >= range[0]).all() != (lut <= range[1]).all()):
+            raise ValueError(f"values in 3D LUT must be between {range[0]} and {range[1]}")
+
+        return lut
+
+
     def lms2rgb_matrix(primaries=BT2020_PRIMARIES):
         xy = np.array(primaries, dtype=np.float64)
 

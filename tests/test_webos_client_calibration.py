@@ -79,53 +79,73 @@ class TestWebOsClientCalibration():
 
 
     data_get_3by3_gamut_data = [
-        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
-        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
-        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
-        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
-        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
-          
-        ( "3by3_gamut_data",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
-          
-        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
-        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
-        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
-        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
-        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
-          
-        ( "3by3_gamut_data_hdr",  cal.GET_HDR_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
+        ( "",   "foo.bar",      cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   None, -2 ),
+        ( "",   "",             cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
+        ( "",   "",             cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
+        ( "",   "",             cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
+        ( "",   "",             cal.GET_3BY3_GAMUT_DATA,    {"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
+        ( "",   "",             cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
+
+        ( "",   "",             cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
+        ( "",   "test.matrix",  cal.GET_3BY3_GAMUT_DATA,    {"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   "3by3.matrix", 2 ),
+
+        ( "_hdr",   "foo.bar",  cal.GET_HDR_3BY3_GAMUT_DATA,{"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   None, -2 ),
+        ( "_hdr",   "",         cal.GET_HDR_3BY3_GAMUT_DATA,{"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "foo"},   None, -1 ),
+        ( "_hdr",   "",         cal.GET_HDR_3BY3_GAMUT_DATA,{"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataTypex": "float"},   None, -1 ),
+        ( "_hdr",   "",         cal.GET_HDR_3BY3_GAMUT_DATA,{"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCountx": 7, "dataType": "float"},   None, -1 ),
+        ( "_hdr",   "",         cal.GET_HDR_3BY3_GAMUT_DATA,{"datax": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, -1 ),
+        ( "_hdr",   "",         cal.GET_HDR_3BY3_GAMUT_DATA,{"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 7, "dataType": "float"},   None, 0 ),
+
+        ( "_hdr",   "",         cal.GET_HDR_3BY3_GAMUT_DATA,{"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},   [[0.4, 0.3, 0.2], [0.2, 0.4, 0.3], [0.3, 0.2, 0.4]], 1 ),
+        ( "_hdr",   "test.matrix",  cal.GET_HDR_3BY3_GAMUT_DATA,{"data": "zczMPpqZmT7NzEw+zcxMPs3MzD6amZk+mpmZPs3MTD7NzMw+", "dataCount": 9, "dataType": "float"},  "3by3.matrix", 2 ),
     ]
 
-    @pytest.mark.parametrize("methodName,command,data,result,expected", data_get_3by3_gamut_data)
-    async def test_get_3by3_gamut_data(self, mocker, methodName, command, data, result, expected):
+    @pytest.mark.parametrize("methodName,backupFile,command,data,result,expected", data_get_3by3_gamut_data)
+    async def test_get_3by3_gamut_data(self, tmp_path, mocker, methodName, backupFile, command, data, result, expected):
         mocker.patch('bscpylgtv.WebOsClient.request', return_value=data)
 
         client = await WebOsClient.create("x", states=[], client_key="x")
-        method = getattr(client, f'get_{methodName}')
+        method = getattr(client, f'get_3by3_gamut_data{methodName}')
 
-        if expected > 0:
-            res = await method()
+        if expected > 1:
+            backupFileObj = tmp_path / backupFile
+            res = await method(str(backupFileObj))
+
+            currentDir = os.path.dirname(os.path.realpath(__file__))
+            with open(os.path.join(currentDir, TEST_DIR_EXPECTED, result)) as f:
+                result = f.read()
+
+            client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
+            assert backupFileObj.read_text() == result
+        elif expected == 1:
+            res = await method(backupFile)
             result = np.array(result, np.float32)
 
             assert np.array_equal(result, res)
             client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
         elif expected == 0:
             with pytest.raises(ValueError, match=r'data should have size .+$'):
-                await method()
-        else:
+                await method(backupFile)
+        elif expected == -1:
             with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
-                await method()
+                await method(backupFile)
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid Get Calibration file extension, .+$'):
+                await method(backupFile)
 
 
 
     data_get_1d_lut = [
-        ( cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "foo",                  "1dlut_00.cube",    -1 ),
-        ( cal.GET_1D_LUT, "1dlut_00.txt", 3073,   "unsigned integer16",   None,               0 ),
-        ( cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "unsigned integer16",   "1dlut_00.cube",    1 ),
+        ( "foo.bar",    cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "unsigned integer16",   "1dlut_00.cube",    -2 ),
+        ( "",           cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "foo",                  "1dlut_00.cube",    -1 ),
+        ( "",           cal.GET_1D_LUT, "1dlut_00.txt", 3073,   "unsigned integer16",   None,               0 ),
+
+        ( "",           cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "unsigned integer16",   "1dlut_00.cube",    1 ),
+        ( "test.1dlut", cal.GET_1D_LUT, "1dlut_00.txt", 3072,   "unsigned integer16",   "1dlut_00.cube",    2 ),
     ]
 
-    @pytest.mark.parametrize("command,fileName,count,type,dataFile,expected", data_get_1d_lut)
-    async def test_get_1d_lut(self, mocker, command, fileName, count, type, dataFile, expected):
+    @pytest.mark.parametrize("backupFile,command,fileName,count,type,dataFile,expected", data_get_1d_lut)
+    async def test_get_1d_lut(self, tmp_path, mocker, backupFile, command, fileName, count, type, dataFile, expected):
         currentDir = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(currentDir, TEST_DIR_DATA, fileName)) as f:
                 dataLut = f.read()
@@ -134,33 +154,49 @@ class TestWebOsClientCalibration():
 
         client = await WebOsClient.create("x", states=[], client_key="x")
 
-        if expected > 0:
-            res = await client.get_1d_lut()
+        if expected > 1:
+            backupFileObj = tmp_path / backupFile
+            res = await client.get_1d_lut(str(backupFileObj))
+
+            with open(os.path.join(currentDir, TEST_DIR_EXPECTED, dataFile)) as f:
+                result = f.read()
+
+            client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
+            assert backupFileObj.read_text() == result
+        elif expected == 1:
+            res = await client.get_1d_lut(backupFile)
             result = np.loadtxt(os.path.join(currentDir, TEST_DIR_EXPECTED, dataFile), dtype=np.uint16)
 
             assert np.array_equal(result, res)
             client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
         elif expected == 0:
             with pytest.raises(ValueError, match=r'data should have size .+$'):
-                await client.get_1d_lut()
-        else:
+                await client.get_1d_lut(backupFile)
+        elif expected == -1:
             with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
-                await client.get_1d_lut()
+                await client.get_1d_lut(backupFile)
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid Get Calibration file extension, .+$'):
+                await client.get_1d_lut(backupFile)
 
 
 
     data_get_3d_lut = [
-        ( "HE_DTV_W17H",    None,           "3dlut_33pt_00.txt",    None,   None,                   None,                   -2 ),
-        ( "HE_DTV_W18H",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "foo",                  "3dlut_17pt_00.npy",    -1 ),
-        ( "HE_DTV_W22O",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "foo",                  "3dlut_33pt_00.npy",    -1 ),
-        ( "HE_DTV_W18H",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "unsigned integer16",   "3dlut_17pt_00.npy",    0 ),
-        ( "HE_DTV_W22O",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "unsigned integer16",   "3dlut_33pt_00.npy",    0 ),
-        ( "HE_DTV_W18H",    cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14739,  "unsigned integer16",   "3dlut_17pt_00.npy",    1 ),
-        ( "HE_DTV_W22O",    cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107811, "unsigned integer16",   "3dlut_33pt_00.npy",    1 ),
+        ( "HE_DTV_W17H",    "",             None,           "3dlut_33pt_00.txt",    None,   None,                   None,                   -3 ),
+        ( "HE_DTV_W18H",    "foo.bar",      None,           "3dlut_33pt_00.txt",    None,   None,                   None,                   -2 ),
+        ( "HE_DTV_W18H",    "",             cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "foo",                  "3dlut_17pt_00.npy",    -1 ),
+        ( "HE_DTV_W22O",    "",             cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "foo",                  "3dlut_33pt_00.npy",    -1 ),
+        ( "HE_DTV_W18H",    "",             cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14740,  "unsigned integer16",   "3dlut_17pt_00.npy",    0 ),
+        ( "HE_DTV_W22O",    "",             cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107812, "unsigned integer16",   "3dlut_33pt_00.npy",    0 ),
+
+        ( "HE_DTV_W18H",    "",             cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14739,  "unsigned integer16",   "3dlut_17pt_00.npy",    1 ),
+        ( "HE_DTV_W22O",    "",             cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107811, "unsigned integer16",   "3dlut_33pt_00.npy",    1 ),
+        ( "HE_DTV_W18H",    "test.3dlut",   cal.GET_3D_LUT, "3dlut_17pt_00.txt",    14739,  "unsigned integer16",   "3dlut_17pt.3dlut",     2 ),
+        ( "HE_DTV_W22O",    "test.3dlut",   cal.GET_3D_LUT, "3dlut_33pt_00.txt",    107811, "unsigned integer16",   "3dlut_33pt.3dlut",     2 ),
     ]
 
-    @pytest.mark.parametrize("model,command,fileName,count,type,dataFile,expected", data_get_3d_lut)
-    async def test_get_3d_lut(self, mocker, model, command, fileName, count, type, dataFile, expected):
+    @pytest.mark.parametrize("model,backupFile,command,fileName,count,type,dataFile,expected", data_get_3d_lut)
+    async def test_get_3d_lut(self, tmp_path, mocker, model, backupFile, command, fileName, count, type, dataFile, expected):
         currentDir = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(currentDir, TEST_DIR_DATA, fileName)) as f:
                 dataLut = f.read()
@@ -170,21 +206,33 @@ class TestWebOsClientCalibration():
         client = await WebOsClient.create("x", states=["software_info"], client_key="x")
         client._software_info = {"model_name" : model}
 
-        if expected > 0:
-            res = await client.get_3d_lut()
+        if expected > 1:
+            backupFileObj = tmp_path / backupFile
+            res = await client.get_3d_lut(str(backupFileObj))
+
+            with open(os.path.join(currentDir, TEST_DIR_EXPECTED, dataFile)) as f:
+                result = f.read()
+
+            client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
+            assert backupFileObj.read_text() == result
+        elif expected == 1:
+            res = await client.get_3d_lut(backupFile)
             result = np.load(os.path.join(currentDir, TEST_DIR_EXPECTED, dataFile))
 
             assert np.array_equal(result, res)
             client.request.assert_called_once_with(ep.GET_CALIBRATION, {"command": command})
         elif expected == 0:
             with pytest.raises(ValueError, match=r'data should have size .+$'):
-                await client.get_3d_lut()
+                await client.get_3d_lut(backupFile)
         elif expected == -1:
             with pytest.raises(PyLGTVCmdException, match=r'Invalid .+$'):
-                await client.get_3d_lut()
+                await client.get_3d_lut(backupFile)
+        elif expected == -2:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid Get Calibration file extension, .+$'):
+                await client.get_3d_lut(backupFile)
         else:
             with pytest.raises(PyLGTVCmdException, match=r'^.+ not supported by model .+$'):
-                await client.get_3d_lut()
+                await client.get_3d_lut(backupFile)
 
 
 
@@ -342,6 +390,7 @@ class TestWebOsClientCalibration():
         ( "1dlut_01.cal",  "1dlut_01.txt",     3072,   1,      1 ),
         ( "1dlut_02.cal",  "1dlut_02.txt",     3072,   1,      1 ),
         ( "1dlut_03.cube", "1dlut_03.txt",     3072,   1,      1 ),
+        ( "1dlut_03.1dlut","1dlut_03.txt",     3072,   1,      1 ),
     ]
 
     @pytest.mark.parametrize("fileName,dataFile,dataCount,dataOpt,expected", data_upload_1d_lut_from_file)
@@ -462,6 +511,8 @@ class TestWebOsClientCalibration():
 
         ( "HE_DTV_W18H",   "3dlut_17pt.cube",   cal.UPLOAD_3D_LUT_BT709,    "3dlut_17pt_01.txt",    14739,  1,      1 ),
         ( "HE_DTV_W22O",   "3dlut_33pt.cube",   cal.UPLOAD_3D_LUT_BT2020,   "3dlut_33pt_01.txt",    107811, 1,      1 ),
+        ( "HE_DTV_W18H",   "3dlut_17pt.3dlut",  cal.UPLOAD_3D_LUT_BT2020,   "3dlut_17pt_01.txt",    14739,  1,      1 ),
+        ( "HE_DTV_W22O",   "3dlut_33pt.3dlut",  cal.UPLOAD_3D_LUT_BT709,    "3dlut_33pt_01.txt",    107811, 1,      1 ),
     ]
 
     @pytest.mark.parametrize("model,fileName,command,dataFile,dataCount,dataOpt,expected", data_upload_3d_lut_from_file)
@@ -666,6 +717,37 @@ class TestWebOsClientCalibration():
         else:
             with pytest.raises(ValueError, match=r'could not convert .+$'):
                 await method(value)
+
+
+
+    data_set_3by3_gamut_data_from_file = [
+        ( "foo",  "3by3.1dlut",     None,                       -1 ),
+        ( "bt709",  "3by3.1dlut",   None,                       0 ),
+        ( "bt709",  "3by3.matrix",  cal.BT709_3BY3_GAMUT_DATA,  1 ),
+        ( "bt2020", "3by3.matrix",  cal.BT2020_3BY3_GAMUT_DATA, 1 ),
+        ( "hdr",    "3by3.matrix",  cal.HDR_3BY3_GAMUT_DATA,    1 ),
+    ]
+
+    @pytest.mark.parametrize("type,fileName,command,expected", data_set_3by3_gamut_data_from_file)
+    async def test_set_3by3_gamut_data_from_file(self, mocker, type, fileName, command, expected):
+        mocker.patch('bscpylgtv.WebOsClient.calibration_request')
+
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        client = await WebOsClient.create("x", states=[], client_key="x")
+
+        if expected > 0:
+            data = np.array([[1.3207, -0.2826, -0.0381], [-0.0749, 1.0719, 0.003], [0.0046, -0.0397, 1.0351]], dtype=np.float32)
+
+            await client.set_3by3_gamut_data_from_file(type, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+
+            client.calibration_request.assert_called_once_with(command, mocker.ANY, 1)
+            assert np.array_equal(data, client.calibration_request.call_args[0][1])
+        elif expected == 0:
+            with pytest.raises(ValueError, match=r'Unsupported file format .+$'):
+                await client.set_3by3_gamut_data_from_file(type, os.path.join(currentDir, TEST_DIR_DATA, fileName))
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid 3by3 gamut type .+$'):
+                await client.set_3by3_gamut_data_from_file(type, os.path.join(currentDir, TEST_DIR_DATA, fileName))
 
 
 

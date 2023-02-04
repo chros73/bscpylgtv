@@ -39,6 +39,10 @@ if np:
         generate_dolby_vision_config,
         read_cal_file,
         read_cube_file,
+        read_1dlut_file,
+        read_3by3_gamut_file,
+        read_3dlut_file,
+        backup_lut_into_file,
         unity_lut_1d,
         unity_lut_3d,
     )
@@ -2329,9 +2333,11 @@ class WebOsClient:
             if isinstance(count, int) and data.size != count:
                 raise ValueError(f"data should have size {count} but instead has {data.size}")
 
-        async def get_calibration_data(self, command, shape):
+        async def get_calibration_data(self, command, shape, filename=""):
             if command not in [cal.GET_GAMMA_2_2_TRANSFORM, cal.GET_GAMMA_0_45_TRANSFORM, cal.GET_3BY3_GAMUT_DATA, cal.GET_HDR_3BY3_GAMUT_DATA, cal.GET_1D_LUT, cal.GET_3D_LUT]:
                 raise PyLGTVCmdException(f"Invalid Get Calibration command {command}.")
+            if filename and filename.split(".")[-1].lower() not in ["1dlut", "matrix", "3dlut"]:
+                raise PyLGTVCmdException(f"Invalid Get Calibration file extension, must be: 1dlut or matrix or 3dlut.")
 
             response = await self.request(ep.GET_CALIBRATION, {"command": command})
 
@@ -2349,9 +2355,15 @@ class WebOsClient:
             data = np.reshape(deserialized_bytes, newshape=shape)
             self.validateCalibrationData(data, shape, npType, None, dataCount)
 
-            # print the full numpy array
-            np.set_printoptions(threshold=np.inf)
-            return data if shape != (1, ) else data[0]
+            if filename:
+                # backup numpy array
+                return await asyncio.get_running_loop().run_in_executor(
+                    None, backup_lut_into_file, filename, data
+                )
+            else:
+                # print the full numpy array
+                np.set_printoptions(threshold=np.inf)
+                return data if shape != (1, ) else data[0]
 
         async def get_1d_en_2_2(self):
             return await self.get_calibration_data(cal.GET_GAMMA_2_2_TRANSFORM, (1, ))
@@ -2359,20 +2371,20 @@ class WebOsClient:
         async def get_1d_en_0_45(self):
             return await self.get_calibration_data(cal.GET_GAMMA_0_45_TRANSFORM, (1, ))
 
-        async def get_3by3_gamut_data(self):
-            return await self.get_calibration_data(cal.GET_3BY3_GAMUT_DATA, (3, 3))
+        async def get_3by3_gamut_data(self, filename=""):
+            return await self.get_calibration_data(cal.GET_3BY3_GAMUT_DATA, (3, 3), filename)
 
-        async def get_3by3_gamut_data_hdr(self):
-            return await self.get_calibration_data(cal.GET_HDR_3BY3_GAMUT_DATA, (3, 3))
+        async def get_3by3_gamut_data_hdr(self, filename=""):
+            return await self.get_calibration_data(cal.GET_HDR_3BY3_GAMUT_DATA, (3, 3), filename)
 
-        async def get_1d_lut(self):
-            return await self.get_calibration_data(cal.GET_1D_LUT, (3, 1024))
+        async def get_1d_lut(self, filename=""):
+            return await self.get_calibration_data(cal.GET_1D_LUT, (3, 1024), filename)
 
-        async def get_3d_lut(self):
+        async def get_3d_lut(self, filename=""):
             self.check_calibration_support("lut3d", "3D LUT Upload")
             lut3d_size = self._calibration_info["lut3d"]
             lut3d_shape = (lut3d_size, lut3d_size, lut3d_size, 3)
-            return await self.get_calibration_data(cal.GET_3D_LUT, lut3d_shape)
+            return await self.get_calibration_data(cal.GET_3D_LUT, lut3d_shape, filename)
 
         async def calibration_request(self, command, data=None, dataOpt=1, picture_mode=None):
             # dataOpt: 0 - Apply, 1 - Apply and Save, 2 - Reset
@@ -2450,9 +2462,13 @@ class WebOsClient:
                 lut = await asyncio.get_running_loop().run_in_executor(
                     None, read_cube_file, filename
                 )
+            elif ext == "1dlut":
+                lut = await asyncio.get_running_loop().run_in_executor(
+                    None, read_1dlut_file, filename
+                )
             else:
                 raise ValueError(
-                    f"Unsupported file format {ext} for 1D LUT. Supported file formats are cal and cube."
+                    f"Unsupported file format {ext} for 1D LUT. Supported file formats are cal, cube and 1dlut."
                 )
 
             return await self.upload_1d_lut(lut)
@@ -2514,9 +2530,14 @@ class WebOsClient:
                 lut = await asyncio.get_running_loop().run_in_executor(
                     None, read_cube_file, filename
                 )
+            elif ext == "3dlut":
+                self.check_calibration_support("lut3d", "3D LUT Upload")
+                lut = await asyncio.get_running_loop().run_in_executor(
+                    None, read_3dlut_file, filename, self._calibration_info["lut3d"]
+                )
             else:
                 raise ValueError(
-                    f"Unsupported file format {ext} for 3D LUT. Supported file formats are cube."
+                    f"Unsupported file format {ext} for 3D LUT. Supported file formats are cube and 3dlut."
                 )
 
             return await self.upload_3d_lut(command, lut)
@@ -2546,7 +2567,7 @@ class WebOsClient:
             else:
                 if data is None:
                     data = np.identity(3, dtype=np.float32)
-                else:
+                elif not isinstance(data, np.ndarray):
                     data = np.array(data, dtype=np.float32)
                 self.validateCalibrationData(data, (3, 3), np.float32, (-1024, 1024))
                 dataOpt = 1
@@ -2564,6 +2585,24 @@ class WebOsClient:
         async def set_3by3_gamut_data_hdr(self, data=None):
             """Set HDR 3x3 color matrix used only in 2019 models (color gamut space transformation in linear space)."""
             return await self.set_3by3_gamut_data(cal.HDR_3BY3_GAMUT_DATA, data)
+
+        async def set_3by3_gamut_data_from_file(self, type, filename):
+            methodName = f'set_3by3_gamut_data_{type}'
+            if not callable(getattr(self, methodName, None)):
+                raise PyLGTVCmdException(f"Invalid 3by3 gamut type {type}, must be: bt709 or bt2020 or hdr")
+
+            ext = filename.split(".")[-1].lower()
+            if ext == "matrix":
+                lut = await asyncio.get_running_loop().run_in_executor(
+                    None, read_3by3_gamut_file, filename
+                )
+            else:
+                raise ValueError(
+                    f"Unsupported file format {ext} for 3by3 gamut. Supported file format is matrix."
+                )
+
+            method = getattr(self, methodName)
+            return await method(lut)
 
         async def set_3by3_gamut_en(self, enable=False):
             """Toggle 3x3 color matrix flag (color gamut space transformation in linear space)."""

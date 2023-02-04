@@ -8,6 +8,10 @@ try:
         generate_dolby_vision_config,
         read_cal_file,
         read_cube_file,
+        read_1dlut_file,
+        read_3by3_gamut_file,
+        read_3dlut_file,
+        backup_lut_into_file,
         unity_lut_1d,
         unity_lut_3d,
     )
@@ -31,6 +35,10 @@ if lut_tools:
         "generate_dolby_vision_config",
         "read_cal_file",
         "read_cube_file",
+        "read_1dlut_file",
+        "read_3by3_gamut_file",
+        "read_3dlut_file",
+        "backup_lut_into_file",
         "unity_lut_1d",
         "unity_lut_3d",
     ])

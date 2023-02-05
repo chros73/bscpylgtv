@@ -381,7 +381,7 @@ bscpylgtvcommand 192.168.1.18 get_3by3_gamut_data "hdr_cinema_3x3.matrix"
 # Backup 1D LUT
 bscpylgtvcommand 192.168.1.18 get_1d_lut "hdr_cinema.1dlut"
 # Backup 3D LUT
-bscpylgtvcommand 192.168.1.18 get_3d_lut "hdr_cinema.3dlut"
+bscpylgtvcommand 192.168.1.18 get_3d_lut "hdr_cinema.3dlut" -s
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration
 ```
@@ -395,7 +395,7 @@ bscpylgtvcommand 192.168.1.18 set_3by3_gamut_data_from_file "bt2020" "hdr_cinema
 # Restore 1D LUT
 bscpylgtvcommand 192.168.1.18 upload_1d_lut_from_file "hdr_cinema.1dlut"
 # Restore 3D LUT
-bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file "hdr_cinema.3dlut"
+bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file "hdr_cinema.3dlut" -s
 # End calibration mode
 bscpylgtvcommand 192.168.1.18 end_calibration
 ```

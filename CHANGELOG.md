@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.4.4](https://github.com/chros73/bscpylgtv/tree/v0.4.4) (2023-02-05)
+**Implemented enhancements:**
+
+- Add take_screenshot method
+- Add ability to backup and restore 1D LUT, 3D LUT and 3x3 color matrix
+
 ## [v0.4.3](https://github.com/chros73/bscpylgtv/tree/v0.4.3) (2023-01-19)
 **Implemented enhancements:**
 

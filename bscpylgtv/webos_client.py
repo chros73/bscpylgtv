@@ -2303,14 +2303,14 @@ class WebOsClient:
             if model_name.startswith("HE_DTV_") and len(model_name) >= 11:
                 chip_type = model_name[7:11]
 
-                if chip_type in ["W18H", "W19H", "W20H", "W21H", "W22H"]:
+                if chip_type in ["W18H", "W19H", "W20H", "W21H", "W22H", "W23H"]:
                     info["lut3d"] = LUT3D_SIZES["17pt"]
-                elif chip_type in ["W18O", "W19O", "W20O", "W21O", "W22O"]:
+                elif chip_type in ["W18O", "W19O", "W20O", "W21O", "W22O", "W23O"]:
                     info["lut3d"] = LUT3D_SIZES["33pt"]
 
                 if chip_type in ["W18H", "W18O"]:
                     info["dovi"] = DV_CONFIG_TYPES["2018"]
-                elif chip_type in ["W19H", "W19O", "W20H", "W20O", "W21H", "W21O", "W22H", "W22O"]:
+                elif chip_type in ["W19H", "W19O", "W20H", "W20O", "W21H", "W21O", "W22H", "W22O", "W23H", "W23O"]:
                     info["dovi"] = DV_CONFIG_TYPES["2019"]
 
             self._calibration_info = info

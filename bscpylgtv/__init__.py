@@ -14,6 +14,7 @@ try:
         backup_lut_into_file,
         unity_lut_1d,
         unity_lut_3d,
+        convert_1dlut_to_cal_format,
     )
     lut_tools = True
 except ImportError:
@@ -41,4 +42,5 @@ if lut_tools:
         "backup_lut_into_file",
         "unity_lut_1d",
         "unity_lut_3d",
+        "convert_1dlut_to_cal_format",
     ])

@@ -1057,6 +1057,40 @@ class TestWebOsClientCalibration():
 
 
 
+    data_convert_1dlut_to_cal = [
+        ( "",               "1dlut_14.cal", -1),
+        ( "1dlut_14.txt",   "1dlut_14.cal", -1),
+
+        ( "1dlut_14.1dlut", "",             0),
+        ( "1dlut_14.1dlut", "1dlut_14.txt", 0),
+
+        ( "1dlut_14.1dlut", "1dlut_14.cal", 1),
+    ]
+
+    @pytest.mark.parametrize("infile,outfile,expected", data_convert_1dlut_to_cal)
+    async def test_convert_1dlut_to_cal(self, mocker, infile, outfile, expected):
+        client = await WebOsClient.create("x", states=[], client_key="x")
+
+        if expected > 0:
+            currentDir = os.path.dirname(os.path.realpath(__file__))
+            with open(os.path.join(currentDir, TEST_DIR_EXPECTED, outfile)) as f:
+                expectedData = f.read().replace("2023-12-22", date.today().isoformat())
+
+            mockedOpen = mocker.patch("builtins.open", mocker.mock_open())
+            result = await client.convert_1dlut_to_cal(os.path.join(currentDir, TEST_DIR_DATA, infile), outfile)
+
+            assert result == True
+            mockedOpen.assert_called_once_with(outfile, "w", newline='\r\n')
+            mockedOpen.return_value.write.assert_called_once_with(expectedData)
+        elif expected == 0:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid cal file extension.+$'):
+                await client.convert_1dlut_to_cal(infile, outfile)
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid 1DLUT file extension.+$'):
+                await client.convert_1dlut_to_cal(infile, outfile)
+
+
+
     data_set_itpg_patch_window = [
         ( -1, 81,     98, 0,  858,    482,    1491,   839,    0 ),
         ( 71, 1024,   98, 0,  858,    482,    1491,   839,    0 ),

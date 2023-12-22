@@ -5,7 +5,7 @@ except ImportError:
 
 if np:
     from datetime import date
-    from .constants import BT2020_PRIMARIES, DV_PICTURE_MODES, DV_BLACK_LEVEL, DV_GAMMA
+    from .constants import BT2020_PRIMARIES, DV_PICTURE_MODES, DV_BLACK_LEVEL, DV_GAMMA, LUT1D_POINTS
 
 
     def unity_lut_1d():
@@ -352,3 +352,41 @@ TPrimaries = {xr:.4f} {yr:.4f} {xg:.4f} {yg:.4f} {xb:.4f} {yb:.4f} {xw:.4f} {yw:
                 return config
 
         raise ValueError("Invalid arguments")
+
+    def convert_1dlut_to_cal_format(in_file):
+        content = ''
+        today = date.today().isoformat()
+        sets = len(LUT1D_POINTS)
+
+        content = f"""CAL
+
+DESCRIPTOR "Argyll Device Calibration Curves"
+ORIGINATOR "Argyll dispcal"
+CREATED "{today}"
+DEVICE_CLASS "DISPLAY"
+COLOR_REP "RGB"
+
+
+NUMBER_OF_FIELDS 4
+BEGIN_DATA_FORMAT
+RGB_I RGB_R RGB_G RGB_B
+END_DATA_FORMAT
+
+NUMBER_OF_SETS {sets}
+BEGIN_DATA
+"""
+
+        lut1d = read_1dlut_file(in_file)
+
+        for point in LUT1D_POINTS:
+            r = lut1d[0,LUT1D_POINTS[point]] / 32767.0
+            g = lut1d[1,LUT1D_POINTS[point]] / 32767.0
+            b = lut1d[2,LUT1D_POINTS[point]] / 32767.0
+
+            content += f"""{point} {r:.6f} {g:.6f} {b:.6f}
+"""
+
+        content += f"""END_DATA
+"""
+
+        return content

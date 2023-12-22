@@ -45,6 +45,7 @@ if np:
         backup_lut_into_file,
         unity_lut_1d,
         unity_lut_3d,
+        convert_1dlut_to_cal_format,
     )
 
 SOUND_OUTPUTS_TO_DELAY_CONSECUTIVE_VOLUME_STEPS = {"external_arc"}
@@ -2807,6 +2808,27 @@ class WebOsClient:
                 f.write(config)
 
             print(f"Generated DoVi config file: {DV_CONFIG_FILENAME}")
+            return True
+
+        async def convert_1dlut_to_cal(self, in_file, out_file):
+            """Converts 1DLUT to ArgyllCMS cal file."""
+            if not in_file or in_file.split(".")[-1].lower() not in ["1dlut"]:
+                raise PyLGTVCmdException(f"Invalid 1DLUT file extension, must be: 1dlut.")
+            if not out_file or out_file.split(".")[-1].lower() not in ["cal"]:
+                raise PyLGTVCmdException(f"Invalid cal file extension, must be: cal.")
+
+            content = await asyncio.get_running_loop().run_in_executor(
+                None,
+                functools.partial(
+                    convert_1dlut_to_cal_format,
+                    in_file=in_file,
+                ),
+            )
+
+            with open(out_file, "w", newline='\r\n') as f:
+                f.write(content)
+
+            print(f"Converted cal file: {out_file}")
             return True
 
         async def set_itpg_patch_window(

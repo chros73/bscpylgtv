@@ -400,6 +400,19 @@ bscpylgtvcommand 192.168.1.18 upload_3d_lut_bt2020_from_file "hdr_cinema.3dlut" 
 bscpylgtvcommand 192.168.1.18 end_calibration
 ```
 
+##### Converting 1D LUT files to ArgyllCMS `cal` files and vica versa
+
+It's also possible to convert 1D LUT files to ArgyllCMS `cal` files and vica versa. 
+Note that the conversion is lossy due to rounding errors and misalignment of points in 1D LUT and I values in cal file.
+
+Example usage for converting:
+```bash
+# Convert 1DLUT file to ArgyllCMS cal file
+bscpylgtvcommand 192.168.1.18 convert_1dlut_to_cal "dovi_cinema.1dlut" "dovi_cinema.cal"
+# Convert ArgyllCMS cal file to 1DLUT file
+bscpylgtvcommand 192.168.1.18 convert_cal_to_1dlut "dovi_cinema.cal" "dovi_cinema.1dlut"
+```
+
 #### Uploading custom tonemapping parameters for HDR10 presets
 
 - available only on supported models (>=2019)

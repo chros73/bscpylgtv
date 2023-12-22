@@ -1091,6 +1091,39 @@ class TestWebOsClientCalibration():
 
 
 
+    data_convert_cal_to_1dlut = [
+        ( "",               "1dlut_15.1dlut",   -1),
+        ( "1dlut_15.txt",   "1dlut_15.1dlut",   -1),
+
+        ( "1dlut_15.cal",   "",                 0),
+        ( "1dlut_15.cal",   "1dlut_15.txt",     0),
+
+        ( "1dlut_15.cal",   "1dlut_15.1dlut",   1),
+    ]
+
+    @pytest.mark.parametrize("infile,outfile,expected", data_convert_cal_to_1dlut)
+    async def test_convert_cal_to_1dlut(self, tmp_path, infile, outfile, expected):
+        client = await WebOsClient.create("x", states=[], client_key="x")
+
+        if expected > 0:
+            currentDir = os.path.dirname(os.path.realpath(__file__))
+            with open(os.path.join(currentDir, TEST_DIR_EXPECTED, outfile)) as f:
+                expectedData = f.read()
+
+            tmpFileObj = tmp_path / "1dlut.1dlut"
+            result = await client.convert_cal_to_1dlut(os.path.join(currentDir, TEST_DIR_DATA, infile), str(tmpFileObj))
+
+            assert result == True
+            assert tmpFileObj.read_text() == expectedData
+        elif expected == 0:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid 1DLUT file extension.+$'):
+                await client.convert_cal_to_1dlut(infile, outfile)
+        else:
+            with pytest.raises(PyLGTVCmdException, match=r'Invalid cal file extension.+$'):
+                await client.convert_cal_to_1dlut(infile, outfile)
+
+
+
     data_set_itpg_patch_window = [
         ( -1, 81,     98, 0,  858,    482,    1491,   839,    0 ),
         ( 71, 1024,   98, 0,  858,    482,    1491,   839,    0 ),

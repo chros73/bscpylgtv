@@ -2811,7 +2811,7 @@ class WebOsClient:
             return True
 
         async def convert_1dlut_to_cal(self, in_file, out_file):
-            """Converts 1DLUT to ArgyllCMS cal file."""
+            """Converts 1DLUT file to ArgyllCMS cal file."""
             if not in_file or in_file.split(".")[-1].lower() not in ["1dlut"]:
                 raise PyLGTVCmdException(f"Invalid 1DLUT file extension, must be: 1dlut.")
             if not out_file or out_file.split(".")[-1].lower() not in ["cal"]:
@@ -2830,6 +2830,33 @@ class WebOsClient:
 
             print(f"Converted cal file: {out_file}")
             return True
+
+        async def convert_cal_to_1dlut(self, in_file, out_file):
+            """Converts ArgyllCMS cal file to 1DLUT file."""
+            if not in_file or in_file.split(".")[-1].lower() not in ["cal"]:
+                raise PyLGTVCmdException(f"Invalid cal file extension, must be: cal.")
+            if not out_file or out_file.split(".")[-1].lower() not in ["1dlut"]:
+                raise PyLGTVCmdException(f"Invalid 1DLUT file extension, must be: 1dlut.")
+
+            lut = await asyncio.get_running_loop().run_in_executor(
+                None,
+                functools.partial(
+                    read_cal_file,
+                    filename=in_file,
+                ),
+            )
+
+            result = await asyncio.get_running_loop().run_in_executor(
+                None,
+                functools.partial(
+                    backup_lut_into_file,
+                    filename=out_file,
+                    data=lut,
+                ),
+            )
+
+            print(f"Converted 1DLUT file: {out_file}")
+            return result
 
         async def set_itpg_patch_window(
             self, r=0, g=0, b=0, win_id=0, width=858, height=482, startx=1491, starty=839

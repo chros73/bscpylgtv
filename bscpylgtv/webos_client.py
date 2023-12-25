@@ -1144,13 +1144,13 @@ class WebOsClient:
         return await self.luna_request(ep.LUNA_SET_DEVICE_INFO, params)
 
     async def set_current_picture_mode(self, pic_mode, category="picture"):
-        """Set picture mode for current category, input, dynamic range and 3d mode (OLED C2).
+        """Set picture mode for current category, input, dynamic range and 3d mode (OLED C3).
 
         Known picture modes are: cinema, eco, expert1, expert2, filmMaker,
-        game, normal, photo, sports, vivid, hdrCinema, hdrCinemaBright,
-        hdrExternal, hdrFilmMaker, hdrGame, hdrStandard, hdrVivid,
+        game, normal, personalized, photo, sports, vivid, hdrCinema, hdrCinemaBright,
+        hdrExternal, hdrFilmMaker, hdrGame, hdrPersonalized, hdrStandard, hdrVivid,
         dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
-        dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid
+        dolbyHdrGame, dolbyHdrPersonalized, dolbyHdrStandard, dolbyHdrVivid
 
         Known categories are: picture, aiPicture
 
@@ -1164,18 +1164,18 @@ class WebOsClient:
     async def set_picture_mode(
         self, pic_mode, tv_input, dynamic_range="sdr", stereoscopic="2d", category="picture"
     ):
-        """Set picture mode for specific category, input, dynamic range and 3d mode (OLED C2).
+        """Set picture mode for specific category, input, dynamic range and 3d mode (OLED C3).
 
         Known picture modes are: cinema, eco, expert1, expert2, filmMaker,
-        game, normal, photo, sports, vivid, hdrCinema, hdrCinemaBright,
-        hdrExternal, hdrFilmMaker, hdrGame, hdrStandard, hdrVivid,
+        game, normal, personalized, photo, sports, vivid, hdrCinema, hdrCinemaBright,
+        hdrExternal, hdrFilmMaker, hdrGame, hdrPersonalized, hdrStandard, hdrVivid,
         dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
-        dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid
+        dolbyHdrGame, dolbyHdrPersonalized, dolbyHdrStandard, dolbyHdrVivid
 
         Known inputs are: atv, av1, av2, browser, camera, comp1, comp2,
-        comp3, default, dtv, gallery, hdmi1, hdmi1_pc, hdmi2, hdmi2_pc,
-        hdmi3, hdmi3_pc, hdmi4, hdmi4_pc, ip, movie, photo, pictest,
-        rgb, scart, smhl
+        comp3, default, dp1, dp2, dtv, gallery, hdmi1, hdmi1_pc, hdmi2,
+        hdmi2_pc, hdmi3, hdmi3_pc, hdmi4, hdmi4_pc, ip, movie, photo,
+        pictest, rgb, scart, smhl, usbc1, usbc2
 
         Known dynamic range modes are: sdr, sdrALLM, hdr, hdrALLM,
         technicolorHdr, technicolorHdrALLM, dolbyHdr, dolbyHdrALLM
@@ -1197,7 +1197,7 @@ class WebOsClient:
     async def set_current_picture_settings(self, settings, category="picture"):
         """Set picture settings for current category, picture mode, input, dynamic range and 3d mode.
 
-        A possible list of settings and OLED C2 example values are below
+        A possible list of settings and OLED C3 example values are below
         (not all settings are applicable for all modes and/or tv models):
         /etc/palm/defaultSettings.json
 
@@ -1291,6 +1291,7 @@ class WebOsClient:
         "dynamicContrast": "off",
         "edgeEnhancer": "on",
         "expertPattern": "off",
+        "expressionEnhancer": "off",
         "externalPqlDbType": "none",
         "gamma": "high2",
         "grassColor": "0",
@@ -1466,10 +1467,15 @@ class WebOsClient:
     async def set_other_settings(self, settings):
         """Set other settings.
 
-        A possible list of settings and OLED C2 example values are below
+        A possible list of settings and OLED C3 example values are below
         (not all settings are applicable for all tv models/firmwares):
         /etc/palm/defaultSettings.json
 
+        "444BypassHDMI1": "off",
+        "444BypassHDMI2": "off",
+        "444BypassHDMI3": "off",
+        "444BypassHDMI4": "off",
+        "444BypassHDMINone": "off",
         "activeArtisticDisplayScreenSaver": false,
         "amazonHotkeyIsActive": true,
         "appReturn": "",
@@ -1489,6 +1495,7 @@ class WebOsClient:
         "colorimetryHDMI2": "auto",
         "colorimetryHDMI3": "auto",
         "colorimetryHDMI4": "auto",
+        "contentRecommendation": "on",
         "cursorAutoRemover": "on",
         "darkMode": "off",
         "dolbyVSVDBVer": "v2",
@@ -1496,6 +1503,11 @@ class WebOsClient:
         "dolbyVSVDBVerHDMI2": "v2",
         "dolbyVSVDBVerHDMI3": "v2",
         "dolbyVSVDBVerHDMI4": "v2",
+        "dpPcMode": {
+            "dp1": false,
+            "dp2": false
+        },
+        "enableALLM": "on",
         "enableQuickGame": "on",
         "eotf": "auto",
         "eotfHDMI1": "auto",
@@ -1516,9 +1528,9 @@ class WebOsClient:
         "freesyncOLEDHDMI4": "off",
         "freesyncSupport": "off",
         "freeviewTnCPopup": "off",
-        "gameAdjustContrast": 95,
+        "gameAdjustContrast": 100,
         "gameBlackLevel": 50,
-        "gameColorDepth": 55,
+        "gameColorDepth": 65,
         "gameDashboardStatusList": [
             "fps",
             "vrr_aiGameSound_whiteStabilizer",
@@ -1533,10 +1545,14 @@ class WebOsClient:
             "hdmi4": "off"
         },
         "gameOptimization": "on",
+        "gameOptimizationDP1": "on",
+        "gameOptimizationDP2": "on",
         "gameOptimizationHDMI1": "on",
         "gameOptimizationHDMI2": "on",
         "gameOptimizationHDMI3": "on",
         "gameOptimizationHDMI4": "on",
+        "gameOptimizationUSBC1": "on",
+        "gameOptimizationUSBC2": "on",
         "gameScreenPosition": "middle",
         "gameScreenRatio": "16:9",
         "gameScreenSize": "full",
@@ -1548,12 +1564,8 @@ class WebOsClient:
             "Standard": false,
             "USER": false
         },
-        "gameSharpness": 10,
+        "gameSharpness": 25,
         "gameUIColor": "violet",
-        "gameWallpaper": {
-            "folderUpdateVersion": 0,
-            "imgSrc": ""
-        },
         "hdmiPcMode": {
             "hdmi1": false,
             "hdmi2": false,
@@ -1571,9 +1583,13 @@ class WebOsClient:
                 "version": 1.0
             }
         ],
+        "homelegalPopup": "on",
         "illuminanceThreshold": 0,
         "inputOptimization": "auto",
         "isFirstCapture": "true",
+        "isHdpOpAppPopupDone": false,
+        "isSLZoomExecutable": false,
+        "isSLZoomOn": "off",
         "isfUpdated": "false",
         "lgLogoDisplay": "on",
         "lightingBrightness": 8,
@@ -1688,6 +1704,97 @@ class WebOsClient:
                 }
             },
             {
+                "wavve": {
+                    "app_id": "pooq",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "coupangplay": {
+                    "app_id": "coupangplay",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "stan": {
+                    "app_id": "stan.webos2",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "shop": {
+                    "app_id": "com.lgshop.app79",
+                    "isActive": false,
+                    "launch_param": null
+                }
+            },
+            {
+                "slingtv": {
+                    "app_id": "com.movenetworks.app.sling-tv-sling-production",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "tver": {
+                    "app_id": "tver",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "hulu": {
+                    "app_id": "jp.happyon.app",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "nhkplus": {
+                    "app_id": "jp.nhk.plus",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "tod": {
+                    "app_id": "webos.tod.tv",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "apps": {
+                    "app_id": "com.webos.app.discovery",
+                    "isActive": false,
+                    "launch_param": null
+                }
+            },
+            {
+                "freeviewplay": {
+                    "app_id": "com.fvp.fve",
+                    "isActive": true,
+                    "launch_param": null
+                }
+            },
+            {
+                "wink": {
+                    "app_id": "ru.rt.video.app.tv",
+                    "isActive": false,
+                    "launch_param": null
+                }
+            },
+            {
+                "start": {
+                    "app_id": "start",
+                    "isActive": false,
+                    "launch_param": null
+                }
+            },
+            {
                 "new": {
                     "app_id": null,
                     "isActive": false,
@@ -1716,27 +1823,35 @@ class WebOsClient:
         "maxFALLHDMI2": "auto",
         "maxFALLHDMI3": "auto",
         "maxFALLHDMI4": "auto",
+        "multiViewLaunchMode": "sxs",
         "netflixHotkeyIsActive": true,
         "newKey": "on",
         "oledCareMode": "off",
         "oledCareRecommendation": "off",
         "playbackThreshold": 200,
         "pseudoTouchMode": "on",
+        "qmsVrr": "on",
         "quickSettingsMenuList": [
             "QuickSettings_picture_button",
+            "QuickSettings_OledLcdBrightness_button",
             "QuickSettings_soundMode_button",
             "QuickSettings_soundOut_button",
+            "QuickSettings_timer_button",
+            "QuickSettings_eyecare_button",
+            "QuickSettings_screenOff_button",
             "QuickSettings_game_button",
             "QuickSettings_multiview_button",
-            "QuickSettings_ocp_button",
-            "QuickSettings_network_button",
-            "QuickSettings_menu_button"
+            "QuickSettings_musicSearch_button"
         ],
+        "quickSettingsRecentMenu": "",
         "screenRemoteAutoShow": "true",
         "screenRemoteExpanded": "false",
         "screenRemotePosition": "right",
         "simplinkAutoPowerOn": "on",
         "simplinkEnable": "off",
+        "slzoomTargetAreaLevel": -1,
+        "slzoomTargetAreaX": -1,
+        "slzoomTargetAreaY": -1,
         "soundSyncModeColor": "auto",
         "soundSyncModeDisplayMode": "bar",
         "soundSyncModeFrequency": "mid",
@@ -1747,6 +1862,7 @@ class WebOsClient:
         "staticModeColor4": 0,
         "supportAirplay": false,
         "supportBnoModel": false,
+        "svcMenuFlag": true,
         "touchRemoteLaunchMode": "edgeSwipe",
         "ueiEnable": "off",
         "uhdDeepColor": "off",
@@ -1762,6 +1878,10 @@ class WebOsClient:
         "uhdDeepColorHDMI2": "off",
         "uhdDeepColorHDMI3": "off",
         "uhdDeepColorHDMI4": "off",
+        "usbcPcMode": {
+            "usbc1": false,
+            "usbc2": false
+        },
         "weatherAllowed": false,
         "whiteStabilizer": 13
 
@@ -1774,7 +1894,7 @@ class WebOsClient:
     async def set_option_settings(self, settings):
         """Set option settings.
 
-        A possible list of settings and OLED C2 example values are below
+        A possible list of settings and OLED C3 example values are below
         (not all settings are applicable for all tv models/firmwares):
         /etc/palm/defaultSettings.json
 
@@ -1800,7 +1920,7 @@ class WebOsClient:
         "artisticDisplayTimer": "off",
         "audioGuidance": "off",
         "audioGuidancePitch": "medium",
-        "audioGuidanceSpeed": "medium",
+        "audioGuidanceSpeed": "fast",
         "audioGuidanceVolume": "medium",
         "autoComplete": false,
         "autoSmartServiceCountry": "on",
@@ -2001,6 +2121,24 @@ class WebOsClient:
         "ohtv": "on",
         "orbit": "off",
         "password_ipcontrol": "828",
+        "personalizedDemoImgList": {
+            "list": [],
+            "userSelected": false
+        },
+        "personalizedDemoString": {
+            "longStrIdx": 0,
+            "shortList": []
+        },
+        "personalizedImgList": {
+            "list": [],
+            "otherUserPreferences": {},
+            "userSelected": false
+        },
+        "personalizedString": {
+            "longStrIdx": 0,
+            "shortList": [],
+            "userNo": ""
+        },
         "phlCitySelection": "0",
         "pointerAlignment": "off",
         "pointerShape": "auto",
@@ -2070,7 +2208,7 @@ class WebOsClient:
     async def get_configs(self, keys=["tv.model.*"], jsonOutput=False):
         """Get config settings.
 
-        A possible list of keys of OLED C2 are below (not all settings are applicable for all tv models):
+        A possible list of keys of OLED C3 are below (not all settings are applicable for all tv models):
         /etc/configd/layers
 
         airplay.*
@@ -2097,7 +2235,7 @@ class WebOsClient:
         com.webos.keyaction.*
         com.webos.memorymanager.*
         com.webos.service.airplay.*
-        com.webos.service.alwayready.*
+        com.webos.service.alwaysready.*
         com.webos.service.arccontroller.*
         com.webos.service.attachedstoragemanager.*
         com.webos.service.bthidmanager.*
@@ -2108,6 +2246,7 @@ class WebOsClient:
         com.webos.service.eim.*
         com.webos.service.favoriteservice.*
         com.webos.service.fepg.*
+        com.webos.service.homelaunchpoints.*
         com.webos.service.hybridtv.*
         com.webos.service.iepg.*
         com.webos.service.ime.*
@@ -2134,7 +2273,9 @@ class WebOsClient:
         com.webos.service.utp.*
         com.webos.service.voiceinput.*
         com.webos.service.wampluggable.hbbtv.*
+        com.webos.service.wowplay.*
         com.webos.surfacemanager.*
+        con.webos.service.pbsw.*
         dvr.*
         extinput-service.*
         gip.*
@@ -2142,6 +2283,7 @@ class WebOsClient:
         mediaCapability.*
         miracast.*
         multiview.*
+        operatorApp.*
         profile.*
         system.*
         tv.config.*
@@ -2191,7 +2333,7 @@ class WebOsClient:
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.
 
-        Most of the settings are not exposed via this call, OLED C2 valid settings:
+        Most of the settings are not exposed via this call, OLED C3 valid settings:
         /usr/palm/services/com.webos.service.apiadapter/adapters/settings/valid-settings.js
 
         "twinTv": [

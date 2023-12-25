@@ -1,18 +1,18 @@
-### OLED C2 (2022) webOS v7.3.1
+### OLED C3 (2023) webOS v8.2.0
 Available settings per category that can be used with various methods.
 
 #### Inputs
 ```
-atv, av1, av2, browser, camera, comp1, comp2, comp3, default, dtv, gallery,
+atv, av1, av2, browser, camera, comp1, comp2, comp3, default, dp1, dp2, dtv, gallery,
 hdmi1, hdmi1_pc, hdmi2, hdmi2_pc, hdmi3, hdmi3_pc, hdmi4, hdmi4_pc,
-ip, movie, photo, pictest, rgb, scart, smhl
+ip, movie, photo, pictest, rgb, scart, smhl, usbc1, usbc2
 ```
 
 #### Picture modes (presets)
 ```
-cinema, eco, expert1, expert2, filmMaker, game, normal, photo, sports, vivid,
-hdrCinema, hdrCinemaBright, hdrExternal, hdrFilmMaker, hdrGame, hdrStandard, hdrVivid,
-dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon, dolbyHdrGame, dolbyHdrStandard, dolbyHdrVivid
+cinema, eco, expert1, expert2, filmMaker, game, normal, personalized, photo, sports, vivid,
+hdrCinema, hdrCinemaBright, hdrExternal, hdrFilmMaker, hdrGame, hdrPersonalized, hdrStandard, hdrVivid,
+dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon, dolbyHdrGame, dolbyHdrPersonalized, dolbyHdrStandard, dolbyHdrVivid
 ```
 
 #### Dynamic range modes
@@ -115,6 +115,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "dynamicContrast": "off",
     "edgeEnhancer": "on",
     "expertPattern": "off",
+    "expressionEnhancer": "off",
     "externalPqlDbType": "none",
     "gamma": "high2",
     "grassColor": "0",
@@ -294,7 +295,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "artisticDisplayTimer": "off",
     "audioGuidance": "off",
     "audioGuidancePitch": "medium",
-    "audioGuidanceSpeed": "medium",
+    "audioGuidanceSpeed": "fast",
     "audioGuidanceVolume": "medium",
     "autoComplete": false,
     "autoSmartServiceCountry": "on",
@@ -495,6 +496,24 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "ohtv": "on",
     "orbit": "off",
     "password_ipcontrol": "828",
+    "personalizedDemoImgList": {
+        "list": [],
+        "userSelected": false
+    },
+    "personalizedDemoString": {
+        "longStrIdx": 0,
+        "shortList": []
+    },
+    "personalizedImgList": {
+        "list": [],
+        "otherUserPreferences": {},
+        "userSelected": false
+    },
+    "personalizedString": {
+        "longStrIdx": 0,
+        "shortList": [],
+        "userNo": ""
+    },
     "phlCitySelection": "0",
     "pointerAlignment": "off",
     "pointerShape": "auto",
@@ -558,6 +577,11 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
 
 #### `other` category - default settings (used by `set_other_settings` method)
 ```json
+    "444BypassHDMI1": "off",
+    "444BypassHDMI2": "off",
+    "444BypassHDMI3": "off",
+    "444BypassHDMI4": "off",
+    "444BypassHDMINone": "off",
     "activeArtisticDisplayScreenSaver": false,
     "amazonHotkeyIsActive": true,
     "appReturn": "",
@@ -577,6 +601,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "colorimetryHDMI2": "auto",
     "colorimetryHDMI3": "auto",
     "colorimetryHDMI4": "auto",
+    "contentRecommendation": "on",
     "cursorAutoRemover": "on",
     "darkMode": "off",
     "dolbyVSVDBVer": "v2",
@@ -584,6 +609,11 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "dolbyVSVDBVerHDMI2": "v2",
     "dolbyVSVDBVerHDMI3": "v2",
     "dolbyVSVDBVerHDMI4": "v2",
+    "dpPcMode": {
+        "dp1": false,
+        "dp2": false
+    },
+    "enableALLM": "on",
     "enableQuickGame": "on",
     "eotf": "auto",
     "eotfHDMI1": "auto",
@@ -604,9 +634,9 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "freesyncOLEDHDMI4": "off",
     "freesyncSupport": "off",
     "freeviewTnCPopup": "off",
-    "gameAdjustContrast": 95,
+    "gameAdjustContrast": 100,
     "gameBlackLevel": 50,
-    "gameColorDepth": 55,
+    "gameColorDepth": 65,
     "gameDashboardStatusList": [
         "fps",
         "vrr_aiGameSound_whiteStabilizer",
@@ -621,10 +651,14 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
         "hdmi4": "off"
     },
     "gameOptimization": "on",
+    "gameOptimizationDP1": "on",
+    "gameOptimizationDP2": "on",
     "gameOptimizationHDMI1": "on",
     "gameOptimizationHDMI2": "on",
     "gameOptimizationHDMI3": "on",
     "gameOptimizationHDMI4": "on",
+    "gameOptimizationUSBC1": "on",
+    "gameOptimizationUSBC2": "on",
     "gameScreenPosition": "middle",
     "gameScreenRatio": "16:9",
     "gameScreenSize": "full",
@@ -636,12 +670,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
         "Standard": false,
         "USER": false
     },
-    "gameSharpness": 10,
+    "gameSharpness": 25,
     "gameUIColor": "violet",
-    "gameWallpaper": {
-        "folderUpdateVersion": 0,
-        "imgSrc": ""
-    },
     "hdmiPcMode": {
         "hdmi1": false,
         "hdmi2": false,
@@ -659,9 +689,13 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "version": 1.0
         }
     ],
+    "homelegalPopup": "on",
     "illuminanceThreshold": 0,
     "inputOptimization": "auto",
     "isFirstCapture": "true",
+    "isHdpOpAppPopupDone": false,
+    "isSLZoomExecutable": false,
+    "isSLZoomOn": "off",
     "isfUpdated": "false",
     "lgLogoDisplay": "on",
     "lightingBrightness": 8,
@@ -776,6 +810,97 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             }
         },
         {
+            "wavve": {
+                "app_id": "pooq",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "coupangplay": {
+                "app_id": "coupangplay",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "stan": {
+                "app_id": "stan.webos2",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "shop": {
+                "app_id": "com.lgshop.app79",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "slingtv": {
+                "app_id": "com.movenetworks.app.sling-tv-sling-production",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "tver": {
+                "app_id": "tver",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "hulu": {
+                "app_id": "jp.happyon.app",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "nhkplus": {
+                "app_id": "jp.nhk.plus",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "tod": {
+                "app_id": "webos.tod.tv",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "apps": {
+                "app_id": "com.webos.app.discovery",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "freeviewplay": {
+                "app_id": "com.fvp.fve",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "wink": {
+                "app_id": "ru.rt.video.app.tv",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "start": {
+                "app_id": "start",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
             "new": {
                 "app_id": null,
                 "isActive": false,
@@ -804,27 +929,35 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "maxFALLHDMI2": "auto",
     "maxFALLHDMI3": "auto",
     "maxFALLHDMI4": "auto",
+    "multiViewLaunchMode": "sxs",
     "netflixHotkeyIsActive": true,
     "newKey": "on",
     "oledCareMode": "off",
     "oledCareRecommendation": "off",
     "playbackThreshold": 200,
     "pseudoTouchMode": "on",
+    "qmsVrr": "on",
     "quickSettingsMenuList": [
         "QuickSettings_picture_button",
+        "QuickSettings_OledLcdBrightness_button",
         "QuickSettings_soundMode_button",
         "QuickSettings_soundOut_button",
+        "QuickSettings_timer_button",
+        "QuickSettings_eyecare_button",
+        "QuickSettings_screenOff_button",
         "QuickSettings_game_button",
         "QuickSettings_multiview_button",
-        "QuickSettings_ocp_button",
-        "QuickSettings_network_button",
-        "QuickSettings_menu_button"
+        "QuickSettings_musicSearch_button"
     ],
+    "quickSettingsRecentMenu": "",
     "screenRemoteAutoShow": "true",
     "screenRemoteExpanded": "false",
     "screenRemotePosition": "right",
     "simplinkAutoPowerOn": "on",
     "simplinkEnable": "off",
+    "slzoomTargetAreaLevel": -1,
+    "slzoomTargetAreaX": -1,
+    "slzoomTargetAreaY": -1,
     "soundSyncModeColor": "auto",
     "soundSyncModeDisplayMode": "bar",
     "soundSyncModeFrequency": "mid",
@@ -835,6 +968,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "staticModeColor4": 0,
     "supportAirplay": false,
     "supportBnoModel": false,
+    "svcMenuFlag": true,
     "touchRemoteLaunchMode": "edgeSwipe",
     "ueiEnable": "off",
     "uhdDeepColor": "off",
@@ -850,6 +984,10 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "uhdDeepColorHDMI2": "off",
     "uhdDeepColorHDMI3": "off",
     "uhdDeepColorHDMI4": "off",
+    "usbcPcMode": {
+        "usbc1": false,
+        "usbc2": false
+    },
     "weatherAllowed": false,
     "whiteStabilizer": 13
 ```
@@ -967,6 +1105,7 @@ com.webos.service.datamigrator.*
 com.webos.service.eim.*
 com.webos.service.favoriteservice.*
 com.webos.service.fepg.*
+com.webos.service.homelaunchpoints.*
 com.webos.service.hybridtv.*
 com.webos.service.iepg.*
 com.webos.service.ime.*
@@ -993,7 +1132,9 @@ com.webos.service.update.*
 com.webos.service.utp.*
 com.webos.service.voiceinput.*
 com.webos.service.wampluggable.hbbtv.*
+com.webos.service.wowplay.*
 com.webos.surfacemanager.*
+con.webos.service.pbsw.*
 dvr.*
 extinput-service.*
 gip.*
@@ -1001,6 +1142,7 @@ inputMap.*
 mediaCapability.*
 miracast.*
 multiview.*
+operatorApp.*
 profile.*
 system.*
 tv.config.*

@@ -1,5 +1,13 @@
 # Change Log
 
+## [v0.4.5](https://github.com/chros73/bscpylgtv/tree/v0.4.5) (2023-12-25)
+**Implemented enhancements:**
+
+- Add ability to convert 1D LUT file to ArgyllCMS cal file and vica versa
+- Add calibration support for 2023 OLED models
+- Add available settings doc of 2023 models
+- Update readme with enabling full Service Menu on newer models
+
 ## [v0.4.4](https://github.com/chros73/bscpylgtv/tree/v0.4.4) (2023-02-05)
 **Implemented enhancements:**
 

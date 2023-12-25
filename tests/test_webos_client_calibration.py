@@ -1074,7 +1074,7 @@ class TestWebOsClientCalibration():
         if expected > 0:
             currentDir = os.path.dirname(os.path.realpath(__file__))
             with open(os.path.join(currentDir, TEST_DIR_EXPECTED, outfile)) as f:
-                expectedData = f.read().replace("2023-12-22", date.today().isoformat())
+                expectedData = f.read().replace("2023-12-23", date.today().isoformat())
 
             mockedOpen = mocker.patch("builtins.open", mocker.mock_open())
             result = await client.convert_1dlut_to_cal(os.path.join(currentDir, TEST_DIR_DATA, infile), outfile)

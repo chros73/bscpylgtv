@@ -78,6 +78,8 @@ bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.softwareupdat
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"inStart\"}"
 # Launch Ez-Adjust Service Menu (code: 0413) (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"ezAdjust\"}"
+# Enable full Service Menu on newer models
+bscpylgtvcommand 192.168.1.18 set_other_settings "{\"svcMenuFlag\": false}"
 # Get config values of "tv.model" category (using list)
 bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]" true
 # Activate "OLED Motion Pro" on C9 (using JSON)

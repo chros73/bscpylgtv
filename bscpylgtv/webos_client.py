@@ -2130,6 +2130,7 @@ class WebOsClient:
         com.webos.service.time.*
         com.webos.service.tnm.*
         com.webos.service.tvpower.*
+        com.webos.service.update.*
         com.webos.service.utp.*
         com.webos.service.voiceinput.*
         com.webos.service.wampluggable.hbbtv.*

@@ -1,4 +1,4 @@
-### OLED C2 (2022) webOS v7.3.0
+### OLED C2 (2022) webOS v7.3.1
 Available settings per category that can be used with various methods.
 
 #### Inputs
@@ -989,6 +989,7 @@ com.webos.service.scd.*
 com.webos.service.time.*
 com.webos.service.tnm.*
 com.webos.service.tvpower.*
+com.webos.service.update.*
 com.webos.service.utp.*
 com.webos.service.voiceinput.*
 com.webos.service.wampluggable.hbbtv.*

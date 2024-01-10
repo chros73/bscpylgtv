@@ -362,12 +362,8 @@ get_1d_lut, get_3d_lut
 
 Example usage (all the supported commands have the same syntax):
 ```bash
-# Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration hdr_game
 # Get 3x3 color matrix (no extra parameter is required)
 bscpylgtvcommand 192.168.1.18 get_3by3_gamut_data
-# End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration
 ```
 
 ##### Backup and restore 1D/3D LUTs and 3x3 color matrices
@@ -376,16 +372,12 @@ It's possible to backup and resture 1D/3D LUTs and 3x3 color matrices (if the ge
 
 Example usage for backuping:
 ```bash
-# Start calibration mode
-bscpylgtvcommand 192.168.1.18 start_calibration hdr_cinema
 # Backup 3x3 color matrix
 bscpylgtvcommand 192.168.1.18 get_3by3_gamut_data "hdr_cinema_3x3.matrix"
 # Backup 1D LUT
 bscpylgtvcommand 192.168.1.18 get_1d_lut "hdr_cinema.1dlut"
 # Backup 3D LUT
 bscpylgtvcommand 192.168.1.18 get_3d_lut "hdr_cinema.3dlut" -s
-# End calibration mode
-bscpylgtvcommand 192.168.1.18 end_calibration
 ```
 
 Example usage for restoring:

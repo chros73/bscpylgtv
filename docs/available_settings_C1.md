@@ -849,3 +849,54 @@ tv.nyx.*
 tv.rmm.*
 ```
 
+#### part of default DoVi config of C1 (can be used for USB upload)
+```ini
+[Global]
+# Panel Specific
+Tmax = 680
+Tmin = 0.001
+# From panel specification
+TPrimaries = 0.6771 0.3213 0.252 0.6829 0.1434 0.0496 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 680
+vsvdb_Tmin = 0.0001
+vsvdb_TPrimaries = 0.6771 0.3213 0.252 0.6829 0.1434 0.0496 0.3127 0.329
+
+# PictureMode 0-4 don't support Iamge Customization.
+[PictureMode = 0]
+PictureModeName = Vivid
+# Panel Specific
+Tmax = 300
+# Light Sense
+Ambient = 1
+
+[PictureMode = 1]
+PictureModeName = CinemaHome
+# Panel Specific
+Tmax = 340
+# Light Sense
+Ambient = 1
+
+[PictureMode = 2]
+PictureModeName = Cinema
+SupportsDM3 = 1
+BrightnessPreservation = 0
+# Panel Specific
+# Light Sense
+Ambient = 0
+
+[PictureMode = 3]
+PictureModeName = Standard
+# Panel Specific
+Tmax = 340
+# Light Sense
+Ambient = 1
+
+[PictureMode = 4]
+PictureModeName = Game
+# Panel Specific
+Tmax = 340
+# Light Sense
+Ambient = 1
+```

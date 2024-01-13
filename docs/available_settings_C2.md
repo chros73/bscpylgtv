@@ -1012,4 +1012,93 @@ tv.rmm.*
 wee.*
 ```
 
+#### part of default DoVi config of >=55C2 (can be used for USB upload)
+```ini
+[Global]
+# Panel Specific
+Tmax = 810
+Tmin = 0.001
+# From panel specification
+TPrimaries = 0.6801 0.3195 0.2603 0.6870 0.1470 0.0478 0.3127 0.329
 
+# VSVDB Related Information
+vsvdb_Tmax = 810
+vsvdb_Tmin = 0.001
+vsvdb_TPrimaries = 0.6801 0.3195 0.2603 0.6870 0.1470 0.0478 0.3127 0.329
+
+# PictureMode 0-4 don't support Iamge Customization.
+[PictureMode = 0]
+PictureModeName = Vivid
+# Panel Specific
+DBrightness = 0.6
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 1
+# Precision Detail
+SupportsPrecisionRendering = 1
+PrecisionRenderingStrength = 0.75
+PrecisionRendering29Scalar = 0.75
+DBrightness_PR_on = 0.6
+
+[PictureMode = 1]
+PictureModeName = CinemaHome
+# Panel Specific
+DBrightness = 0.3
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 1
+# Precision Detail
+SupportsPrecisionRendering = 1
+PrecisionRenderingStrength = 0.75
+PrecisionRendering29Scalar = 0.75
+DBrightness_PR_on = 0.3
+
+[PictureMode = 2]
+PictureModeName = Cinema
+# Panel Specific
+DBrightness = 0.0
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 0
+# Precision Detail
+SupportsPrecisionRendering = 0
+PrecisionRenderingStrength = 0.15
+PrecisionRendering29Scalar = 0.15
+DBrightness_PR_on = 0.0
+
+[PictureMode = 3]
+PictureModeName = Standard
+# Panel Specific
+DBrightness = 0.3
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 1
+# Precision Detail
+SupportsPrecisionRendering = 1
+PrecisionRenderingStrength = 0.75
+PrecisionRendering29Scalar = 0.75
+DBrightness_PR_on = 0.3
+
+[PictureMode = 4]
+PictureModeName = Game
+# Panel Specific
+DBrightness = 0.3
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 1
+# Precision Detail
+SupportsPrecisionRendering = 0
+PrecisionRenderingStrength = 0.15
+PrecisionRendering29Scalar = 0.15
+DBrightness_PR_on = 0.3
+```

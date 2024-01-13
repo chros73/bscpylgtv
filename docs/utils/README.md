@@ -58,4 +58,5 @@ Also this one:
 strings usr/sbin/lginput2 | grep -i '^KEY_' | sort -u | cut -d "_" -f 2,3,4,5,6,7,8
 ```
 
-
+#### Getting part of DoVi config:
+DoVi config files of newer models are located in `usr/share/pqdb/dolby` directory.

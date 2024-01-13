@@ -749,3 +749,83 @@ tv.rmm.*
 webos.keyaction.*
 ```
 
+#### part of default DoVi config of C9 (can be used for USB upload)
+```ini
+[Global]
+# Panel Specific
+Tmax = 600
+Tmin = 0.001
+# From panel specification
+TPrimaries = 0.6766 0.3231 0.2526 0.6822 0.1413 0.0483 0.3127 0.3290
+
+# VSVDB Related Information
+vsvdb_Tmax = 700
+vsvdb_Tmin = 0.0001
+vsvdb_TPrimaries = 0.7080 0.2920 0.1700 0.7970 0.1310 0.0460 0.3127 0.3290
+
+# PictureMode 0-4 don't support Iamge Customization.
+[PictureMode = 0]
+PictureModeName = Vivid
+# Panel Specific
+Tmax = 200
+# Ambient Light Compensation
+Ambient = 1
+# Preference Picture
+DBacklight = 1
+DContrast = 0
+DBrightness = 0
+DSaturation = 0
+DColorShift = 0
+
+[PictureMode = 1]
+PictureModeName = CinemaHome
+# Panel Specific
+Tmax = 300
+# Ambient Light Compensation
+Ambient = 1
+# Preference Picture
+DBacklight = 1
+DContrast = 0
+DBrightness = 0
+DSaturation = 0
+DColorShift = 0
+
+[PictureMode = 2]
+PictureModeName = Cinema
+SupportsDM3 = 1 
+BrightnessPreservation = 0
+# Ambient Light Compensation
+Ambient = 0
+# Preference Picture
+DBacklight = 1
+DContrast = 0
+DBrightness = 0
+DSaturation = 0
+DColorShift = 0
+
+[PictureMode = 3]
+PictureModeName = Standard
+# Panel Specific
+Tmax = 300
+# Ambient Light Compensation
+Ambient = 1
+# Preference Picture
+DBacklight = 1
+DContrast = 0
+DBrightness = 0
+DSaturation = 0
+DColorShift = 0
+
+[PictureMode = 4]
+PictureModeName = Game
+# Panel Specific
+Tmax = 300
+# Ambient Light Compensation
+Ambient = 1
+# Preference Picture
+DBacklight = 1
+DContrast = 0
+DBrightness = 0
+DSaturation = 0
+DColorShift = 0
+```

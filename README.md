@@ -425,8 +425,13 @@ bscpylgtvcommand 192.168.1.18 end_calibration
 
 ### Writing Dolby Vision config file for USB upload
 
+Copy the generated config `DolbyVision_UserDisplayConfiguration.txt` file into the root of a thumbdrive, plug it into the TV, then play a DoVi content (e.g. with a built-in app), the DoVi config update popup will appear.
+
+Note: the DoVi config update popup is disabled via USB if any data (e.g. custom 1D LUT) is uploaded via the calibration API to a given DoVi preset. Either you have to update the config beforehand or reset the preset on the UI (or via calibration API), update DoVi config via USB, then upload the data (e.g. custom 1D LUT) again if necessary.
+
 - picture modes: dolby_cinema_bright - 1 (DoVi Cinema Home), dolby_cinema_dark - 2 (DoVi Cinema), dolby_game - 4 (DoVi Game)
 - primaries (in this order): xr, yr, xg, yg, xb, yb
+- default value of black_level: 0.0001
 - config of 2018 models is different from newer models (>=2019)
 
 ```bash

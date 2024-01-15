@@ -2330,6 +2330,17 @@ class WebOsClient:
         """Eject a USB device. deviceId can be obtained with get_attached_devices method."""
         return await self.luna_request(ep.LUNA_EJECT_DEVICE, {"deviceId": device_id})
 
+    async def enable_tpc_or_gsr(self, algo, enable=True):
+        """Toggle Temporal Peak Control (TPC) or Global Stress Reduction (GSR) in In-Start Service Menu."""
+        if algo not in ["tpc", "gsr"]:
+            raise ValueError(f"Invalid algo {algo}, must be tpc or gsr.")
+        if not (type(enable) is bool):
+            raise ValueError(f"Invalid enable {enable}, must be bool.")
+
+        epName = "LUNA_SET_TPC" if algo == "tpc" else "LUNA_SET_GSR"
+
+        return await self.luna_request(getattr(ep, epName), {"enable": enable})
+
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.
 

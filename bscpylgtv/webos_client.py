@@ -2341,6 +2341,18 @@ class WebOsClient:
 
         return await self.luna_request(getattr(ep, epName), {"enable": enable})
 
+    async def set_sm_white_balance(self, color_temp, rg, gg, bg, rc=64, gc=64, bc=64):
+        """Set White Balance in Ez-Adjust Service Menu, color_temp can be: cool, medium, warm"""
+        if color_temp not in ["cool", "medium", "warm"]:
+            raise ValueError(f"Invalid color_temp {color_temp}, must be cool, medium or warm.")
+        for value in [rg, gg, bg, rc, gc, bc]:
+            if value < 0 or value > 255:
+                raise ValueError(f"Invalid color {value}, must be between 0 and 255.")
+
+        params = {"colorTemp": color_temp, "gain": [rg, gg, bg], "offset": [rc, gc, bc]}
+
+        return await self.luna_request(ep.LUNA_SET_WHITE_BALANCE, params)
+
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.
 

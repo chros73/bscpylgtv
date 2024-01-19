@@ -74,8 +74,10 @@ bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.tvhotkey "{\"
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.softwareupdate
 # NOTE: this does not work anymore on some models since end of 2021. Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.softwareupdate "{\"mode\": \"user\", \"flagUpdate\": true}"
-# Toggle TPC or GSR in In-Start Service Menu, values of algo: tpc, gsr
+# Toggle TPC or GSR in In-Start Service Menu (on 2020 and newer models), values of algo: tpc, gsr
 bscpylgtvcommand 192.168.1.18 enable_tpc_or_gsr tpc false
+# Set White Balance in Ez-Adjust Service Menu (on 2020 and newer models), values of color_temp: cool, medium, warm
+bscpylgtvcommand 192.168.1.18 set_sm_white_balance warm 192 169 111
 # Launch In-Start Service Menu (code: 0413) (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"inStart\"}"
 # Launch Ez-Adjust Service Menu (code: 0413) (using JSON)

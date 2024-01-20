@@ -490,6 +490,10 @@ bscpylgtvcommand 192.168.1.18 toggle_itpg true 2 1
 bscpylgtvcommand 192.168.1.18 toggle_itpg false 0
 ```
 
+### Calibration guides
+
+A collection of calibration guides can be found under [docs directory](https://github.com/chros73/bscpylgtv/tree/master/docs/guides/).
+
 
 ## Development of `bscpylgtv`
 

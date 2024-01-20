@@ -24,12 +24,10 @@ pip install --upgrade .[with_calibration]
 ```
 
 ### Windows binaries
-Portable Windows binaries can be found under [releases](https://github.com/chros73/bscpylgtv/releases).
+Portable Windows binaries can be found under [releases](https://github.com/chros73/bscpylgtv/releases), along with [First use](https://github.com/chros73/bscpylgtv/tree/master/docs/guides/first_use.md) guide.
 
 ## Examples
 Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory, also available [buttons](https://github.com/chros73/bscpylgtv/tree/master/bscpylgtv/buttons.py).
-They can even be more useful when they are paired with other frontend utilities that can run batch files (e.g. [madvr-js-remote](https://github.com/chros73/madvr-js-remote) or [HTWebRemote
-](https://github.com/nicko88/HTWebRemote) on Windows).
 ```bash
 # Get list of apps (including hidden ones as well)
 bscpylgtvcommand 192.168.1.18 get_apps_all true

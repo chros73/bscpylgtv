@@ -1,4 +1,4 @@
-### OLED CX (2020) webOS v5.2.3
+### OLED CX (2020) webOS v5.5.0
 Available settings per category that can be used with various methods.
 
 #### Inputs
@@ -487,10 +487,10 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "colorimetryHDMI3": "auto",
     "colorimetryHDMI4": "auto",
     "cursorAutoRemover": "on",
-    "dolbyVSVDBVerHDMI1": "v1",
-    "dolbyVSVDBVerHDMI2": "v1",
-    "dolbyVSVDBVerHDMI3": "v1",
-    "dolbyVSVDBVerHDMI4": "v1",
+    "dolbyVSVDBVerHDMI1": "v2",
+    "dolbyVSVDBVerHDMI2": "v2",
+    "dolbyVSVDBVerHDMI3": "v2",
+    "dolbyVSVDBVerHDMI4": "v2",
     "eotfHDMI1": "auto",
     "eotfHDMI2": "auto",
     "eotfHDMI3": "auto",
@@ -548,6 +548,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "maxFALLHDMI3": "auto",
     "maxFALLHDMI4": "auto",
     "netflixHotkeyIsActive": true,
+    "playbackThreshold": 200,
     "quickSettingsMenuList": [
         "QuickSettings_picture_button",
         "QuickSettings_soundMode_button",
@@ -655,6 +656,8 @@ com.webos.memorymanager.*
 com.webos.service.airplay.*
 com.webos.service.arccontroller.*
 com.webos.service.attachedstoragemanager.*
+com.webos.service.bthidmanager.*
+com.webos.service.capture.*
 com.webos.service.cbox.*
 com.webos.service.config.*
 com.webos.service.eim.*
@@ -672,6 +675,7 @@ com.webos.service.pdm.*
 com.webos.service.photorenderer.*
 com.webos.service.preloadmanager.*
 com.webos.service.scd.*
+com.webos.service.screenmanager.*
 com.webos.service.time.*
 com.webos.service.tnm.*
 com.webos.service.tvpower.*

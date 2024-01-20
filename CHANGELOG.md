@@ -1,5 +1,15 @@
 # Change Log
 
+## [v0.4.6](https://github.com/chros73/bscpylgtv/tree/v0.4.6) (2024-01-20)
+**Implemented enhancements:**
+
+- Add `enable_tpc_or_gsr` method (requires 2020 and newer models)
+- Add `set_sm_white_balance` method (requires 2020 and newer models)
+- Add available settings doc of 2019 models
+- Update available settings doc of 2020 models
+- Update available settings doc of Cx models with part of DoVi config
+- Add calibration guides under docs: First use, Profiling SDR, Calibrating HDR10, Mitigating DoVi raised black
+
 ## [v0.4.5](https://github.com/chros73/bscpylgtv/tree/v0.4.5) (2023-12-25)
 **Implemented enhancements:**
 

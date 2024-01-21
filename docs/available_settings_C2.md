@@ -1,4 +1,4 @@
-### OLED C2 (2022) webOS v7.3.1
+### OLED C2 (2022) webOS v7.4.0
 Available settings per category that can be used with various methods.
 
 #### Inputs
@@ -577,6 +577,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "colorimetryHDMI2": "auto",
     "colorimetryHDMI3": "auto",
     "colorimetryHDMI4": "auto",
+    "contentRecommendation": "on",
     "cursorAutoRemover": "on",
     "darkMode": "off",
     "dolbyVSVDBVer": "v2",
@@ -659,6 +660,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "version": 1.0
         }
     ],
+    "homelegalPopup": "on",
     "illuminanceThreshold": 0,
     "inputOptimization": "auto",
     "isFirstCapture": "true",
@@ -772,6 +774,76 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "shahid": {
                 "app_id": "net.mbc.shahid-lgapp",
                 "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "wavve": {
+                "app_id": "pooq",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "coupangplay": {
+                "app_id": "coupangplay",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "stan": {
+                "app_id": "stan.webos2",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "shop": {
+                "app_id": "com.lgshop.app79",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "slingtv": {
+                "app_id": "com.movenetworks.app.sling-tv-sling-production",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "tver": {
+                "app_id": "tver",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "freeviewplay": {
+                "app_id": "com.fvp.fve",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "apps": {
+                "app_id": "com.webos.app.discovery",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "wink": {
+                "app_id": "ru.rt.video.app.tv",
+                "isActive": false,
+                "launch_param": null
+            }
+        },
+        {
+            "start": {
+                "app_id": "start",
+                "isActive": false,
                 "launch_param": null
             }
         },
@@ -986,6 +1058,7 @@ com.webos.service.pqcontroller.*
 com.webos.service.preloadmanager.*
 com.webos.service.rollingscreen.*
 com.webos.service.scd.*
+com.webos.service.screenmanager.*
 com.webos.service.time.*
 com.webos.service.tnm.*
 com.webos.service.tvpower.*

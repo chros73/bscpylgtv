@@ -1,4 +1,4 @@
-### OLED C2 (2022) webOS v7.4.0
+### OLED C2 (2022) firmware v4.40.90, webOS v7.4.0
 Available settings per category that can be used with various methods.
 
 #### Inputs

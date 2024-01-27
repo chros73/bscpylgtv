@@ -9,7 +9,7 @@ Set oled light and gamma of the given preset to a desired value on the UI, e.g. 
 Set bypass modes in the given preset:
 ```sh
 bscpylgtvcommand 192.168.1.18 start_calibration cinema
-bscpylgtvcommand 192.168.1.18 set_bypass_modes_sdr
+bscpylgtvcommand 192.168.1.18 set_bypass_modes_sdr -s
 bscpylgtvcommand 192.168.1.18 end_calibration
 ```
 

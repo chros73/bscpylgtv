@@ -1,4 +1,4 @@
-### OLED C9 (2019) webOS v4.9.7
+### OLED C9 (2019) firmware v5.30.40, webOS v4.9.7
 Available settings per category that can be used with various methods.
 
 #### Inputs

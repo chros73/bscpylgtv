@@ -1,4 +1,4 @@
-### OLED C3 (2023) webOS v8.2.0
+### OLED C3 (2023) firmware v3.20.17, webOS v8.2.0
 Available settings per category that can be used with various methods.
 
 #### Inputs

@@ -1,4 +1,4 @@
-### OLED C8 (2018) webOS v4.4.0
+### OLED C8 (2018) firmware v5.40.09, webOS v4.4.0
 Available settings per category that can be used with various methods.
 
 #### Inputs

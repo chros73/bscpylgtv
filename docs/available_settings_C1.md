@@ -1,4 +1,4 @@
-### OLED C1 (2021) webOS v6.1.0
+### OLED C1 (2021) firmware v3.36.50, webOS v6.1.0
 Available settings per category that can be used with various methods.
 
 #### Inputs

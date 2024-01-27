@@ -1,4 +1,4 @@
-### OLED CX (2020) webOS v5.5.0
+### OLED CX (2020) firmware v4.50.53, webOS v5.5.0
 Available settings per category that can be used with various methods.
 
 #### Inputs

@@ -1154,7 +1154,7 @@ tv.rmm.*
 wee.*
 ```
 
-#### part of default DoVi config of >=55C3 (can be used for USB upload)
+#### part of default DoVi config of >=55" C3 (DMSwVersion = 4.0, IDK_Version = SOC_5.0) (can be used for USB upload)
 ```ini
 [Global]
 # Panel Specific
@@ -1244,3 +1244,156 @@ PrecisionRenderingStrength = 0.15
 PrecisionRendering29Scalar = 0.15
 DBrightness_PR_on = 0.3
 ```
+
+##### differences in <=48" C3 config
+```ini
+[Global]
+# Panel Specific
+Tmax = 640
+# From panel specification
+TPrimaries = 0.6746 0.3193 0.2595 0.6856 0.1467 0.0507 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 640
+vsvdb_TPrimaries = 0.6746 0.3193 0.2595 0.6856 0.1467 0.0507 0.3127 0.329
+```
+
+##### differences in 55"-77" G3 config
+```ini
+[Global]
+# Panel Specific
+Tmax = 1470
+# From panel specification
+TPrimaries = 0.6708 0.3217 0.2454 0.6924 0.1462 0.0584 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 1470
+vsvdb_TPrimaries = 0.6708 0.3217 0.2454 0.6924 0.1462 0.0584 0.3127 0.329
+
+[PictureMode = 0]
+DBrightness = 0.7
+```
+
+##### differences in 83" G3 config
+```ini
+[Global]
+# Panel Specific
+Tmax = 900
+# From panel specification
+TPrimaries = 0.6708 0.3217 0.2454 0.6924 0.1462 0.0584 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 900
+vsvdb_TPrimaries = 0.6708 0.3217 0.2454 0.6924 0.1462 0.0584 0.3127 0.329
+
+[PictureMode = 0]
+DBrightness = 0.7
+```
+
+##### differences in 97" G3 config
+```ini
+[Global]
+# Panel Specific
+Tmax = 990
+# From panel specification
+TPrimaries = 0.6708 0.3217 0.2454 0.6924 0.1462 0.0584 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 990
+vsvdb_TPrimaries = 0.6708 0.3217 0.2454 0.6924 0.1462 0.0584 0.3127 0.329
+
+[PictureMode = 0]
+DBrightness = 0.7
+```
+
+##### part of default DoVi config of B3 (DMSwVersion = 4.0, IDK_Version = SOC_1.6.1.4)
+```ini
+[Global]
+# Panel Specific
+Tmax = 640
+Tmin = 0.01
+# From panel specification
+TPrimaries = 0.6721 0.3261 0.2632 0.6784 0.1453 0.0494 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 640
+vsvdb_Tmin = 0.01
+vsvdb_TPrimaries = 0.6721 0.3261 0.2632 0.6784 0.1453 0.0494 0.3127 0.329
+
+# PictureMode 0-4 don't support Iamge Customization.
+[PictureMode = 0]
+PictureModeName = Vivid
+# Panel Specific
+Tmax = 224
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 0
+
+[PictureMode = 1]
+PictureModeName = CinemaHome
+# Panel Specific
+Tmax = 320
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 0
+
+[PictureMode = 2]
+PictureModeName = Cinema
+SupportsDM3 = 1
+BrightnessPreservation = 0
+# Panel Specific
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 0
+
+[PictureMode = 3]
+PictureModeName = Standard
+# Panel Specific
+Tmax = 320
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 0
+
+[PictureMode = 4]
+PictureModeName = Game
+# Panel Specific
+Tmax = 320
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 0
+```
+
+##### differences in A3 config compared to B3
+```ini
+[Global]
+# Panel Specific
+Tmax = 576
+# From panel specification
+TPrimaries = 0.6762 0.3228 0.2567 0.6854 0.1456 0.0505 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 576
+vsvdb_TPrimaries = 0.6762 0.3228 0.2567 0.6854 0.1456 0.0505 0.3127 0.329
+
+[PictureMode = 0]
+Tmax = 202
+
+[PictureMode = 1]
+Tmax = 288
+
+[PictureMode = 3]
+Tmax = 288
+
+[PictureMode = 4]
+Tmax = 288
+``` 

@@ -749,7 +749,7 @@ tv.rmm.*
 webos.keyaction.*
 ```
 
-#### part of default DoVi config of C9 (can be used for USB upload)
+#### part of default DoVi config of C9 (DMSwVersion = 4.0) (can be used for USB upload)
 ```ini
 [Global]
 # Panel Specific
@@ -828,4 +828,15 @@ DContrast = 0
 DBrightness = 0
 DSaturation = 0
 DColorShift = 0
+```
+
+##### differences in B9 config
+```ini
+# From panel specification
+TPrimaries = 0.6789 0.3211 0.2520 0.6847 0.1433 0.0477 0.3127 0.3290
+
+# VSVDB Related Information
+vsvdb_Tmax = 600
+vsvdb_Tmin = 0.001
+vsvdb_TPrimaries = 0.7222 0.2978 0.2142 0.7655 0.1310 0.0396 0.3127 0.3290 
 ```

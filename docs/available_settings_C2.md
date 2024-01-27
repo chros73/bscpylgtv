@@ -1085,7 +1085,7 @@ tv.rmm.*
 wee.*
 ```
 
-#### part of default DoVi config of >=55C2 (can be used for USB upload)
+#### part of default DoVi config of >=55" C2 (DMSwVersion = 4.0, IDK_Version = SOC_5.0) (can be used for USB upload)
 ```ini
 [Global]
 # Panel Specific
@@ -1174,4 +1174,126 @@ SupportsPrecisionRendering = 0
 PrecisionRenderingStrength = 0.15
 PrecisionRendering29Scalar = 0.15
 DBrightness_PR_on = 0.3
+```
+
+##### differences in <=48" C2 config
+```ini
+[Global]
+# Panel Specific
+Tmax = 648
+
+# VSVDB Related Information
+vsvdb_Tmax = 648
+```
+
+##### differences in 55"-77" G2 config
+```ini
+[Global]
+# Panel Specific
+Tmax = 990
+
+# VSVDB Related Information
+vsvdb_Tmax = 990
+
+[PictureMode = 0]
+DLocalContrast = 0.2
+
+[PictureMode = 1]
+DBrightness_PR_on = 0.35
+DLocalContrast = 0.2
+
+[PictureMode = 3]
+DLocalContrast = 0.2
+```
+
+##### part of default DoVi config of B2 (DMSwVersion = 4.0, IDK_Version = SOC_1.6.1.4)
+```ini
+[Global]
+# Panel Specific
+Tmax = 640
+Tmin = 0.001
+# From panel specification
+TPrimaries = 0.6773 0.3219 0.2586 0.6762 0.1449 0.0484 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 640
+vsvdb_Tmin = 0.001
+vsvdb_TPrimaries = 0.6773 0.3219 0.2586 0.6762 0.1449 0.0484 0.3127 0.329
+
+# PictureMode 0-4 don't support Iamge Customization.
+[PictureMode = 0]
+PictureModeName = Vivid
+# Panel Specific
+Tmax = 224
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 1
+
+[PictureMode = 1]
+PictureModeName = CinemaHome
+# Panel Specific
+Tmax = 320
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 1
+
+[PictureMode = 2]
+PictureModeName = Cinema
+SupportsDM3 = 1
+BrightnessPreservation = 0
+# Panel Specific
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 0
+
+[PictureMode = 3]
+PictureModeName = Standard
+# Panel Specific
+Tmax = 320
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 1
+
+[PictureMode = 4]
+PictureModeName = Game
+# Panel Specific
+Tmax = 320
+# Dark Detail
+DarkDetail = 0
+DarkDetailCompLum = 50
+# Light Sense
+Ambient = 1
+```
+
+##### differences in A2 config compared to B2
+```ini
+[Global]
+# Panel Specific
+Tmax = 576
+# From panel specification
+TPrimaries = 0.6772 0.3221 0.2604 0.6735 0.1440 0.0475 0.3127 0.329
+
+# VSVDB Related Information
+vsvdb_Tmax = 576
+vsvdb_TPrimaries = 0.6772 0.3221 0.2604 0.6735 0.1440 0.0475 0.3127 0.329
+
+[PictureMode = 0]
+Tmax = 202
+
+[PictureMode = 1]
+Tmax = 288
+
+[PictureMode = 3]
+Tmax = 288
+
+[PictureMode = 4]
+Tmax = 288
 ```

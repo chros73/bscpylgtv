@@ -697,7 +697,7 @@ tv.nyx.*
 tv.rmm.*
 ```
 
-#### part of default DoVi config of CX (can be used for USB upload)
+#### part of default DoVi config of CX (DMSwVersion = 4.0) (can be used for USB upload)
 ```ini
 [Global]
 # Panel Specific
@@ -746,4 +746,26 @@ PictureModeName = Game
 Tmax = 350
 # Light Sense
 Ambient = 1
+```
+
+##### differences in BX config
+```ini
+[Global]
+# Panel Specific
+Tmax = 600
+# From panel specification
+TPrimaries = 0.6740 0.3250 0.2613 0.6782 0.1455 0.0482 0.3127 0.3290
+
+# VSVDB Related Information
+vsvdb_Tmax = 800
+vsvdb_TPrimaries = 0.6858 0.3164 0.2421 0.7304 0.1289 0.0351 0.3127 0.3290
+
+[PictureMode = 1]
+Tmax = 300
+
+[PictureMode = 3]
+Tmax = 300
+
+[PictureMode = 4]
+Tmax = 300
 ```

@@ -491,7 +491,7 @@ tv.model.*
 tv.rmm.*
 ```
 
-#### part of default DoVi config of C8 (can be used for USB upload)
+#### part of default DoVi config of C8 (DMSwVersion = 3.1) (can be used for USB upload)
 ```ini
 PictureMode=0
 Tmax = 280
@@ -524,3 +524,16 @@ Tmax = 700
 Tmin = 0.0001
 ColorPrimaries = 0.6800	0.3200 0.2500 0.7000 0.1400 0.0450 0.3127 0.3290
 ```
+
+##### differences in B8 config
+`Tmax = 200` in all presets except for:
+```ini
+PictureMode=2
+Tmax = 400
+
+# For VSVDB
+PictureMode=19
+Tmax = 500
+ColorPrimaries = 0.7030 0.3201 0.2459 0.7225 0.1287 0.0350 0.3127 0.3290
+```
+

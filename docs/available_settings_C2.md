@@ -1,4 +1,4 @@
-### OLED C2 (2022) firmware v13.30.56, webOS v8.3.0
+### OLED C2 (2022) firmware v23.20.72, webOS v9.2.1
 Available settings per category that can be used with various methods.
 
 #### Inputs
@@ -11,7 +11,7 @@ ip, movie, photo, pictest, rgb, scart, smhl, usbc1, usbc2
 #### Picture modes (presets)
 ```
 cinema, eco, expert1, expert2, filmMaker, game, normal, personalized, photo, sports, vivid,
-hdrCinema, hdrCinemaBright, hdrExternal, hdrFilmMaker, hdrGame, hdrPersonalized, hdrStandard, hdrVivid,
+hdrCinema, hdrCinemaBright, hdrEco, hdrExternal, hdrFilmMaker, hdrGame, hdrPersonalized, hdrStandard, hdrVivid,
 dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon, dolbyHdrGame, dolbyHdrPersonalized, dolbyHdrStandard, dolbyHdrVivid
 ```
 
@@ -19,11 +19,6 @@ dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon, dolbyHdrGame, dolbyHdr
 ```
 sdr, hdr, technicolorHdr, dolbyHdr,
 sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
-```
-
-#### Stereoscopic modes
-```
-2d, 3d
 ```
 
 #### `aiPicture` category - default settings: `hdmi1` input - `expert2` preset (used by `set_current_picture_settings` method)
@@ -36,6 +31,10 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
 
 #### `picture` category - default settings: `hdmi1` input - `expert2` preset (used by `set_current_picture_settings` method)
 ```json
+    "DtmMastering10k": 40,
+    "DtmMastering1k": 80,
+    "DtmMastering4k": 60,
+    "DtmProfessional": false,
     "adjustingLuminance": [
         0,
         0,
@@ -274,7 +273,21 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
 #### `option` category - default settings (used by `set_option_settings` method)
 ```json
     "IPControlSecureKey": "",
-    "_3dModeEstreamer": "off",
+    "a11yQuickList": [
+        "AudioGuidance",
+        "VideoDescription",
+        "AudioDescription",
+        "AudioDescriptionAtsc",
+        "TvPowerSound",
+        "HighContrast",
+        "GreyScale",
+        "InvertColors",
+        "Caption",
+        "Subtitles",
+        "TunerlessCaption",
+        "HardOfHearing",
+        "DialogEnhancement"
+    ],
     "additionalAudioSelection": "none",
     "addressInfo": [
         "not_defined",
@@ -287,6 +300,56 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
         "colorInversion": "off"
     },
     "animationGuide": "on",
+    "aodThemeHistory": [
+        {
+            "category": "category-movements",
+            "name": "Blooms",
+            "subType": "igallery_littleflower",
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Little Flower.png"
+        },
+        {
+            "category": "category-movements",
+            "name": "Plants",
+            "subType": "igallery_leaf",
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Leaf.png"
+        },
+        {
+            "category": "category-movements",
+            "name": "Turtle in the sea",
+            "subType": "igallery_turtle",
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Turtle.png"
+        },
+        {
+            "category": "category-movements",
+            "name": "Aquarium",
+            "subType": "igallery_aquarium",
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Aquarium.png"
+        },
+        {
+            "category": "category-movements",
+            "name": "Chandelier",
+            "subType": "igallery_chandelier",
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Chandelier.png"
+        },
+        {
+            "category": "category-movements",
+            "name": "Reed Glass",
+            "subType": "igallery_reedglass",
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Reed Glass.png"
+        },
+        {
+            "category": "category-information",
+            "name": "Live Window",
+            "subType": "liveWindow",
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/information/img_category_live_window.png"
+        },
+        {
+            "category": "category-tbar",
+            "name": "Space",
+            "subType": "tbar_space",
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/tbar/img_tbar_space01.png"
+        }
+    ],
     "appInstallDevice": {
         "deviceId": "",
         "driveId": ""
@@ -301,12 +364,10 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "autoSmartServiceCountry": "on",
     "avatar": "off",
     "backupPsm": {
-        "backupPsm2d": "hdrStandard",
-        "backupPsm3d": "hdrStandard"
+        "backupPsm2d": "hdrStandard"
     },
     "backupPsmDolby": {
-        "backupPsm2d": "dolbyHdrDark",
-        "backupPsm3d": "dolbyHdrDark"
+        "backupPsm2d": "dolbyHdrDark"
     },
     "baloonHelp": "on",
     "bannerPosition": "none",
@@ -391,8 +452,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "emergencyInformationLanguageAtsc30": "eng",
     "enableIpControl": "off",
     "enableSDDP": "off",
-    "enableToastPopup": "off",
-    "enabling3dSettingsMenu": "off",
+    "enableToastPopup": "on",
     "epgPipMode": "off",
     "estreamerMinimalMode": "off",
     "estreamerStatus": "off",
@@ -409,6 +469,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "hddEcoMode": "on",
     "helpOnSettings": "on",
     "highContrast": "off",
+    "homeWallPaper": "opt1",
     "hybridCast": "off",
     "inputDevicesSupportStatus": {
         "keyboard": true,
@@ -431,6 +492,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "lineView": "on",
     "liveMenuLaunched": false,
     "livePlus": "off",
+    "livePromotion": "on",
     "localeCountryGroup": "UNDEFINED",
     "logoLight": "low",
     "magicNum1": {
@@ -493,6 +555,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "motionSensorSensitivityForAOD": "medium",
     "multiChannelAudio": "on",
     "multiViewStatus": "off",
+    "nearbyDevicePermission": [],
     "ohtv": "on",
     "orbit": "off",
     "password_ipcontrol": "828",
@@ -562,11 +625,44 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "voiceRecognitionLanguage": "eng",
     "vsn": "N/A",
     "wakeUpword": "LGTV",
+    "wallPaperHistory": [
+        {
+            "color": "#D4B04F",
+            "name": "Flip",
+            "thumb": "/usr/palm/applications/com.webos.app.artisticdisplay/assets/thumbnails/thumb_clock_calendar.png",
+            "type": "clock_flip_color1"
+        },
+        {
+            "color": "#CFC1AB",
+            "name": "Typography 1",
+            "thumb": "/usr/palm/applications/com.webos.app.artisticdisplay/assets/thumbnails/thumb_poster_minimal_01.png",
+            "type": "poster_minimal1_color1"
+        },
+        {
+            "frame": "/usr/palm/applications/com.webos.app.artisticdisplay/assets/thumbnails/thumb_frame_peaceful.png",
+            "name": "Dream",
+            "thumb": "/usr/palm/applications/com.webos.app.artisticdisplay/assets/thumbnails/thumb_window_dream.png",
+            "type": "window_dream_wooden"
+        },
+        {
+            "name": "Cozy Fireplace",
+            "thumb": "/usr/palm/applications/com.webos.app.artisticdisplay/assets/thumbnails/thumb_healing_fire.png",
+            "type": "healing_fire"
+        },
+        {
+            "name": "Modern",
+            "thumb": "/usr/palm/applications/com.webos.app.artisticdisplay/assets/thumbnails/thumb_music_modern.png",
+            "type": "music_modern"
+        },
+        {
+            "name": "Home Screen Wallpaper",
+            "thumb": "/usr/palm/applications/com.webos.app.artisticdisplay/assets/thumbnails/thumb_home.png",
+            "type": "homeBg"
+        }
+    ],
     "wallPaperSettings": {
-        "artisticDisplayTheme": "default",
+        "artisticDisplayTheme": "clock_flip",
         "artisticDisplayThemeVersion": 0,
-        "currentHomeImgPath": "",
-        "currentHomeIndex": 0,
         "homeImageVersion": 0,
         "imageLimit": 0,
         "isFullView": false
@@ -586,7 +682,9 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "444BypassHDMINone": "off",
     "activeArtisticDisplayScreenSaver": false,
     "amazonHotkeyIsActive": true,
+    "aodPictureSyncMode": "on",
     "appReturn": "",
+    "autoSLZoomWithObjectDetection": false,
     "battery25PercentMode": "off",
     "batteryInstopProtect": "on",
     "blackStabilizer": 13,
@@ -611,11 +709,9 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "dolbyVSVDBVerHDMI2": "v2",
     "dolbyVSVDBVerHDMI3": "v2",
     "dolbyVSVDBVerHDMI4": "v2",
-    "dpPcMode": {
-        "dp1": false,
-        "dp2": false
-    },
+    "enable144HzBooster": "off",
     "enableALLM": "on",
+    "enableDolbyVisionPC": "off",
     "enableQuickGame": "on",
     "eotf": "auto",
     "eotfHDMI1": "auto",
@@ -692,17 +788,24 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
         }
     ],
     "homelegalPopup": "on",
+    "hueSyncAutoEnable": false,
+    "hueSyncManualEnable": false,
     "illuminanceThreshold": 0,
     "inputOptimization": "auto",
     "isFirstCapture": "true",
     "isHdpOpAppPopupDone": false,
     "isSLZoomExecutable": false,
     "isSLZoomOn": "off",
+    "isSLZoomOperable": false,
     "isfUpdated": "false",
     "lgLogoDisplay": "on",
+    "lightingAutoBrightness": "off",
     "lightingBrightness": 8,
+    "lightingColorMode": "whiteColorMode",
     "lightingEnable": "off",
     "lightingMode": "dynamic",
+    "lightingTnativeBrightness": 100,
+    "lightingTnativeMode": "off",
     "lowLevelAdjustment": 0,
     "lowPowerMode": "off",
     "mapping_info": [
@@ -882,6 +985,27 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             }
         },
         {
+            "sonyliv": {
+                "app_id": "com.sonyliv2.tvapp",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "tv360": {
+                "app_id": "com.viettel.media.tv360",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "vtvgo": {
+                "app_id": "com.vtvgotv.app",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
             "freeviewplay": {
                 "app_id": "com.fvp.fve",
                 "isActive": true,
@@ -936,6 +1060,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "newKey": "on",
     "oledCareMode": "off",
     "oledCareRecommendation": "off",
+    "othersColorMode": 0,
     "playbackThreshold": 200,
     "pseudoTouchMode": "on",
     "qmsVrr": "on",
@@ -947,7 +1072,7 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
         "QuickSettings_timer_button",
         "QuickSettings_eyecare_button",
         "QuickSettings_screenOff_button",
-        "QuickSettings_game_button",
+        "QuickSettings_privacyTerms_button",
         "QuickSettings_multiview_button",
         "QuickSettings_musicSearch_button"
     ],
@@ -986,16 +1111,17 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "uhdDeepColorHDMI2": "off",
     "uhdDeepColorHDMI3": "off",
     "uhdDeepColorHDMI4": "off",
-    "usbcPcMode": {
-        "usbc1": false,
-        "usbc2": false
-    },
     "weatherAllowed": false,
+    "whiteColorMode": 1,
     "whiteStabilizer": 13
 ```
 
 #### `system` categories and keys (used by `get_system_settings` method)
 ```json
+    "aspectRatio": [
+            "arcPerApp",
+            "justScan"
+    ],
     "twinTv": [
             "status",
             "role",
@@ -1021,7 +1147,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "japanCitySelection",
             "countryBroadcastSystem",
             "yourMomentsVersion",
-            "wallPaperSettings"
+            "wallPaperSettings",
+            "quickStartMode"
     ],
     "time": [
             "onTimerVolume",
@@ -1032,7 +1159,63 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "backlight",
             "contrast",
             "color",
-            "energySaving"
+            "energySaving",
+            "pictureMode",
+            "dynamicContrast",
+            "peakBrightness",
+            "gamma",
+            "blackLevel",
+            "motionEyeCare",
+            "colorGamut",
+            "hdrDynamicToneMapping",
+            "realCinema",
+            "truMotionMode",
+            "tint",
+            "adjustingLuminance",
+            "colorTemperature",
+            "whiteBalancePoint",
+            "superResolution",
+            "sharpness",
+            "noiseReduction",
+            "mpegNoiseReduction",
+            "smoothGradation",
+            "dynamicColor",
+            "whiteBalanceMethod",
+            "whiteBalanceIre10pt",
+            "whiteBalanceIre",
+            "whiteBalanceRedOffset",
+            "whiteBalanceRedGain",
+            "whiteBalanceRed10pt",
+            "whiteBalanceRed",
+            "adjustingLuminance10pt",
+            "whiteBalanceGreenOffset",
+            "whiteBalanceGreenGain",
+            "whiteBalanceGreen10pt",
+            "whiteBalanceGreen",
+            "whiteBalanceBlueOffset",
+            "whiteBalanceBlueGain",
+            "whiteBalanceBlue10pt",
+            "whiteBalanceBlue",
+            "colorManagementColorSystem",
+            "colorManagementSaturationRed",
+            "colorManagementSaturationGreen",
+            "colorManagementSaturationBlue",
+            "colorManagementSaturationCyan",
+            "colorManagementSaturationMagenta",
+            "colorManagementSaturationYellow",
+            "colorManagementHueRed",
+            "colorManagementHueGreen",
+            "colorManagementHueBlue",
+            "colorManagementHueCyan",
+            "colorManagementHueMagenta",
+            "colorManagementHueYellow",
+            "colorManagementLuminanceRed",
+            "colorManagementLuminanceGreen",
+            "colorManagementLuminanceBlue",
+            "colorManagementLuminanceCyan",
+            "colorManagementLuminanceMagenta",
+            "colorManagementLuminanceYellow",
+            "whiteBalanceLuminance"
     ],
     "" : [
             "eulaStatus",
@@ -1043,7 +1226,11 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
     "other": [
             "simplinkEnable",
             "ueiEnable",
-            "gameWallpaper"
+            "gameWallpaper",
+            "uhdDeepColorHDMI1",
+            "uhdDeepColorHDMI2",
+            "uhdDeepColorHDMI3",
+            "uhdDeepColorHDMI4"
     ],
     "sound": [
             "avSync",
@@ -1054,6 +1241,9 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "soundOutputDigital",
             "soundMode",
             "tvSetupConfiguration"
+    ],
+    "support": [
+             "automaticUpdate"
     ],
     "lock": [
             "parentalGuidance",
@@ -1066,7 +1256,8 @@ sdrALLM, hdrALLM, technicolorHdrALLM, dolbyHdrALLM
             "powerOffBySCA3SystemChanged",
             "SCA3SystemCountry",
             "homeAutoLaunch",
-            "lifeOnScreenMode"
+            "lifeOnScreenMode",
+            "homePromotion"
     ]
 ```
 
@@ -1186,6 +1377,7 @@ SupportsPrecisionRendering = 1
 PrecisionRenderingStrength = 0.75
 PrecisionRendering29Scalar = 0.75
 DBrightness_PR_on = 0.6
+DLocalContrast = 0.2
 
 [PictureMode = 1]
 PictureModeName = CinemaHome
@@ -1200,7 +1392,8 @@ Ambient = 1
 SupportsPrecisionRendering = 1
 PrecisionRenderingStrength = 0.75
 PrecisionRendering29Scalar = 0.75
-DBrightness_PR_on = 0.3
+DBrightness_PR_on = 0.35
+DLocalContrast = 0.2
 
 [PictureMode = 2]
 PictureModeName = Cinema
@@ -1231,6 +1424,7 @@ SupportsPrecisionRendering = 1
 PrecisionRenderingStrength = 0.75
 PrecisionRendering29Scalar = 0.75
 DBrightness_PR_on = 0.3
+DLocalContrast = 0.2
 
 [PictureMode = 4]
 PictureModeName = Game
@@ -1266,16 +1460,6 @@ Tmax = 990
 
 # VSVDB Related Information
 vsvdb_Tmax = 990
-
-[PictureMode = 0]
-DLocalContrast = 0.2
-
-[PictureMode = 1]
-DBrightness_PR_on = 0.35
-DLocalContrast = 0.2
-
-[PictureMode = 3]
-DLocalContrast = 0.2
 ```
 
 ##### part of default DoVi config of B2 (DMSwVersion = 4.0, IDK_Version = SOC_1.6.1.4)

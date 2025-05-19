@@ -37,6 +37,17 @@ class TestWebOsClientLite():
 
         ( 'HE_DTV_W22H_XXXXXXXX',   None,                               17,     2019,   1 ),
         ( 'HE_DTV_W22O_XXXXXXXX',   None,                               33,     2019,   1 ),
+
+        ( 'HE_DTV_W23H_XXXXXXXX',   None,                               17,     2019,   1 ),
+        ( 'HE_DTV_W23O_XXXXXXXX',   None,                               33,     2019,   1 ),
+
+        ( 'HE_DTV_W24H_XXXXXXXX',   None,                               17,     2019,   1 ),
+        ( 'HE_DTV_W24G_XXXXXXXX',   None,                               33,     2019,   1 ),
+        ( 'HE_DTV_W24O_XXXXXXXX',   None,                               33,     2019,   1 ),
+
+        ( 'HE_DTV_W25H_XXXXXXXX',   None,                               17,     2019,   1 ),
+        ( 'HE_DTV_W25G_XXXXXXXX',   None,                               33,     2019,   1 ),
+        ( 'HE_DTV_W25O_XXXXXXXX',   None,                               33,     2019,   1 ),
     ]
 
     @pytest.mark.parametrize("model,calInfo,lut3d,dovi,expected", data_calibration_support_info)

@@ -1194,7 +1194,7 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
-    async def set_current_picture_settings(self, settings, category="picture"):
+    async def set_current_picture_settings(self, settings, category="picture", current_app=None):
         """Set picture settings for current category, picture mode, input, dynamic range and 3d mode.
 
         A possible list of settings and OLED C3 example values are below
@@ -1450,10 +1450,13 @@ class WebOsClient:
 
         params = {"category": category, "settings": settings}
 
+        if current_app is not None:
+            params["current_app"] = current_app
+
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
     async def set_picture_settings(
-        self, settings, pic_mode, tv_input, stereoscopic="2d", category="picture"
+        self, settings, pic_mode, tv_input, stereoscopic="2d", category="picture", current_app=None
     ):
         """Set picture settings for specific category, picture mode, input, and 3d mode."""
 
@@ -1461,6 +1464,9 @@ class WebOsClient:
             "category": f"{category}${tv_input}.{pic_mode}.{stereoscopic}.x",
             "settings": settings,
         }
+
+        if current_app is not None:
+            params["current_app"] = current_app
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 

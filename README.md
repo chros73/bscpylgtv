@@ -47,6 +47,8 @@ bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"hdrDynamicToneMap
 bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"colorGamut\": \"auto\"}"
 # Set mpegNoiseReduction off in the current picture preset (using JSON)
 bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"mpegNoiseReduction\": \"off\"}"
+# Set truMotionMode to smooth in the current picture preset (using JSON), values: off, cinemaClear, natural, smooth, user, clear
+bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"truMotionMode\": \"smooth\"}" picture true
 # Turn AI Picture Pro on in the current picture preset (using JSON)
 bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"ai_Picture\": \"on\"}" aiPicture
 # Setting EOTF in HDMI Signal Override menu, values: auto, sdrGamma, hdrGamma, st2084, hlg (using JSON)

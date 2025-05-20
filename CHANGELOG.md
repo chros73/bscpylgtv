@@ -1,5 +1,10 @@
 # Change Log
 
+## [v0.4.8](https://github.com/chros73/bscpylgtv/tree/v0.4.8) (2025-05-20)
+**Implemented enhancements:**
+
+- Add a new param to set_*picture_settings methods for setting truMotionMode key
+
 ## [v0.4.7](https://github.com/chros73/bscpylgtv/tree/v0.4.7) (2025-05-19)
 **Implemented enhancements:**
 

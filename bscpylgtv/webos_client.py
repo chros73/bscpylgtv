@@ -2359,6 +2359,15 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_WHITE_BALANCE, params)
 
+    async def set_usb_dolby_vision_config(self, action):
+        """Upload or restore an USB Dolby Vision config file, action can be: Update, Restore"""
+        if action not in ["Update", "Restore"]:
+            raise ValueError(f"Invalid action {action}, must be Update or Restore.")
+
+        params = {"dolbyCfgAlertReturn": action}
+
+        return await self.luna_request(ep.LUNA_SET_PQ_PROPERTIES, params)
+
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.
 

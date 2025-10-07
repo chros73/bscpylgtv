@@ -915,12 +915,14 @@ class WebOsClient:
         """Set the current input."""
         return await self.request(ep.SET_INPUT, {"inputId": input})
 
-    async def take_screenshot(self, method="DISPLAY", format="JPG", width=960, height=540, path=""):
-        """Take screenshot.
-            method: DISPLAY (SCREEN), SCREEN_WITH_SOURCE_VIDEO, VIDEO, GRAPHIC, SOURCE (SCALER)
-            format: BMP, JPG, PNG, RGB, RGBA, YUV422
+    async def take_screenshot(self):
+        """Take screenshot in 960x540px JPG format.
+            Parameters to be used for com.webos.service.capture/executeOneShot:
+                method="DISPLAY", format="JPG", width=960, height=540, path="/tmp/capture.jpg"
+                method: DISPLAY (SCREEN), SCREEN_WITH_SOURCE_VIDEO, VIDEO, GRAPHIC, SOURCE (SCALER), BLENDED
+                format: BMP, JPG, PNG, RGB, RGBA, YUV422
         """
-        return await self.request(ep.TAKE_SCREENSHOT, {"method": method, "format": format, "width": width, "height": height, "path": path})
+        return await self.request(ep.TAKE_SCREENSHOT)
 
     # Audio
     async def get_audio_status(self):

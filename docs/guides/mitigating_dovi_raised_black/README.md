@@ -50,7 +50,7 @@ Quit calibration mode, once you get the desired result:
 ```sh
 bscpylgtvcommand 192.168.1.18 end_calibration
 # set color gamut back to native from wide
-bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"colorGamut\": \"native\"}"
+bscpylgtvcommand 192.168.1.18 set_settings picture "{\"colorGamut\": \"native\"}"
 ```
 
 ### 7. Uploading DoVi config file via USB

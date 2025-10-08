@@ -37,22 +37,24 @@ bscpylgtvcommand 192.168.1.18 button INFO
 bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 # Get values of backlight and contrast of the current picture preset (using list)
 bscpylgtvcommand 192.168.1.18 get_picture_settings "[\"backlight\", \"contrast\"]" true
+# Get values of soundOutput and soundMode of sound category (using list)
+bscpylgtvcommand 192.168.1.18 get_system_settings sound "[\"soundOutput\", \"soundMode\"]" true
 # Swtich to SDR ISF Expert Dark picture preset
 bscpylgtvcommand 192.168.1.18 set_current_picture_mode expert2
 # Set values of backlight and contrast of the current picture preset (using JSON)
-bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"backlight\": 0, \"contrast\": 85}"
+bscpylgtvcommand 192.168.1.18 set_settings picture "{\"backlight\": 0, \"contrast\": 85}"
 # Turn hdrDynamicToneMapping on in the current HDR10 picture preset (using JSON)
-bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"hdrDynamicToneMapping\": \"on\"}"
+bscpylgtvcommand 192.168.1.18 set_settings picture "{\"hdrDynamicToneMapping\": \"on\"}"
 # Set colorGamut to "auto" in the current picture preset (using JSON)
-bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"colorGamut\": \"auto\"}"
+bscpylgtvcommand 192.168.1.18 set_settings picture "{\"colorGamut\": \"auto\"}"
 # Set mpegNoiseReduction off in the current picture preset (using JSON)
-bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"mpegNoiseReduction\": \"off\"}"
+bscpylgtvcommand 192.168.1.18 set_settings picture "{\"mpegNoiseReduction\": \"off\"}"
 # Set truMotionMode to smooth in the current picture preset (using JSON), values: off, cinemaClear, natural, smooth, user, clear
-bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"truMotionMode\": \"smooth\"}" picture true
+bscpylgtvcommand 192.168.1.18 set_settings picture "{\"truMotionMode\": \"smooth\"}" true
 # Turn AI Picture Pro on in the current picture preset (using JSON)
-bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"ai_Picture\": \"on\"}" aiPicture
+bscpylgtvcommand 192.168.1.18 set_settings aiPicture "{\"ai_Picture\": \"on\"}"
 # Setting EOTF in HDMI Signal Override menu, values: auto, sdrGamma, hdrGamma, st2084, hlg (using JSON)
-bscpylgtvcommand 192.168.1.18 set_other_settings "{\"eotf\": \"hlg\"}"
+bscpylgtvcommand 192.168.1.18 set_settings other "{\"eotf\": \"hlg\"}"
 # Turn PC Mode on/off for HDMI2
 bscpylgtvcommand 192.168.1.18 set_device_info HDMI_2 pc PC
 bscpylgtvcommand 192.168.1.18 set_device_info HDMI_2 hometheater "Home Theatre"
@@ -83,7 +85,7 @@ bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{
 # Launch Ez-Adjust Service Menu (code: 0413) (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"ezAdjust\"}"
 # Enable full Service Menu on newer models
-bscpylgtvcommand 192.168.1.18 set_other_settings "{\"svcMenuFlag\": false}"
+bscpylgtvcommand 192.168.1.18 set_settings other "{\"svcMenuFlag\": false}"
 # Get config values of "tv.model" category (using list)
 bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]" true
 # Activate "OLED Motion Pro" on C9 (using JSON)

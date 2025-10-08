@@ -24,7 +24,7 @@ Quit calibration mode, once you get the desired result:
 ```sh
 bscpylgtvcommand 192.168.1.18 end_calibration
 # set color gamut back to auto from wide
-bscpylgtvcommand 192.168.1.18 set_current_picture_settings "{\"colorGamut\": \"auto\"}"
+bscpylgtvcommand 192.168.1.18 set_settings picture "{\"colorGamut\": \"auto\"}"
 ```
 
 The last step (setting color gamut back to Auto) is important: since we only deal with white balance calibration and not touching anything 3D LUT related! `start_calibration` command auto-sets this value to `wide`, hence we have to set it back to `auto`, otherwise you will get oversaturated colors.

@@ -2359,6 +2359,18 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_WHITE_BALANCE, params)
 
+    async def normalize_settings(self, response: dict) -> dict:
+        """Parse system settings to deal with SDK inconsistencies over time"""
+
+        normalized = response
+        if 'settings' in response and 'blackLevel' in response['settings']:
+            # blackLevel changed from dict to str in WebOS 25
+            if isinstance(response['settings']['blackLevel'], dict):
+                normalized['settings']['blackLevel'] = response['settings']['blackLevel'].get('unknown', 'unknown')
+            else:
+                normalized['settings']['blackLevel'] = response['settings']['blackLevel']
+        return normalized
+
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings.
 
@@ -2442,7 +2454,8 @@ class WebOsClient:
 
         payload = {"category": category, "keys": keys}
         res = await self.request(ep.GET_SYSTEM_SETTINGS, payload=payload)
-        return self.__output_result(res, jsonOutput)
+        normalized_res = await self.normalize_settings(res)
+        return self.__output_result(normalized_res, jsonOutput)
 
     async def get_picture_settings(
         self, keys=["contrast", "backlight", "brightness", "color"], jsonOutput=False

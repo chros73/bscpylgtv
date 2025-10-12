@@ -25,9 +25,9 @@ async def runloop():
 
         await storage.set_key(cookieName, 1)
     else:
-        await client.close_app('com.palm.app.settings')
-
         await storage.set_key(cookieName, 0)
+
+        await client.close_app('com.palm.app.settings')
 
     await client.disconnect()
 

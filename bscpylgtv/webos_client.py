@@ -1097,6 +1097,48 @@ class WebOsClient:
         res = await self.request(ep.LIST_DEVICES, {"deviceType": types})
         return self.__output_result(res.get("devices"), jsonOutput)
 
+    async def set_system_settings(self, category, settings, current_app=None):
+        """Set system settings for a given category. See available settings docs for details.
+            current_app: bool (required by e.g. truMotionMode, aspectRatio setting)
+        """
+
+        params = {"category": category, "settings": settings}
+
+        if current_app is not None:
+            params["current_app"] = current_app
+
+        return await self.request(ep.SET_SYSTEM_SETTINGS, params)
+
+    async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
+        """Get system settings. See available settings docs for details."""
+
+        payload = {"category": category, "keys": keys}
+        res = await self.request(ep.GET_SYSTEM_SETTINGS, payload=payload)
+        return self.__output_result(res, jsonOutput)
+
+    async def get_picture_settings(
+        self, keys=["contrast", "backlight", "brightness", "color"], jsonOutput=False
+    ):
+        res = await self.get_system_settings("picture", keys)
+        return self.__output_result(res["settings"], jsonOutput)
+
+    async def subscribe_picture_settings(
+        self, callback, keys=["contrast", "backlight", "brightness", "color"]
+    ):
+        async def settings(payload):
+            await callback(payload.get("settings"))
+
+        payload = {"category": "picture", "keys": keys}
+        return await self.subscribe(settings, ep.GET_SYSTEM_SETTINGS, payload=payload)
+
+    async def get_configs(self, keys=["tv.model.*"], jsonOutput=False):
+        """Get config settings. See available settings docs for details."""
+
+        payload = {"configNames": keys}
+        res = await self.request(ep.GET_CONFIGS, payload=payload)
+        return self.__output_result(res, jsonOutput)
+
+    # Luna
     async def luna_request(self, uri, params):
         """luna api call."""
         # n.b. this is a hack which abuses the alert API
@@ -1124,6 +1166,21 @@ class WebOsClient:
             raise PyLGTVCmdException("Invalid alertId")
 
         return await self.request(ep.CLOSE_ALERT, payload={"alertId": alertId})
+
+    async def set_configs(self, settings):
+        """Set config settings.
+
+        Example:
+
+        "tv.model.motionProMode": "OLED Motion",
+        "tv.model.motionProMode": "OLED Motion Pro"
+        "tv.conti.supportUsedTime": true
+
+        """
+
+        params = {"configs": settings}
+
+        return await self.luna_request(ep.LUNA_SET_CONFIGS, params)
 
     async def input_button(self):
         """Input button."""
@@ -1244,7 +1301,7 @@ class WebOsClient:
 
     async def set_settings(self, category, settings, current_app=None):
         """Set settings for a given category. See available settings docs for details.
-            current_app: bool (required by truMotionMode setting)
+            current_app: bool (required by e.g. truMotionMode, aspectRatio setting)
         """
 
         params = {"category": category, "settings": settings}
@@ -1253,28 +1310,6 @@ class WebOsClient:
             params["current_app"] = current_app
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
-
-    async def get_configs(self, keys=["tv.model.*"], jsonOutput=False):
-        """Get config settings. See available settings docs for details."""
-
-        payload = {"configNames": keys}
-        res = await self.request(ep.GET_CONFIGS, payload=payload)
-        return self.__output_result(res, jsonOutput)
-
-    async def set_configs(self, settings):
-        """Set config settings.
-
-        Example:
-
-        "tv.model.motionProMode": "OLED Motion",
-        "tv.model.motionProMode": "OLED Motion Pro"
-        "tv.conti.supportUsedTime": true
-
-        """
-
-        params = {"configs": settings}
-
-        return await self.luna_request(ep.LUNA_SET_CONFIGS, params)
 
     async def show_screen_saver(self):
         return await self.luna_request(ep.LUNA_TURN_ON_SCREEN_SAVER, {})
@@ -1322,28 +1357,6 @@ class WebOsClient:
         params = {"dolbyCfgAlertReturn": action}
 
         return await self.luna_request(ep.LUNA_SET_PQ_PROPERTIES, params)
-
-    async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
-        """Get system settings. See available settings docs for details."""
-
-        payload = {"category": category, "keys": keys}
-        res = await self.request(ep.GET_SYSTEM_SETTINGS, payload=payload)
-        return self.__output_result(res, jsonOutput)
-
-    async def get_picture_settings(
-        self, keys=["contrast", "backlight", "brightness", "color"], jsonOutput=False
-    ):
-        res = await self.get_system_settings("picture", keys)
-        return self.__output_result(res["settings"], jsonOutput)
-
-    async def subscribe_picture_settings(
-        self, callback, keys=["contrast", "backlight", "brightness", "color"]
-    ):
-        async def settings(payload):
-            await callback(payload.get("settings"))
-
-        payload = {"category": "picture", "keys": keys}
-        return await self.subscribe(settings, ep.GET_SYSTEM_SETTINGS, payload=payload)
 
     # Calibration
 

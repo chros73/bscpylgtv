@@ -10,37 +10,14 @@ We are mostly interested in the `rootfs*` direcory, that's where most of the com
 
 ### Creating a new available_settings_*.md file
 
-#### Getting available Inputs:
-```sh
-grep category etc/palm/defaultSettings.json | cut -d '.' -f 1 | grep picture | cut -d '$' -f 2 | sort -u
-```
-
-#### Getting available Picture modes (presets):
-```sh
-grep category etc/palm/defaultSettings.json | grep picture | cut -d '.' -f 2 | sort -u
-```
-
-#### Getting available Dynamic range modes:
-```sh
-grep category etc/palm/defaultSettings.json | grep picture | cut -d '.' -f 4 | cut -d '"' -f 1 | sort -u
-```
-
-#### Getting available Stereoscopic modes:
-```sh
-grep category etc/palm/defaultSettings.json | grep picture | cut -d '.' -f 3 | sort -u
-```
-
-#### Getting available settings for aiPicture, Picture, Option, Other categories use the `merge_settings.py` script:
-- edit `model` and `category` variables in it
-- place and rename the `defaultSettings.json` file according to the model variable into the same directory as e.g. `defaultSettings-C2.json` 
-- run the script: `merge_settings.py`
-- it spits out the merged settings file e.g. other-C2.json
-- repeat the steps for all the other categories
-
-#### Getting available settings for System category form `getSettingsValidKeySet` section of:
-```sh
-cat usr/palm/services/com.webos.service.apiadapter/adapters/settings/valid-settings.js
-```
+#### Getting available Inputs, Presets, Dynamic ranges, settings for different categories:
+Use the `merge_settings.py` script:
+- place the following files into the same directory and rename them to include the model name, e.g. `defaultSettings-C2.json`
+    - `etc/palm/defaultSettings.json`
+    - `etc/palm/description.json`
+    - `usr/palm/services/com.webos.service.apiadapter/adapters/settings/valid-settings.js`
+- run the script: `merge_settings.py C2`
+- it spits out the merged settings MD file e.g. `available_settings_C2.md`
 
 #### Getting available Config keys:
 ```sh

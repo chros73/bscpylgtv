@@ -70,7 +70,7 @@ def get_merged_options(catsData, data):
 
     return optionData
 
-def get_merged_values(catsData, data):
+def get_merged_values(catsData, data, optionData):
     valueData = {}
     for category in catsData:
         mergedData = {}
@@ -156,7 +156,7 @@ optionData = get_merged_options(catsData, data)
 # open description file to get available values
 data = read_file(valuesFile)
 # get merged values data
-valueData = get_merged_values(catsData, data)
+valueData = get_merged_values(catsData, data, optionData)
 
 # open valid-settings file to get available system options
 data = read_file(systemFile)

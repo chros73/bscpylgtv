@@ -39,8 +39,12 @@ bscpylgtvcommand 192.168.1.18 set_input HDMI_2
 bscpylgtvcommand 192.168.1.18 get_picture_settings "[\"backlight\", \"contrast\"]" true
 # Get values of soundOutput and soundMode of sound category (using list)
 bscpylgtvcommand 192.168.1.18 get_system_settings sound "[\"soundOutput\", \"soundMode\"]" true
+# Swtich to SDR ISF Expert Dark picture preset. Same as set_current_picture_mode method, requries WebOS v9 (2024) or newer.
+bscpylgtvcommand 192.168.1.18 set_system_picture_mode expert2
 # Swtich to SDR ISF Expert Dark picture preset
 bscpylgtvcommand 192.168.1.18 set_current_picture_mode expert2
+# Set values of backlight and contrast of the current picture preset (using JSON) See available settings docs for details.
+bscpylgtvcommand 192.168.1.18 set_system_settings picture "{\"backlight\": 0, \"contrast\": 85}"
 # Set values of backlight and contrast of the current picture preset (using JSON)
 bscpylgtvcommand 192.168.1.18 set_settings picture "{\"backlight\": 0, \"contrast\": 85}"
 # Turn hdrDynamicToneMapping on in the current HDR10 picture preset (using JSON)

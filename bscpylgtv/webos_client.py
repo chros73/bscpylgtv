@@ -1109,6 +1109,10 @@ class WebOsClient:
 
         return await self.request(ep.SET_SYSTEM_SETTINGS, params)
 
+    async def set_system_picture_mode(self, pic_mode):
+        """Set current picture mode. Same as set_current_picture_mode method, requries WebOS v9 (2024) or newer."""
+        return await self.set_system_settings("picture", {"pictureMode": pic_mode})
+
     async def get_system_settings(self, category="option", keys=["audioGuidance"], jsonOutput=False):
         """Get system settings. See available settings docs for details."""
 
@@ -1202,23 +1206,9 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_DEVICE_INFO, params)
 
-    async def set_current_picture_mode(self, pic_mode, category="picture"):
-        """Set picture mode for current category, input, dynamic range and 3d mode (OLED C3).
-
-        Known picture modes are: cinema, eco, expert1, expert2, filmMaker,
-        game, normal, personalized, photo, sports, vivid, hdrCinema, hdrCinemaBright,
-        hdrExternal, hdrFilmMaker, hdrGame, hdrPersonalized, hdrStandard, hdrVivid,
-        dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon,
-        dolbyHdrGame, dolbyHdrPersonalized, dolbyHdrStandard, dolbyHdrVivid
-
-        Known categories are: picture, aiPicture
-
-        Likely not all modes are valid for all tv models.
-        """
-
-        params = {"category": category, "settings": {"pictureMode": pic_mode}}
-
-        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
+    async def set_current_picture_mode(self, pic_mode):
+        """Set current picture mode. See available settings docs for details."""
+        return await self.set_settings("picture", {"pictureMode": pic_mode})
 
     async def set_picture_mode(
         self, pic_mode, tv_input, dynamic_range="sdr", stereoscopic="2d", category="picture"

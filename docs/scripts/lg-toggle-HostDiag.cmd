@@ -12,17 +12,18 @@ call lg_constants.cmd
 
 if exist %cname% (
 	REM exit app and delete cookie
-	%mcmd% close_app com.palm.app.settings
 	del /q %cname%
+	%mcmd% close_app com.palm.app.settings
 ) else (
 	REM launch app and create cookie
-	%mcmd% launch_app_with_params com.palm.app.settings "{\"target\": \"channel\"}"
-	timeout 2
-	%mcmd% button RIGHT
-	%mcmd% button 1
-	%mcmd% button 1
-	%mcmd% button 1
-	%mcmd% button 1
-	%mcmd% button 1
+	%mcmd% launch_app_with_params com.palm.app.settings "{\"target\": \"channel\"}" , ^
+    sleep 3 , ^
+    button RIGHT , ^
+    button 1 , ^
+    button 1 , ^
+    button 1 , ^
+    button 1 , ^
+    button 1
+
 	echo 1 > %cname%
 )

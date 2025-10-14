@@ -14,7 +14,7 @@ async def runloop():
     if cookie != 1:
         await client.launch_app_with_params('com.palm.app.settings', {"target": "channel"})
 
-        await asyncio.sleep(2)
+        await asyncio.sleep(3)
 
         await client.button("RIGHT")
         await client.button(1)

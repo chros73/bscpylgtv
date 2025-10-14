@@ -12,10 +12,26 @@ async def list_keys(path_key_file):
     await storage.list_keys()
 
 async def runloop(args):
+    # parse multiple commands with parameters separated by ","
+    commands = []
+    current = []
+    for arg in args.commands:
+        if arg == ",":
+            if current:
+                commands.append(current)
+                current = []
+        else:
+            current.append(arg)
+    if current:
+        commands.append(current)
+    
     client = await WebOsClient.create(args.host, ping_interval=None, get_hello_info=args.get_hello_info, without_ssl=args.without_ssl,
         states=args.states, calibration_info=args.calibration_info, client_key=args.key, key_file_path=args.path_key_file)
     await client.connect()
-    print(await getattr(client, args.command)(*args.parameters))
+    for cmd in commands:
+        cmd_name = cmd[0]
+        cmd_args = cmd[1:]
+        print(await getattr(client, cmd_name)(*cmd_args))
     await client.disconnect()
 
 
@@ -95,15 +111,10 @@ def bscpylgtvcommand():
             "host", type=str, help="hostname or ip address of the TV to connect to"
         )
         parser.add_argument(
-            "command",
-            type=str,
-            help="command to send to the TV (can be any function of WebOsClient)",
-        )
-        parser.add_argument(
-            "parameters",
+            "commands",
             type=convert_arg,
-            nargs="*",
-            help="additional parameters to be passed to WebOsClient function call",
+            nargs="+",
+            help="commands to send to the TV (can be any function of WebOsClient)",
         )
 
         args = parser.parse_args(remainder, namespace=argsL)

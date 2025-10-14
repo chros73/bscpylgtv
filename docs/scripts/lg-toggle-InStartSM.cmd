@@ -12,15 +12,16 @@ call lg_constants.cmd
 
 if exist %cname% (
 	REM exit app and delete cookie
-	%mcmd% close_app com.webos.app.factorywin
 	del /q %cname%
+	%mcmd% close_app com.webos.app.factorywin
 ) else (
 	REM launch app and create cookie
-	%mcmd% launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"inStart\"}"
-	timeout 2
-	%mcmd% button 0
-	%mcmd% button 4
-	%mcmd% button 1
-	%mcmd% button 3
+	%mcmd% launch_app_with_params com.webos.app.factorywin "{\"id\":\"executeFactory\", \"irKey\":\"inStart\"}" , ^
+	sleep 2 , ^
+	button 0 , ^
+	button 4 , ^
+	button 1 , ^
+	button 3
+
 	echo 1 > %cname%
 )

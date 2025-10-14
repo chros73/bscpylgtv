@@ -104,6 +104,11 @@ bscpylgtvcommand 192.168.1.18 reboot_soft
 bscpylgtvcommand 192.168.1.18 power_off
 ```
 
+Multiple commands with arguments can also be passed to `bscpylgtvcommand` separated by ` , `:
+```bash
+bscpylgtvcommand 192.168.1.18 set_current_picture_mode expert2 , sleep 3 , set_settings picture "{\"backlight\": 34, \"contrast\": 85}"
+```
+
 ### Optional command line switches
 
 ```bash

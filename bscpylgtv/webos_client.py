@@ -498,6 +498,12 @@ class WebOsClient:
     def clear_state_update_callbacks(self):
         self.state_update_callbacks = []
 
+    async def print(self, message):
+        print(message)
+
+    async def sleep(self, seconds):
+        await asyncio.sleep(seconds)
+
     async def do_state_update_callbacks(self):
         callbacks = set()
         for callback in self.state_update_callbacks:

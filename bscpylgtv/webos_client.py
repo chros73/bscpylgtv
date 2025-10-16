@@ -1197,7 +1197,7 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_CONFIGS, params)
 
-    async def set_device_info(self, input, icon, label):
+    async def set_device_info_luna(self, input, icon, label):
         """Set device info. It can be used to switch between PC and non-PC modes.
 
         Inputs: "HDMI_1", "HDMI_2", "HDMI_3", "HDMI_4"

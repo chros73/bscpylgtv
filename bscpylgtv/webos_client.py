@@ -1203,21 +1203,6 @@ class WebOsClient:
 
         return await self.request(ep.CLOSE_ALERT, payload={"alertId": alertId})
 
-    async def set_configs(self, settings):
-        """Set config settings.
-
-        Example:
-
-        "tv.model.motionProMode": "OLED Motion",
-        "tv.model.motionProMode": "OLED Motion Pro"
-        "tv.conti.supportUsedTime": true
-
-        """
-
-        params = {"configs": settings}
-
-        return await self.luna_request(ep.LUNA_SET_CONFIGS, params)
-
     async def set_device_info_luna(self, input, icon, label):
         """Set device info. It can be used to switch between PC and non-PC modes.
 
@@ -1329,21 +1314,6 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
-    async def show_screen_saver(self):
-        return await self.luna_request(ep.LUNA_TURN_ON_SCREEN_SAVER, {})
-
-    async def reboot_soft(self, webos_ver=""):
-        epName = f"LUNA_REBOOT_TV_WO{webos_ver}" if webos_ver else "LUNA_REBOOT_TV"
-
-        if not hasattr(ep, epName):
-            raise ValueError(f"there's no {epName} endpoint")
-
-        return await self.luna_request(getattr(ep, epName), {"reason": "reset"})
-
-    async def eject_attached_device(self, device_id):
-        """Eject a USB device. deviceId can be obtained with get_attached_devices method."""
-        return await self.luna_request(ep.LUNA_EJECT_DEVICE, {"deviceId": device_id})
-
     async def enable_tpc_or_gsr(self, algo, enable=True):
         """Toggle Temporal Peak Control (TPC) or Global Stress Reduction (GSR) in In-Start Service Menu."""
         if algo not in ["tpc", "gsr"]:
@@ -1375,6 +1345,41 @@ class WebOsClient:
         params = {"dolbyCfgAlertReturn": action}
 
         return await self.luna_request(ep.LUNA_SET_PQ_PROPERTIES, params)
+
+    async def set_configs(self, settings):
+        """Set config settings.
+        NOTE: this method does not work anymore on newer WebOS versions.
+
+        Example:
+
+        "tv.model.motionProMode": "OLED Motion",
+        "tv.model.motionProMode": "OLED Motion Pro"
+        "tv.conti.supportUsedTime": true
+
+        """
+
+        params = {"configs": settings}
+
+        return await self.luna_request(ep.LUNA_SET_CONFIGS, params)
+
+    async def show_screen_saver(self):
+        """NOTE: this method does not work anymore on newer WebOS versions."""
+        return await self.luna_request(ep.LUNA_TURN_ON_SCREEN_SAVER, {})
+
+    async def reboot_soft(self, webos_ver=""):
+        """NOTE: this method does not work anymore on newer WebOS versions."""
+        epName = f"LUNA_REBOOT_TV_WO{webos_ver}" if webos_ver else "LUNA_REBOOT_TV"
+
+        if not hasattr(ep, epName):
+            raise ValueError(f"there's no {epName} endpoint")
+
+        return await self.luna_request(getattr(ep, epName), {"reason": "remoteKey"})
+
+    async def eject_attached_device(self, device_id):
+        """Eject a USB device. deviceId can be obtained with get_attached_devices method.
+        NOTE: this method does not work anymore on newer WebOS versions.
+        """
+        return await self.luna_request(ep.LUNA_EJECT_DEVICE, {"deviceId": device_id})
 
     # Calibration
 

@@ -76,9 +76,9 @@ bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.installation
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.tvhotkey "{\"activateType\": \"mute-hidden-action\"}"
 # Display 7x GREEN button hidden Freesync info
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.tvhotkey "{\"activateType\": \"freesync-info\"}"
-# NOTE: this does not work anymore on some models since end of 2021. Launch hidden software updater on older firmwares
+# NOTE: this method does not work anymore on newer WebOS versions since end of 2021. Launch hidden software updater on older firmwares
 bscpylgtvcommand 192.168.1.18 launch_app com.webos.app.softwareupdate
-# NOTE: this does not work anymore on some models since end of 2021. Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)
+# NOTE: this method does not work anymore on newer WebOS versions since end of 2021. Launch hidden software updater on newer firmwares, useful to downgrade (using JSON)
 bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.softwareupdate "{\"mode\": \"user\", \"flagUpdate\": true}"
 # Toggle TPC or GSR in In-Start Service Menu (on 2020 and newer models), values of algo: tpc, gsr
 bscpylgtvcommand 192.168.1.18 enable_tpc_or_gsr tpc false
@@ -92,15 +92,15 @@ bscpylgtvcommand 192.168.1.18 launch_app_with_params com.webos.app.factorywin "{
 bscpylgtvcommand 192.168.1.18 set_settings other "{\"svcMenuFlag\": false}"
 # Get config values of "tv.model" category (using list)
 bscpylgtvcommand 192.168.1.18 get_configs "[\"tv.model.*\"]" true
-# Activate "OLED Motion Pro" on C9 (using JSON)
+# NOTE: this method does not work anymore on newer WebOS versions. Activate "OLED Motion Pro" on C9 (using JSON)
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED Motion Pro\"}"
-# Display Total Power On Time under TV Information on EU models where it's hidden (using JSON)
+# NOTE: this method does not work anymore on newer WebOS versions. Display Total Power On Time under TV Information on EU models where it's hidden (using JSON)
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.conti.supportUsedTime\": true}"
 # Take screenshot
 bscpylgtvcommand 192.168.1.18 take_screenshot
 # Reboot the TV fully in case it is malfunctioning
 bscpylgtvcommand 192.168.1.18 reboot
-# Soft reboot the TV in case it is malfunctioning: reboot_soft [webos_version] (e.g. for older WebOS: reboot_soft 4)
+# NOTE: this method does not work anymore on newer WebOS versions. Soft reboot the TV in case it is malfunctioning: reboot_soft [webos_version] (e.g. for older WebOS: reboot_soft 4)
 bscpylgtvcommand 192.168.1.18 reboot_soft
 # Turn the TV off (standby)
 bscpylgtvcommand 192.168.1.18 power_off

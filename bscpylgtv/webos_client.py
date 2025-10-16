@@ -1095,6 +1095,7 @@ class WebOsClient:
         """Close web app."""
         return await self.request(ep.CLOSE_WEB_APP)
 
+    # Other
     async def get_attached_devices(self, types=[], jsonOutput=False):
         """Get attached devices. types can be:
             ["usb", "internal camera", "internal samples", "internal igallery", "dms", "internal store demo"]
@@ -1102,6 +1103,10 @@ class WebOsClient:
         types = types if type(types) is list else []
         res = await self.request(ep.LIST_DEVICES, {"deviceType": types})
         return self.__output_result(res.get("devices"), jsonOutput)
+
+    async def input_button(self):
+        """Input button."""
+        return await self.request(ep.SHOW_INPUT_PICKER, {})
 
     async def set_system_settings(self, category, settings, current_app=None):
         """Set system settings for a given category. See available settings docs for details.
@@ -1191,10 +1196,6 @@ class WebOsClient:
         params = {"configs": settings}
 
         return await self.luna_request(ep.LUNA_SET_CONFIGS, params)
-
-    async def input_button(self):
-        """Input button."""
-        return await self.luna_request(ep.LUNA_SHOW_INPUT_PICKER, {})
 
     async def set_device_info(self, input, icon, label):
         """Set device info. It can be used to switch between PC and non-PC modes.

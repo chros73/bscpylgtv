@@ -60,6 +60,7 @@ GET_CONFIGS = "config/getConfigs"
 LIST_DEVICES = "com.webos.service.attachedstoragemanager/listDevices"
 SHOW_INPUT_PICKER = "com.webos.surfacemanager/showInputPicker"
 SET_DEVICE_INFO = "com.webos.service.eim/setDeviceInfo"
+REQUEST_REBOOT = "com.webos.service.devicereset/requestReboot"
 
 # webOS TV internal Luna API endpoints
 LUNA_SET_CONFIGS = "com.webos.service.config/setConfigs"

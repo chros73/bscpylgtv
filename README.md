@@ -98,6 +98,8 @@ bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.model.motionProMode\": \"OLED M
 bscpylgtvcommand 192.168.1.18 set_configs "{\"tv.conti.supportUsedTime\": true}"
 # Take screenshot
 bscpylgtvcommand 192.168.1.18 take_screenshot
+# Reboot the TV fully in case it is malfunctioning
+bscpylgtvcommand 192.168.1.18 reboot
 # Soft reboot the TV in case it is malfunctioning: reboot_soft [webos_version] (e.g. for older WebOS: reboot_soft 4)
 bscpylgtvcommand 192.168.1.18 reboot_soft
 # Turn the TV off (standby)

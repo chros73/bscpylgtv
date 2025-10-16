@@ -1125,6 +1125,10 @@ class WebOsClient:
 
         return await self.request(ep.SET_DEVICE_INFO, params)
 
+    async def reboot(self):
+        """Reboot device fully."""
+        return await self.request(ep.REQUEST_REBOOT, {"reason": "broadcastSystemChanged"})
+
     async def set_system_settings(self, category, settings, current_app=None):
         """Set system settings for a given category. See available settings docs for details.
             current_app: bool (required by e.g. truMotionMode, aspectRatio setting)

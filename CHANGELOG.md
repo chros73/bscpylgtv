@@ -1,9 +1,35 @@
 # Change Log
 
+## [v0.5.0](https://github.com/chros73/bscpylgtv/tree/v0.5.0) (2025-10-17)
+**Implemented enhancements:**
+
+- Remove parameters from `take_screenshot` method
+- Modify `input_button` method
+- Add `set_device_info` method and rename the old one to `set_device_info_luna`
+- Add `reboot` method
+- Add `set_usb_dolby_vision_config` method to Update or Restore DoVi config from USB device
+- Add `set_settings` method that replaces `set_current_picture_settings`, `set_other_settings`, `set_option_settings` methods
+- Add `set_system_settings` method that uses the public API
+- Add `set_system_picture_mode` method that uses the public API (requires WebOS v9 (2024) or newer)
+- Add `print` method
+- Add `sleep` method
+- Add abillity to pass multiple commands with arguments to `bscpylgtvcommand`
+- Update `merge_settings.py` script and its Readme to add more settings
+- Update all the available settings docs with more settings
+- Add available settings doc of 2025 models
+- Add 2 small scripts to `docs/scripts`
+- Add new guide under docs: Setting presets
+
+**Note:**
+The following methods are deprecated and will be removed in a future version, use `set_settings` method instead:
+- `set_current_picture_settings`
+- `set_other_settings`
+- `set_option_settings`
+
 ## [v0.4.8](https://github.com/chros73/bscpylgtv/tree/v0.4.8) (2025-05-20)
 **Implemented enhancements:**
 
-- Add a new param to set_*picture_settings methods for setting truMotionMode key
+- Add a new param to `set_*picture_settings` methods for setting `truMotionMode` key
 
 ## [v0.4.7](https://github.com/chros73/bscpylgtv/tree/v0.4.7) (2025-05-19)
 **Implemented enhancements:**

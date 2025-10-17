@@ -12,12 +12,12 @@ We are mostly interested in the `rootfs*` direcory, that's where most of the com
 
 #### Getting available Inputs, Presets, Dynamic ranges, settings for different categories:
 Use the `merge_settings.py` script:
-- place the following files into the same directory and rename them to include the model name, e.g. `defaultSettings-C2.json`
+- create a new directery with the name of the model, e.g. `C2` and copy the following files into it:
     - `etc/palm/defaultSettings.json`
     - `etc/palm/description.json`
     - `usr/palm/services/com.webos.service.apiadapter/adapters/settings/valid-settings.js`
 - run the script: `merge_settings.py C2`
-- it spits out the merged settings MD file e.g. `available_settings_C2.md`
+- it spits out the merged settings MD file e.g. `C2/available_settings_C2.md`
 
 #### Getting available Config keys:
 ```sh

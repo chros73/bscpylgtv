@@ -134,10 +134,10 @@ if len(sys.argv) < 2:
 
 # variables
 model = sys.argv[1]
-settingsFile = f'defaultSettings-{model}.json'
-valuesFile = f'description-{model}.json'
-systemFile = f'valid-settings-{model}.js'
-outputFile = f'available_settings_{model}.md'
+settingsFile = f'{model}/defaultSettings.json'
+valuesFile = f'{model}/description.json'
+systemFile = f'{model}/valid-settings.js'
+outputFile = f'{model}/available_settings_{model}.md'
 excludeCats = ["dimensionInfo", "pqsettings", "psmModified", "settingsservice"]
 
 # open defaultSettings file to get available options

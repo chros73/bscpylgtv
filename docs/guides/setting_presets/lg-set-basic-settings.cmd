@@ -15,7 +15,7 @@ sleep 2 , ^
 button ENTER , ^
  ^
 print "# Set Aspect Ratio to Original, Just Scan to On" , ^
-set_system_settings aspectRatio "{\"arcPerApp\": \"original\", \"justScan\": \"on\"}" true , ^
+set_system_settings aspectRatio "{\"arcPerApp\": \"original\", \"justScan\": \"on\"}" , ^
  ^
 print "# Set UHD Deep color to 4K, Simplink/CEC to On, disable Displaying LG logo and OLED Care settings" , ^
 set_settings other "{\"uhdDeepColor\": \"4k\", \"simplinkEnable\": \"on\", \"simplinkAutoPowerOn\": \"on\", \"lgLogoDisplay\": \"off\", \"oledCareMode\": \"off\", \"oledCareRecommendation\": \"off\", \"contentRecommendation\": \"off\"}" , ^

@@ -21,7 +21,7 @@ async def runloop():
     await asyncio.sleep(1)
 
     print("\n# Set Aspect Ratio to Original, Just Scan to On")
-    await client.set_system_settings(category="aspectRatio", settings={"arcPerApp": "original", "justScan": "on"}, current_app=True)
+    await client.set_system_settings(category="aspectRatio", settings={"arcPerApp": "original", "justScan": "on"})
     await asyncio.sleep(1)
 
     print("\n# Set UHD Deep color to 4K, Simplink/CEC to On, disable Displaying LG logo and OLED Care settings")

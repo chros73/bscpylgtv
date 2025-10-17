@@ -866,7 +866,7 @@ class WebOsClient:
         await self.command("request", ep.POWER_OFF)
 
     async def power_on(self):
-        """Power on TV."""
+        """Power on TV. NOTE: this method does not work anymore on newer WebOS versions."""
         return await self.request(ep.POWER_ON)
 
     async def turn_screen_off(self, webos_ver=""):
@@ -893,11 +893,11 @@ class WebOsClient:
 
     # 3D Mode
     async def turn_3d_on(self):
-        """Turn 3D on."""
+        """Turn 3D on. NOTE: this method does not work anymore on newer WebOS versions."""
         return await self.request(ep.SET_3D_ON)
 
     async def turn_3d_off(self):
-        """Turn 3D off."""
+        """Turn 3D off. NOTE: this method does not work anymore on newer WebOS versions."""
         return await self.request(ep.SET_3D_OFF)
 
     # Inputs

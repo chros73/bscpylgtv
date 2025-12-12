@@ -24,9 +24,27 @@ async def runloop(args):
             current.append(arg)
     if current:
         commands.append(current)
-    
-    client = await WebOsClient.create(args.host, ping_interval=None, get_hello_info=args.get_hello_info, without_ssl=args.without_ssl,
-        states=args.states, calibration_info=args.calibration_info, client_key=args.key, key_file_path=args.path_key_file)
+
+    # Load custom manifest from JSON file if provided
+    try:
+        manifest = None
+        if args.manifest_file_path:
+            with open(args.manifest_file_path, 'r') as f:
+                manifest = json.load(f)
+    except Exception as e:
+        print(f"Error loading manifest file: {e}")
+
+    client = await WebOsClient.create(
+        args.host,
+        ping_interval=None,
+        get_hello_info=args.get_hello_info,
+        without_ssl=args.without_ssl,
+        states=args.states,
+        calibration_info=args.calibration_info,
+        client_key=args.key,
+        key_file_path=args.path_key_file,
+        manifest=manifest,
+    )
     await client.connect()
     for cmd in commands:
         cmd_name = cmd[0]
@@ -80,6 +98,9 @@ def bscpylgtvcommand():
         parser = argparse.ArgumentParser(add_help=False)
         parser.add_argument(
             "-k", "--key", type=str, help="optional client key"
+        )
+        parser.add_argument(
+            "-m", "--manifest_file_path", type=str, help=argparse.SUPPRESS
         )
         parser.add_argument(
             "-o", "--get_hello_info",

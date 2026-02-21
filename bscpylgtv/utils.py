@@ -25,8 +25,18 @@ async def runloop(args):
     if current:
         commands.append(current)
     
-    client = await WebOsClient.create(args.host, ping_interval=None, get_hello_info=args.get_hello_info, without_ssl=args.without_ssl,
-        states=args.states, calibration_info=args.calibration_info, client_key=args.key, key_file_path=args.path_key_file)
+    client = await WebOsClient.create(
+        ip=args.host,
+        connect_retry_attempts=args.connect_retry_attempts,
+        connect_retry_interval_ms=args.connect_retry_interval_ms,
+        ping_interval=None,
+        get_hello_info=args.get_hello_info,
+        without_ssl=args.without_ssl,
+        states=args.states,
+        calibration_info=args.calibration_info,
+        client_key=args.key,
+        key_file_path=args.path_key_file
+    )
     await client.connect()
     for cmd in commands:
         cmd_name = cmd[0]
@@ -106,6 +116,20 @@ def bscpylgtvcommand():
             dest="without_ssl",
             action="store_true",
             help="optional connecting without SSL"
+        )
+        parser.add_argument(
+            "--connect_retry_attempts",
+            dest="connect_retry_attempts",
+            type=int,
+            default=5,
+            help="optional setting the number of times the client tries to connect to host"
+        )
+        parser.add_argument(
+            "--connect_retry_interval_ms",
+            dest="connect_retry_interval_ms",
+            type=int,
+            default=200,
+            help="optional setting the time in ms between connection retries"
         )
         parser.add_argument(
             "host", type=str, help="hostname or ip address of the TV to connect to"

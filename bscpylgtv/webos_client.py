@@ -59,6 +59,8 @@ class WebOsClient:
         ip,
         key_file_path=None,
         timeout_connect=2,
+        connect_retry_attempts=5,
+        connect_retry_interval_ms=200,
         ping_interval=1,
         ping_timeout=20,
         client_key=None,
@@ -78,6 +80,8 @@ class WebOsClient:
         self.client_key = client_key
         self.command_count = 0
         self.timeout_connect = timeout_connect
+        self.connect_retry_attempts = max(1, int(connect_retry_attempts))
+        self.connect_retry_interval_ms = max(0, int(connect_retry_interval_ms))
         self.ping_interval = ping_interval
         self.ping_timeout = ping_timeout
         self.getHelloInfo = get_hello_info
@@ -172,16 +176,27 @@ class WebOsClient:
     async def connect_handler(self, res):
         ws = None
         try:
-            ws = await asyncio.wait_for(
-                websockets.connect(
-                    f"{self.proto}://{self.ip}:{self.port}",
-                    ping_interval=None,
-                    close_timeout=self.timeout_connect,
-                    max_size=None,
-                    ssl=self._ssl_context,
-                ),
-                timeout=self.timeout_connect,
-            )
+            # Try connecting up to 5 times to mitigate transient timeouts
+            for attempt in range(self.connect_retry_attempts):
+                try:
+                    ws = await asyncio.wait_for(
+                        websockets.connect(
+                            f"{self.proto}://{self.ip}:{self.port}",
+                            ping_interval=None,
+                            close_timeout=self.timeout_connect,
+                            max_size=None,
+                            ssl=self._ssl_context,
+                        ),
+                        timeout=self.timeout_connect,
+                    )
+                    break
+                except asyncio.TimeoutError as ex:
+                    if attempt < self.connect_retry_attempts - 1:
+                        await asyncio.sleep(self.connect_retry_interval_ms / 1000)
+                        print(f"Connection attempt: {attempt + 2}")
+                        continue
+                    else:
+                        raise
 
             if self.getHelloInfo:
                 # send hello
@@ -705,15 +720,27 @@ class WebOsClient:
             if self.input_connection is None:
                 sockres = await self.request(ep.INPUT_SOCKET)
                 inputsockpath = sockres.get("socketPath")
-                inputws = await asyncio.wait_for(
-                    websockets.connect(
-                        inputsockpath,
-                        ping_interval=None,
-                        close_timeout=self.timeout_connect,
-                        ssl=self._ssl_context,
-                    ),
-                    timeout=self.timeout_connect,
-                )
+                
+                # Try connecting up to 5 times to mitigate transient timeouts
+                for attempt in range(self.connect_retry_attempts):
+                    try:
+                        inputws = await asyncio.wait_for(
+                            websockets.connect(
+                                inputsockpath,
+                                ping_interval=None,
+                                close_timeout=self.timeout_connect,
+                                ssl=self._ssl_context,
+                            ),
+                            timeout=self.timeout_connect,
+                        )
+                        break
+                    except asyncio.TimeoutError as ex:
+                        if attempt < self.connect_retry_attempts - 1:
+                            await asyncio.sleep(self.connect_retry_interval_ms / 1000)
+                            print(f"Connection attempt: {attempt + 2}")
+                            continue
+                        else:
+                            raise
 
                 if self.ping_interval is not None and self.ping_timeout is not None:
                     self.handler_tasks.add(asyncio.create_task(self.ping_handler(inputws)))

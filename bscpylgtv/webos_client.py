@@ -79,7 +79,7 @@ class WebOsClient:
         self.key_file_path = key_file_path
         self.client_key = client_key
         self.command_count = 0
-        self.timeout_connect = timeout_connect
+        self.timeout_connect = max(0, int(timeout_connect))
         self.connect_retry_attempts = max(1, int(connect_retry_attempts))
         self.connect_retry_interval_ms = max(0, int(connect_retry_interval_ms))
         self.ping_interval = ping_interval

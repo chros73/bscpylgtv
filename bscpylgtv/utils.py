@@ -27,9 +27,11 @@ async def runloop(args):
     
     client = await WebOsClient.create(
         ip=args.host,
+        timeout_connect=args.timeout_connect,
         connect_retry_attempts=args.connect_retry_attempts,
         connect_retry_interval_ms=args.connect_retry_interval_ms,
         ping_interval=None,
+        volume_step_delay_ms=args.volume_step_delay_ms,
         get_hello_info=args.get_hello_info,
         without_ssl=args.without_ssl,
         states=args.states,
@@ -118,6 +120,13 @@ def bscpylgtvcommand():
             help="optional connecting without SSL"
         )
         parser.add_argument(
+            "--timeout_connect",
+            dest="timeout_connect",
+            type=int,
+            default=2,
+            help="optional setting the connection timout in seconds"
+        )
+        parser.add_argument(
             "--connect_retry_attempts",
             dest="connect_retry_attempts",
             type=int,
@@ -130,6 +139,12 @@ def bscpylgtvcommand():
             type=int,
             default=200,
             help="optional setting the time in ms between connection retries"
+        )
+        parser.add_argument(
+            "--volume_step_delay_ms",
+            dest="volume_step_delay_ms",
+            type=int,
+            help="optional setting the volume step delay in ms"
         )
         parser.add_argument(
             "host", type=str, help="hostname or ip address of the TV to connect to"

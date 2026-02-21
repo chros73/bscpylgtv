@@ -133,10 +133,14 @@ bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 button INFO
 # -l : get list of all saved client keys per ip (otionally from a specified key file)
 bscpylgtvcommand -l
 bscpylgtvcommand -l -p "D:\config\.aiopylgtv.sqlite"
+# --timeout_connect <number> : set the connection timout in seconds
+bscpylgtvcommand --timeout_connect 2 192.168.1.18 button INFO
 # --connect_retry_attempts <number> : set the number of times the client tries to connect to host
 bscpylgtvcommand --connect_retry_attempts 5 192.168.1.18 button INFO
 # --connect_retry_interval_ms <number> : set the time in ms between connection retries
 bscpylgtvcommand --connect_retry_interval_ms 200 192.168.1.18 button INFO
+# --volume_step_delay_ms <number> : set the volume step delay in ms
+bscpylgtvcommand --volume_step_delay_ms 200 192.168.1.18 volume_down
 # -v : display version number
 bscpylgtvcommand -v
 ```

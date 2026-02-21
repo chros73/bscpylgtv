@@ -130,7 +130,7 @@ def bscpylgtvcommand():
             "--connect_retry_attempts",
             dest="connect_retry_attempts",
             type=int,
-            default=5,
+            default=9,
             help="optional setting the number of times the client tries to connect to host"
         )
         parser.add_argument(

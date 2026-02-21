@@ -59,7 +59,7 @@ class WebOsClient:
         ip,
         key_file_path=None,
         timeout_connect=2,
-        connect_retry_attempts=5,
+        connect_retry_attempts=9,
         connect_retry_interval_ms=200,
         ping_interval=1,
         ping_timeout=20,

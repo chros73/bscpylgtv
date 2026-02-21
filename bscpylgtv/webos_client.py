@@ -1,6 +1,5 @@
 import asyncio
 import base64
-import copy
 import functools
 import json
 import os
@@ -17,7 +16,7 @@ import websockets
 from . import buttons as btn
 from . import endpoints as ep
 from .exceptions import PyLGTVPairException, PyLGTVCmdException, PyLGTVCmdError, PyLGTVServiceNotFoundError
-from .handshake import REGISTRATION_MESSAGE
+from .manifest import MANIFEST
 from .storage_proto import StorageProto
 from .storage_sqlitedict import StorageSqliteDict
 from .constants import LUT3D_SIZES, DV_CONFIG_TYPES
@@ -58,6 +57,7 @@ class WebOsClient:
         self,
         ip,
         key_file_path=None,
+        manifest_file_path=None,
         timeout_connect=2,
         connect_retry_attempts=9,
         connect_retry_interval_ms=200,
@@ -77,6 +77,7 @@ class WebOsClient:
         self.port = (3000 if without_ssl else 3001)
         self.proto = ('ws' if without_ssl else 'wss')
         self.key_file_path = key_file_path
+        self.manifest = MANIFEST
         self.client_key = client_key
         self.command_count = 0
         self.timeout_connect = max(0, int(timeout_connect))
@@ -127,6 +128,13 @@ class WebOsClient:
             self._ssl_context = ssl.create_default_context()
             self._ssl_context.check_hostname = False
             self._ssl_context.verify_mode = ssl.CERT_NONE
+        # Load custom manifest from JSON file if provided
+        if manifest_file_path:
+            try:
+                with open(manifest_file_path, 'r', encoding="utf-8") as f:
+                    self.manifest = json.load(f)
+            except Exception as e:
+                print(f"Error loading manifest file, using default instead: {e}")
 
     @classmethod
     async def create(cls, *args, **kwargs):
@@ -169,9 +177,16 @@ class WebOsClient:
         return self.connect_task is not None and not self.connect_task.done()
 
     def registration_msg(self):
-        handshake = copy.deepcopy(REGISTRATION_MESSAGE)
-        handshake["payload"]["client-key"] = self.client_key
-        return handshake
+        return {
+            "type": "register",
+            "id": "register_0",
+            "payload": {
+                "client-key": self.client_key,
+                "forcePairing": False,
+                "manifest": self.manifest,
+                "pairingType": "PROMPT",
+            },
+        }
 
     async def connect_handler(self, res):
         ws = None
@@ -1286,7 +1301,7 @@ class WebOsClient:
     async def set_current_picture_settings(self, settings, category="picture", current_app=None):
         """Set picture settings for current category, picture mode, input, dynamic range and 3d mode.
         See available settings docs for details.
-        NOTE: this method is deprecated and will be removed in future versions! 
+        NOTE: this method is deprecated and will be removed in future versions!
         """
 
         params = {"category": category, "settings": settings}

@@ -37,7 +37,8 @@ async def runloop(args):
         states=args.states,
         calibration_info=args.calibration_info,
         client_key=args.key,
-        key_file_path=args.path_key_file
+        key_file_path=args.path_key_file,
+        manifest_file_path=args.manifest_file_path
     )
     await client.connect()
     for cmd in commands:
@@ -92,6 +93,9 @@ def bscpylgtvcommand():
         parser = argparse.ArgumentParser(add_help=False)
         parser.add_argument(
             "-k", "--key", type=str, help="optional client key"
+        )
+        parser.add_argument(
+            "-m", "--manifest_file_path", type=str, help="optional path to manifest file"
         )
         parser.add_argument(
             "-o", "--get_hello_info",

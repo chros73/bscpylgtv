@@ -1,5 +1,19 @@
 # Change Log
 
+## [v0.5.1](https://github.com/chros73/bscpylgtv/tree/v0.5.1) (2025-02-22)
+**Implemented enhancements:**
+
+- Mitigate connection failure by retrying connecting multiple times (WebOS 25)
+    - Add optional `--connect_retry_attempts` and `--connect_retry_interval_ms` command line parameters
+- Add optional `--timeout_connect` and `--volume_step_delay_ms` command line parameters
+- Allow passing custom manifest JSON file (https://github.com/chros73/bscpylgtv/pull/5 thanks to @llamafilm)
+
+**Note:**
+The following deprecated methods are removed, use `set_settings` method instead:
+- `set_current_picture_settings`
+- `set_other_settings`
+- `set_option_settings`
+
 ## [v0.5.0](https://github.com/chros73/bscpylgtv/tree/v0.5.0) (2025-10-17)
 **Implemented enhancements:**
 

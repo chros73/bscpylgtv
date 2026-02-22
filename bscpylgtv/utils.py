@@ -95,7 +95,7 @@ def bscpylgtvcommand():
             "-k", "--key", type=str, help="optional client key"
         )
         parser.add_argument(
-            "-m", "--manifest_file_path", type=str, help="optional path to manifest file"
+            "-m", "--manifest_file_path", type=str, help="optional path to manifest JSON file"
         )
         parser.add_argument(
             "-o", "--get_hello_info",

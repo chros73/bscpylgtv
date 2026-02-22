@@ -130,18 +130,18 @@ bscpylgtvcommand -w 192.168.1.18 button INFO
 bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 button INFO
 # -p <path_to_key_file> : specifying path to key file
 bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 button INFO
-# -m <path_to_manifest_file> : specifying path to manifest file
+# -m <path_to_manifest_file> : specifying path to manifest JSON file
 bscpylgtvcommand -p "D:\config\manifest.json" 192.168.1.18 button INFO
 # -l : get list of all saved client keys per ip (otionally from a specified key file)
 bscpylgtvcommand -l
 bscpylgtvcommand -l -p "D:\config\.aiopylgtv.sqlite"
-# --timeout_connect <number> : set the connection timout in seconds
+# --timeout_connect <seconds> : set the connection timout in seconds (default: 2)
 bscpylgtvcommand --timeout_connect 2 192.168.1.18 button INFO
-# --connect_retry_attempts <number> : set the number of times the client tries to connect to host
+# --connect_retry_attempts <attempts> : set the number of times the client tries to connect to host (default: 9)
 bscpylgtvcommand --connect_retry_attempts 9 192.168.1.18 button INFO
-# --connect_retry_interval_ms <number> : set the time in ms between connection retries
+# --connect_retry_interval_ms <milliseconds> : set the time in ms between connection retries (default: 200)
 bscpylgtvcommand --connect_retry_interval_ms 200 192.168.1.18 button INFO
-# --volume_step_delay_ms <number> : set the volume step delay in ms
+# --volume_step_delay_ms <milliseconds> : set the volume step delay in ms
 bscpylgtvcommand --volume_step_delay_ms 200 192.168.1.18 volume_down
 # -v : display version number
 bscpylgtvcommand -v
@@ -521,6 +521,8 @@ A collection of calibration guides can be found under [docs directory](https://g
 
 
 ## Development of `bscpylgtv`
+
+Pull requests must target the develop branch.
 
 ### Adding available settings for newer models
 

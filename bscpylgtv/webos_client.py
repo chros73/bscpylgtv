@@ -1298,19 +1298,6 @@ class WebOsClient:
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 
-    async def set_current_picture_settings(self, settings, category="picture", current_app=None):
-        """Set picture settings for current category, picture mode, input, dynamic range and 3d mode.
-        See available settings docs for details.
-        NOTE: this method is deprecated and will be removed in future versions!
-        """
-
-        params = {"category": category, "settings": settings}
-
-        if current_app is not None:
-            params["current_app"] = current_app
-
-        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
-
     async def set_picture_settings(
         self, settings, pic_mode, tv_input, stereoscopic="2d", category="picture", current_app=None
     ):
@@ -1323,24 +1310,6 @@ class WebOsClient:
 
         if current_app is not None:
             params["current_app"] = current_app
-
-        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
-
-    async def set_other_settings(self, settings):
-        """Set other settings. See available settings docs for details.
-        NOTE: this method is deprecated and will be removed in future versions!
-        """
-
-        params = {"category": "other", "settings": settings}
-
-        return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
-
-    async def set_option_settings(self, settings):
-        """Set option settings. See available settings docs for details.
-        NOTE: this method is deprecated and will be removed in future versions!
-        """
-
-        params = {"category": "option", "settings": settings}
 
         return await self.luna_request(ep.LUNA_SET_SYSTEM_SETTINGS, params)
 

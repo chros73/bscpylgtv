@@ -45,6 +45,5 @@ class StorageSqliteDict:
         return self.db.get(key)
 
     async def list_keys(self):
-        """Display all key value pairs from storage."""
-        for key, value in self.db.iteritems():
-            print(key, value)
+        """Return all key value pairs from storage."""
+        return dict(self.db.iteritems())

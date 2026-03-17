@@ -1,6 +1,10 @@
+import logging
+
 from ._version import __version__, __version_info__
 from .exceptions import PyLGTVCmdException, PyLGTVPairException
 from .webos_client import StorageSqliteDict, WebOsClient
+
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 try:
     from .lut_tools import (

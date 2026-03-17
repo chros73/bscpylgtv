@@ -2,6 +2,7 @@ import asyncio
 import base64
 import functools
 import json
+import logging
 import os
 import ssl
 from datetime import timedelta
@@ -46,6 +47,8 @@ if np:
         unity_lut_3d,
         convert_1dlut_to_cal_format,
     )
+
+logger = logging.getLogger(__name__)
 
 SOUND_OUTPUTS_TO_DELAY_CONSECUTIVE_VOLUME_STEPS = {"external_arc"}
 
@@ -134,7 +137,7 @@ class WebOsClient:
                 with open(manifest_file_path, 'r', encoding="utf-8") as f:
                     self.manifest = json.load(f)
             except Exception as e:
-                print(f"Error loading manifest file, using default instead: {e}")
+                logger.warning("Error loading manifest file, using default instead: %s", e)
 
     @classmethod
     async def create(cls, *args, **kwargs):
@@ -208,7 +211,7 @@ class WebOsClient:
                 except asyncio.TimeoutError as ex:
                     if attempt < self.connect_retry_attempts - 1:
                         await asyncio.sleep(self.connect_retry_interval_ms / 1000)
-                        print(f"Connection attempt: {attempt + 2}")
+                        logger.info("Connection attempt: %d", attempt + 2)
                         continue
                     else:
                         raise
@@ -528,9 +531,6 @@ class WebOsClient:
     def clear_state_update_callbacks(self):
         self.state_update_callbacks = []
 
-    async def print(self, message):
-        print(message)
-
     async def sleep(self, seconds):
         await asyncio.sleep(seconds)
 
@@ -735,7 +735,7 @@ class WebOsClient:
             if self.input_connection is None:
                 sockres = await self.request(ep.INPUT_SOCKET)
                 inputsockpath = sockres.get("socketPath")
-                
+
                 # Try connecting up to 5 times to mitigate transient timeouts
                 for attempt in range(self.connect_retry_attempts):
                     try:
@@ -752,7 +752,7 @@ class WebOsClient:
                     except asyncio.TimeoutError as ex:
                         if attempt < self.connect_retry_attempts - 1:
                             await asyncio.sleep(self.connect_retry_interval_ms / 1000)
-                            print(f"Connection attempt: {attempt + 2}")
+                            logger.info("Connection attempt: %d", attempt + 2)
                             continue
                         else:
                             raise
@@ -1912,7 +1912,7 @@ class WebOsClient:
             with open(os.path.join(full_path, DV_CONFIG_FILENAME), "w", newline='\r\n') as f:
                 f.write(config)
 
-            print(f"Generated DoVi config file: {DV_CONFIG_FILENAME}")
+            logger.info("Generated DoVi config file: %s", DV_CONFIG_FILENAME)
             return True
 
         async def convert_1dlut_to_cal(self, in_file, out_file):
@@ -1933,7 +1933,7 @@ class WebOsClient:
             with open(out_file, "w", newline='\r\n') as f:
                 f.write(content)
 
-            print(f"Converted cal file: {out_file}")
+            logger.info("Converted cal file: %s", out_file)
             return True
 
         async def convert_cal_to_1dlut(self, in_file, out_file):
@@ -1960,7 +1960,7 @@ class WebOsClient:
                 ),
             )
 
-            print(f"Converted 1DLUT file: {out_file}")
+            logger.info("Converted 1DLUT file: %s", out_file)
             return result
 
         async def set_itpg_patch_window(

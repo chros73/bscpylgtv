@@ -211,7 +211,7 @@ class WebOsClient:
                 except asyncio.TimeoutError as ex:
                     if attempt < self.connect_retry_attempts - 1:
                         await asyncio.sleep(self.connect_retry_interval_ms / 1000)
-                        logger.info("Connection attempt: %d", attempt + 2)
+                        logger.debug("Connection attempt: %d", attempt + 2)
                         continue
                     else:
                         raise
@@ -752,7 +752,7 @@ class WebOsClient:
                     except asyncio.TimeoutError as ex:
                         if attempt < self.connect_retry_attempts - 1:
                             await asyncio.sleep(self.connect_retry_interval_ms / 1000)
-                            logger.info("Connection attempt: %d", attempt + 2)
+                            logger.debug("Connection attempt: %d", attempt + 2)
                             continue
                         else:
                             raise

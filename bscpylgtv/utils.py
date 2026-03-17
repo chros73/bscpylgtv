@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import logging
 
 from ._version import __version__
 from bscpylgtv import WebOsClient
@@ -26,7 +27,7 @@ async def runloop(args):
             current.append(arg)
     if current:
         commands.append(current)
-    
+
     client = await WebOsClient.create(
         ip=args.host,
         timeout_connect=args.timeout_connect,
@@ -71,6 +72,9 @@ def convert_arg(arg):
 
 
 def bscpylgtvcommand():
+    logging.basicConfig(level=logging.WARNING, format="%(message)s")
+    logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
+
     parser = argparse.ArgumentParser(description="Send command to LG WebOs TV.")
     parser.add_argument(
         "-v", "--version",

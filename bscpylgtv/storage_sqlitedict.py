@@ -1,3 +1,4 @@
+import asyncio
 import os
 from sqlitedict import SqliteDict
 
@@ -27,7 +28,9 @@ class StorageSqliteDict:
 
     async def async_init(self):
         """Create db."""
-        self.db = SqliteDict(self.db_path, self.table)
+        self.db = await asyncio.get_running_loop().run_in_executor(
+            None, SqliteDict, self.db_path, self.table
+        )
 
     async def set_key(self, key, val):
         """Set the key value pair into storage."""
@@ -35,16 +38,17 @@ class StorageSqliteDict:
             return
 
         self.db[key] = val
-        self.db.commit()
+        await asyncio.get_running_loop().run_in_executor(None, self.db.commit)
 
     async def get_key(self, key):
         """Get value of key from storage."""
         if key is None:
             return
 
-        return self.db.get(key)
+        val = await asyncio.get_running_loop().run_in_executor(None, self.db.get, key)
+        return val
 
     async def list_keys(self):
         """Display all key value pairs from storage."""
-        for key, value in self.db.iteritems():
+        for key, value in await asyncio.get_running_loop().run_in_executor(None, self.db.iteritems):
             print(key, value)

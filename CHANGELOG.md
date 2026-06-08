@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.5.2](https://github.com/chros73/bscpylgtv/tree/v0.5.2) (2025-06-08)
+**Implemented enhancements:**
+
+- Enable calibration support for 2026 OLED models
+- Update available settings doc of 2022 models
+
 ## [v0.5.1](https://github.com/chros73/bscpylgtv/tree/v0.5.1) (2025-02-22)
 **Implemented enhancements:**
 

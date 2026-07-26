@@ -1458,7 +1458,7 @@ class WebOsClient:
             npType = getattr(np, type[0])
             data_bytes = base64.b64decode(encodedData.encode())
             deserialized_bytes = np.frombuffer(data_bytes, dtype=npType)
-            data = np.reshape(deserialized_bytes, newshape=shape)
+            data = np.reshape(deserialized_bytes, shape)
             self.validateCalibrationData(data, shape, npType, None, dataCount)
 
             if filename:

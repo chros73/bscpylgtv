@@ -131,7 +131,9 @@ bscpylgtvcommand -k ef6858b2133d68854612831e3df8e495 192.168.1.18 button INFO
 # -p <path_to_key_file> : specifying path to key file
 bscpylgtvcommand -p "D:\config\.aiopylgtv.sqlite" 192.168.1.18 button INFO
 # -m <path_to_manifest_file> : specifying path to manifest JSON file
-bscpylgtvcommand -p "D:\config\manifest.json" 192.168.1.18 button INFO
+bscpylgtvcommand -m "D:\config\manifest.json" 192.168.1.18 button INFO
+# -t <pairing_type> : specifying pairing type, values: ["PROMPT", "PIN", "COMBINED", "LGSWITCH-PIN"]
+bscpylgtvcommand -t "PIN" 192.168.1.18 button INFO
 # -l : get list of all saved client keys per ip (otionally from a specified key file)
 bscpylgtvcommand -l
 bscpylgtvcommand -l -p "D:\config\.aiopylgtv.sqlite"

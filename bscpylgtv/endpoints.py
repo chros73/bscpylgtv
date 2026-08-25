@@ -58,6 +58,7 @@ SET_3D_OFF = "com.webos.service.tv.display/set3DOff"
 TURN_OFF_SCREEN_WO4 = "com.webos.service.tv.power/turnOffScreen"
 TURN_ON_SCREEN_WO4 = "com.webos.service.tv.power/turnOnScreen"
 POWER_ON = "system/turnOn"
+SET_PIN = "pairing/setPin"
 
 # webOS TV internal Luna API endpoints
 LUNA_SET_SYSTEM_SETTINGS = "com.webos.settingsservice/setSystemSettings"

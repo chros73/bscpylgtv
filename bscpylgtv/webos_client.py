@@ -19,7 +19,7 @@ from .exceptions import PyLGTVPairException, PyLGTVCmdException, PyLGTVCmdError,
 from .manifest import MANIFEST
 from .storage_proto import StorageProto
 from .storage_sqlitedict import StorageSqliteDict
-from .constants import LUT3D_SIZES, DV_CONFIG_TYPES
+from .constants import PAIRING_TYPES, LUT3D_SIZES, DV_CONFIG_TYPES
 
 if np:
     from . import cal_commands as cal
@@ -58,6 +58,7 @@ class WebOsClient:
         ip,
         key_file_path=None,
         manifest_file_path=None,
+        pairing_type=None,
         timeout_connect=2,
         connect_retry_attempts=9,
         connect_retry_interval_ms=200,
@@ -78,6 +79,7 @@ class WebOsClient:
         self.proto = ('ws' if without_ssl else 'wss')
         self.key_file_path = key_file_path
         self.manifest = MANIFEST
+        self.pairing_type = PAIRING_TYPES[0]
         self.client_key = client_key
         self.command_count = 0
         self.timeout_connect = max(0, int(timeout_connect))
@@ -135,6 +137,11 @@ class WebOsClient:
                     self.manifest = json.load(f)
             except Exception as e:
                 print(f"Error loading manifest file, using default instead: {e}")
+        if pairing_type:
+            if pairing_type in PAIRING_TYPES:
+                self.pairing_type = pairing_type
+            else:
+                print(f"Invalid pairing_type, using default instead.")
 
     @classmethod
     async def create(cls, *args, **kwargs):
@@ -184,7 +191,7 @@ class WebOsClient:
                 "client-key": self.client_key,
                 "forcePairing": False,
                 "manifest": self.manifest,
-                "pairingType": "PROMPT",
+                "pairingType": self.pairing_type,
             },
         }
 
@@ -229,7 +236,22 @@ class WebOsClient:
             raw_response = await ws.recv()
             response = json.loads(raw_response)
 
-            if (response["type"] == "response" and response["payload"]["pairingType"] == "PROMPT"):
+            if response["type"] == "response" and response["payload"]["pairingType"] in [PAIRING_TYPES[0], PAIRING_TYPES[2]]:
+                raw_response = await ws.recv()
+                response = json.loads(raw_response)
+
+                if response["type"] == "registered":
+                    self.client_key = response["payload"]["client-key"]
+                    await self.storage.set_key(self.ip, self.client_key)
+            elif response["type"] == "response" and response["payload"]["pairingType"] in [PAIRING_TYPES[1], PAIRING_TYPES[3]]:
+                pin = input("Enter PIN: ")
+                payload = {
+                    "type": "request",
+                    "id": "register_1",
+                    "uri": f"ssap://{ep.SET_PIN}",
+                    "payload": {"pin": pin}
+                }
+                await ws.send(json.dumps(payload))
                 raw_response = await ws.recv()
                 response = json.loads(raw_response)
 

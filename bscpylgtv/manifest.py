@@ -12,6 +12,7 @@ SIGNATURE = (
 MANIFEST = {
     "appVersion": "1.1",
     "manifestVersion": 1,
+    "deviceName": "bscpylgtv",
     "permissions": [
         "LAUNCH",
         "LAUNCH_WEBAPP",

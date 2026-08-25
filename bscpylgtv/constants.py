@@ -5,6 +5,8 @@ try:
 except ImportError:
     np = None
 
+PAIRING_TYPES = ("PROMPT", "PIN", "COMBINED", "LGSWITCH-PIN")
+
 LUT3D_SIZES = MappingProxyType({
     "17pt": 17,
     "33pt": 33,

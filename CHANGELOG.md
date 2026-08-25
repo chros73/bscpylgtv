@@ -1,5 +1,14 @@
 # Change Log
 
+## [v0.5.3](https://github.com/chros73/bscpylgtv/tree/v0.5.3) (2025-08-25)
+**Implemented enhancements:**
+
+- Add support for all available pairing types
+    - Add optional `-t` command line parameter
+- Add compatibility manifest for webOS26 and later versions to `docs/manifests`
+- Remove deprecated `newshape` parameter from `numpy` (https://github.com/chros73/bscpylgtv/pull/7 thanks to @mrbjarksen)
+- Add available settings doc of 2026 models
+
 ## [v0.5.2](https://github.com/chros73/bscpylgtv/tree/v0.5.2) (2025-06-08)
 **Implemented enhancements:**
 
@@ -13,6 +22,7 @@
     - Add optional `--connect_retry_attempts` and `--connect_retry_interval_ms` command line parameters
 - Add optional `--timeout_connect` and `--volume_step_delay_ms` command line parameters
 - Allow passing custom manifest JSON file (https://github.com/chros73/bscpylgtv/pull/5 thanks to @llamafilm)
+    - Add optional `-m` command line parameter
 
 **Note:**
 The following deprecated methods are removed, use `set_settings` method instead:

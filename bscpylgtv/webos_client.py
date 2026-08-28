@@ -341,7 +341,12 @@ class WebOsClient:
                 closeout.add(asyncio.create_task(self.input_connection.close()))
 
             for callback in self.state_update_callbacks:
-                closeout.add(callback(self))
+                # Wrap in a Task: asyncio.wait() rejects raw coroutines with
+                # TypeError on Python 3.11+ ("Passing coroutines is forbidden"),
+                # which aborted this closeout, killed disconnect() and left the
+                # client half-torn-down. ensure_future() also passes Tasks and
+                # Futures through unchanged.
+                closeout.add(asyncio.ensure_future(callback(self)))
 
             if closeout:
                 closeout_task = asyncio.create_task(asyncio.wait(closeout))

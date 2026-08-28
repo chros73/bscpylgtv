@@ -1,5 +1,55 @@
+import asyncio
+import sys
+
 import pytest
 from bscpylgtv import WebOsClient
+
+
+@pytest.mark.asyncio
+async def test_closeout_pattern_with_async_callback_is_wait_safe(tmp_path):
+    """connect_handler's finally block hands state-update callback results to
+    asyncio.wait(), which rejects raw coroutines with TypeError on Python
+    3.11+ — aborting the closeout and leaving the client half-torn-down.
+    Post-fix, callback results are wrapped with asyncio.ensure_future()."""
+
+    client = await WebOsClient.create(
+        "127.0.0.1",
+        key_file_path=str(tmp_path / "key.sqlite"),
+        states=[],
+        timeout_connect=1,
+    )
+
+    fired = []
+
+    async def on_update(client_arg):
+        fired.append(client_arg)
+        await asyncio.sleep(0)
+
+    # doStateUpdate is False before connect: registration only appends.
+    await client.register_state_update_callback(on_update)
+
+    # Exact closeout semantics from connect_handler's finally block
+    # (post-fix): callback results are wrapped with ensure_future().
+    closeout = set()
+    closeout.update(client.handler_tasks)
+    for callback in client.state_update_callbacks:
+        closeout.add(asyncio.ensure_future(callback(client)))
+
+    done, pending = await asyncio.wait(closeout, timeout=5)
+    assert pending == set()
+    assert len(done) == 1
+    assert fired  # the teardown fire reached the callback
+
+    if sys.version_info >= (3, 11):
+        # Pre-fix behaviour, kept as the regression guard: a raw coroutine
+        # in the closeout set crashes asyncio.wait().
+        async def raw(_client_arg):
+            pass
+
+        coro = raw(client)
+        with pytest.raises(TypeError):
+            await asyncio.wait({coro}, timeout=5)
+        coro.close()
 
 
 @pytest.mark.asyncio

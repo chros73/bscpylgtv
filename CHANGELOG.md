@@ -1,5 +1,10 @@
 # Change Log
 
+## Unreleased
+**Fixed:**
+
+- Fix teardown closeout crash on Python 3.11+ by wrapping state-update callback results for `asyncio.wait()`
+
 ## [v0.5.3](https://github.com/chros73/bscpylgtv/tree/v0.5.3) (2025-08-25)
 **Implemented enhancements:**
 

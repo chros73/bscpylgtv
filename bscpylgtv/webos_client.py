@@ -341,7 +341,7 @@ class WebOsClient:
                 closeout.add(asyncio.create_task(self.input_connection.close()))
 
             for callback in self.state_update_callbacks:
-                closeout.add(callback(self))
+                closeout.add(asyncio.create_task(callback(self)))
 
             if closeout:
                 closeout_task = asyncio.create_task(asyncio.wait(closeout))

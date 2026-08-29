@@ -1,9 +1,32 @@
+import asyncio
 import pytest
 from bscpylgtv import WebOsClient
 
 
 @pytest.mark.asyncio
 class TestWebOsClientLite():
+
+    async def test_connect_handler_invokes_state_update_callbacks_on_failed_connect(self, monkeypatch):
+        async def fake_connect(*args, **kwargs):
+            raise OSError("simulated connect failure")
+
+        monkeypatch.setattr("bscpylgtv.webos_client.websockets.connect", fake_connect)
+
+        called = []
+
+        async def on_update(client):
+            called.append(client)
+
+        client = await WebOsClient.create("x", states=["power", "software_info"], client_key="x")
+        client.connect_retry_attempts = 1
+        await client.register_state_update_callback(on_update)
+        res = asyncio.Future()
+        await client.connect_handler(res)
+
+        assert isinstance(res.exception(), OSError)
+        assert called == [client]
+
+
 
     data_calibration_support_info = [
         ( 'HE_DTV_W99H_XXXXXXXX',   {"foo": "17pt", "dovi": "2019" },   None,   2019,   0 ),

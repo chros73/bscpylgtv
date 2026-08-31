@@ -289,6 +289,8 @@ if np:
         if version == 2018:
             lms2rgb = lms2rgb_matrix(primaries)
             tlms2rgb = np.reshape(lms2rgb, [9])
+            # Stabilize the serialized matrix across platforms by rounding to 14 decimal places
+            tlms2rgb = np.round(tlms2rgb, 14)
 
             config += f"""PictureMode = {DV_PICTURE_MODES[picture_mode]}
 Tmax = {white_level:#.4f}

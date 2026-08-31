@@ -1,7 +1,11 @@
 import asyncio
+import logging
 import os
 from bscpylgtv import StorageSqliteDict, WebOsClient
 from lg_constants import DB_PATH, DB_TABLE_COOKIE, LG_IP
+
+logging.basicConfig(level=logging.WARNING, format="%(message)s")
+logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
 
 async def runloop():
     cookieName = os.path.basename(__file__)

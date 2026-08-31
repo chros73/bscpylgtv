@@ -7,8 +7,13 @@
 #     - expert2:    34 (118n), gamma 2.4, upload gamma 2.40 3D LUT for night
 
 import asyncio
+import logging
 from bscpylgtv import WebOsClient
 from lg_constants import DB_PATH, LG_IP
+
+logging.basicConfig(level=logging.WARNING, format="%(message)s")
+logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
+logger = logging.getLogger("bscpylgtv")
 
 async def runloop():
     client = await WebOsClient.create(LG_IP, ping_interval=None, states=["software_info"], key_file_path=DB_PATH)
@@ -16,7 +21,7 @@ async def runloop():
 
 
     # Set preset
-    print("\n### vivid ###")
+    logger.info("\n### vivid ###")
     await client.set_system_picture_mode(pic_mode="vivid")
     await asyncio.sleep(3)
     await client.set_system_settings(category="picture", settings={"backlight": "34", "contrast": "85", "brightness": "50", "dynamicContrast": "off", "peakBrightness": "off", "gamma": "high1", "motionEyeCare": "off", "color": "50", "tint": "0", "colorGamut": "auto", "dynamicColor": "off", "colorTemperature": "50", "sharpness": "0", "superResolution": "off", "noiseReduction": "off", "mpegNoiseReduction": "off", "smoothGradation": "off", "realCinema": "on"})
@@ -29,7 +34,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### normal ###")
+    logger.info("\n### normal ###")
     await client.set_system_picture_mode(pic_mode="normal")
     await asyncio.sleep(3)
     await client.set_system_settings(category="picture", settings={"backlight": "34", "contrast": "85", "brightness": "50", "dynamicContrast": "off", "peakBrightness": "off", "gamma": "high1", "motionEyeCare": "off", "color": "50", "tint": "0", "colorGamut": "auto", "dynamicColor": "off", "colorTemperature": "50", "sharpness": "0", "superResolution": "off", "noiseReduction": "off", "mpegNoiseReduction": "off", "smoothGradation": "off", "realCinema": "on"})
@@ -42,7 +47,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### eco ###")
+    logger.info("\n### eco ###")
     await client.set_system_picture_mode(pic_mode="eco")
     await asyncio.sleep(3)
     await client.set_system_settings(category="picture", settings={"backlight": "0", "contrast": "85", "brightness": "50", "dynamicContrast": "off", "peakBrightness": "off", "gamma": "high1", "motionEyeCare": "off", "color": "50", "tint": "0", "colorGamut": "native", "dynamicColor": "off", "colorTemperature": "50", "sharpness": "0", "superResolution": "off", "noiseReduction": "off", "mpegNoiseReduction": "off", "smoothGradation": "off", "realCinema": "on"})
@@ -55,7 +60,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### sports ###")
+    logger.info("\n### sports ###")
     await client.set_system_picture_mode(pic_mode="sports")
     await asyncio.sleep(3)
     await client.set_system_settings(category="picture", settings={"backlight": "34", "contrast": "85", "brightness": "50", "dynamicContrast": "off", "peakBrightness": "off", "gamma": "high1", "motionEyeCare": "off", "color": "50", "tint": "0", "colorGamut": "auto", "dynamicColor": "off", "colorTemperature": "50", "sharpness": "0", "superResolution": "off", "noiseReduction": "off", "mpegNoiseReduction": "off", "smoothGradation": "off", "realCinema": "on"})
@@ -68,7 +73,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### game ###")
+    logger.info("\n### game ###")
     await client.set_system_picture_mode(pic_mode="game")
     await asyncio.sleep(3)
     await client.set_system_settings(category="picture", settings={"backlight": "34", "contrast": "85", "brightness": "50", "dynamicContrast": "off", "peakBrightness": "off", "gamma": "medium", "motionEyeCare": "off", "color": "50", "tint": "0", "colorGamut": "auto", "dynamicColor": "off", "colorTemperature": "50", "sharpness": "0", "superResolution": "off", "noiseReduction": "off", "mpegNoiseReduction": "off", "smoothGradation": "off", "realCinema": "on"})
@@ -81,7 +86,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### cinema ###")
+    logger.info("\n### cinema ###")
     await client.set_system_picture_mode(pic_mode="cinema")
     await asyncio.sleep(3)
 
@@ -104,7 +109,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### filmMaker ###")
+    logger.info("\n### filmMaker ###")
     await client.set_system_picture_mode(pic_mode="filmMaker")
     await asyncio.sleep(3)
 
@@ -127,7 +132,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### expert1 ###")
+    logger.info("\n### expert1 ###")
     await client.set_system_picture_mode(pic_mode="expert1")
     await asyncio.sleep(3)
 
@@ -150,7 +155,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### expert2 ###")
+    logger.info("\n### expert2 ###")
     await client.set_system_picture_mode(pic_mode="expert2")
     await asyncio.sleep(3)
 

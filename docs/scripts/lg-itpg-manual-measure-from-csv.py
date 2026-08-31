@@ -7,10 +7,15 @@
 
 import asyncio
 import csv
+import logging
 import math
 import sys
 from bscpylgtv import WebOsClient
 from lg_constants import DB_PATH, LG_IP
+
+logging.basicConfig(level=logging.WARNING, format="%(message)s")
+logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
+logger = logging.getLogger("bscpylgtv")
 
 screen_resolution = (3840, 2160)
 bfi_interval = 0
@@ -32,7 +37,7 @@ async def get_window_properties(screen_resolution, patch_size):
     window = {'width': width, 'height': height, 'startx': startx, 'starty': starty}
 
     if patch_size < 100:
-        print(f"patch window: {window}")
+        logger.info(f"patch window: {window}")
 
     return window
 
@@ -41,7 +46,7 @@ async def display_patch(client, patch, patch_interval, bfi_interval, window_full
     """ Display full screen black window in the background and color patch window on top of it
     in the given window size. The complete new state should always be set for both."""
 
-    print(f"patch: {patch}")
+    logger.info(f"patch: {patch}")
     await client.set_itpg_patch_window(r=int(patch[1]), g=int(patch[2]), b=int(patch[3]), win_id=1, width=window_patch['width'], height=window_patch['height'], startx=window_patch['startx'], starty=window_patch['starty'])
     await client.set_itpg_patch_window(r=0, b=0, g=0, win_id=0, width=window_full['width'], height=window_full['height'], startx=window_full['startx'], starty=window_full['starty'])
 
@@ -49,7 +54,7 @@ async def display_patch(client, patch, patch_interval, bfi_interval, window_full
     await asyncio.sleep(patch_interval)
 
     if bfi_interval:
-        print("BFI")
+        logger.info("BFI")
         # Set full screen black window in the background again
         await client.set_itpg_patch_window(r=0, b=0, g=0, win_id=0, width=window_full['width'], height=window_full['height'], startx=window_full['startx'], starty=window_full['starty'])
         await client.toggle_itpg(enable=True, numOfBox=1)

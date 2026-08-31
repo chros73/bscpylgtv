@@ -145,6 +145,8 @@ bscpylgtvcommand --connect_retry_attempts 9 192.168.1.18 button INFO
 bscpylgtvcommand --connect_retry_interval_ms 200 192.168.1.18 button INFO
 # --volume_step_delay_ms <milliseconds> : set the volume step delay in ms
 bscpylgtvcommand --volume_step_delay_ms 200 192.168.1.18 volume_down
+# --log <level> : specifying log level, values: ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+bscpylgtvcommand --log "DEBUG" "D:\config\.aiopylgtv.sqlite" 192.168.1.18 button INFO
 # -v : display version number
 bscpylgtvcommand -v
 ```
@@ -153,14 +155,19 @@ bscpylgtvcommand -v
 
 ```python
 import asyncio
+import logging
 from bscpylgtv import WebOsClient
+
+logging.basicConfig(level=logging.WARNING, format="%(message)s")
+logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
+logger = logging.getLogger("bscpylgtv")
 
 async def runloop():
     client = await WebOsClient.create('192.168.1.18', ping_interval=None, states=[])
     await client.connect()
     apps = await client.get_apps_all()
     for app in apps:
-        print(app)
+        logger.info(app)
 
     await client.disconnect()
 
@@ -171,24 +178,29 @@ asyncio.run(runloop())
 
 ```python
 import asyncio
+import logging
 from bscpylgtv import WebOsClient
 
+logging.basicConfig(level=logging.WARNING, format="%(message)s")
+logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
+logger = logging.getLogger("bscpylgtv")
+
 async def on_state_change(client):
-    print("State changed:")
-    print(client.apps)
-    print(client.inputs)
-    print(client.power_state)
-    print(client.current_appId)
-    print(client.channels)
-    print(client.current_channel)
-    print(client.channel_info)
-    print(client.muted)
-    print(client.volume)
-    print(client.sound_output)
-    print(client.picture_settings)
-    print(client.system_info)
-    print(client.software_info)
-    print(client.hello_info)
+    logger.info("State changed:")
+    logger.info(client.apps)
+    logger.info(client.inputs)
+    logger.info(client.power_state)
+    logger.info(client.current_appId)
+    logger.info(client.channels)
+    logger.info(client.current_channel)
+    logger.info(client.channel_info)
+    logger.info(client.muted)
+    logger.info(client.volume)
+    logger.info(client.sound_output)
+    logger.info(client.picture_settings)
+    logger.info(client.system_info)
+    logger.info(client.software_info)
+    logger.info(client.hello_info)
 
 async def runloop():
     client = await WebOsClient.create('192.168.1.18', get_hello_info=True)
@@ -196,7 +208,7 @@ async def runloop():
     await client.connect()
 
     ret = await client.volume_up()
-    print(ret)
+    logger.info(ret)
     await asyncio.sleep(30)
 
     await client.disconnect()
@@ -209,15 +221,20 @@ asyncio.run(runloop())
 Replacing built-in `StorageSqliteDict` key storage with custom `StorageMy` class that implements [methods](https://github.com/chros73/bscpylgtv/tree/master/bscpylgtv/storage_proto.py) of `StorageProto` class:
 ```python
 import asyncio
+import logging
 from bscpylgtv import WebOsClient
 from storage_my import StorageMy
+
+logging.basicConfig(level=logging.WARNING, format="%(message)s")
+logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
+logger = logging.getLogger("bscpylgtv")
 
 async def runloop():
     storage = await StorageMy.create("file_path")
     client = await WebOsClient.create('192.168.1.18', ping_interval=None, states=[], storage=storage)
     await client.connect()
     info = await client.get_software_info()
-    print(info)
+    logger.info(info)
 
     await client.disconnect()
 
@@ -306,7 +323,11 @@ bscpylgtvcommand 192.168.1.18 end_calibration
 Same calibration session via scripting:
 ```python
 import asyncio
+import logging
 from bscpylgtv import WebOsClient
+
+logging.basicConfig(level=logging.WARNING, format="%(message)s")
+logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
 
 async def runloop():
     client = await WebOsClient.create('192.168.1.18', states=["software_info"])

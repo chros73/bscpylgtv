@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import logging
 
 from ._version import __version__
 from bscpylgtv import WebOsClient
@@ -77,6 +78,13 @@ def bscpylgtvcommand():
         version=f'%(prog)s {__version__}'
     )
     parser.add_argument(
+        "--log",
+        dest="log",
+        default="DEBUG",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="set logging level (default: DEBUG)",
+    )
+    parser.add_argument(
         "-l", "--list_client_keys",
         dest="list_client_keys",
         action="store_true",
@@ -87,6 +95,10 @@ def bscpylgtvcommand():
     )
 
     argsL, remainder = parser.parse_known_args()
+
+    log_level = getattr(logging, argsL.log.upper(), logging.DEBUG)
+    logging.basicConfig(level=logging.WARNING, format="%(message)s")
+    logging.getLogger("bscpylgtv").setLevel(log_level)
 
     if argsL.list_client_keys:
         asyncio.run(list_keys(argsL.path_key_file))

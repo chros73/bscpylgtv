@@ -3,8 +3,13 @@
 #     - dolbyHdrGame, dolbyHdrCinemaBright, dolbyHdrCinema: upload the same 1D LUT (RGB only calibration)
 
 import asyncio
+import logging
 from bscpylgtv import WebOsClient
 from lg_constants import DB_PATH, LG_IP
+
+logging.basicConfig(level=logging.WARNING, format="%(message)s")
+logging.getLogger("bscpylgtv").setLevel(logging.DEBUG)
+logger = logging.getLogger("bscpylgtv")
 
 async def runloop():
     client = await WebOsClient.create(LG_IP, ping_interval=None, states=[], key_file_path=DB_PATH)
@@ -12,7 +17,7 @@ async def runloop():
 
 
     # Set preset
-    print("\n### dolbyHdrVivid ###")
+    logger.info("\n### dolbyHdrVivid ###")
     await client.set_system_picture_mode(pic_mode="dolbyHdrVivid")
     await asyncio.sleep(3)
     await client.set_settings(category="picture", settings={"backlight": "100", "contrast": "100", "brightness": "50", "dynamicContrast": "off", "peakBrightness": "high", "gamma": "medium", "motionEyeCare": "off", "color": "50", "tint": "0", "colorGamut": "native", "dynamicColor": "off", "colorTemperature": "-50", "sharpness": "0", "superResolution": "off", "noiseReduction": "off", "mpegNoiseReduction": "off", "smoothGradation": "off", "realCinema": "on", "dolbyPrecisionDetail": "off", "whiteBalanceMethod": "22", "whiteBalanceRed": [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "whiteBalanceGreen": [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "whiteBalanceBlue": [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "whiteBalancePoint": "low", "whiteBalanceRedOffset": "-2", "whiteBalanceGreenOffset": "-2", "whiteBalanceBlueOffset": "-2", "whiteBalanceRedGain": "0", "whiteBalanceGreenGain": "0", "whiteBalanceBlueGain": "0", "whiteBalanceIre": "10"})
@@ -25,7 +30,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### dolbyHdrStandard ###")
+    logger.info("\n### dolbyHdrStandard ###")
     await client.set_system_picture_mode(pic_mode="dolbyHdrStandard")
     await asyncio.sleep(3)
     await client.set_settings(category="picture", settings={"backlight": "100", "contrast": "100", "brightness": "50", "dynamicContrast": "off", "peakBrightness": "high", "gamma": "medium", "motionEyeCare": "off", "color": "50", "tint": "0", "colorGamut": "native", "dynamicColor": "off", "colorTemperature": "-50", "sharpness": "0", "superResolution": "off", "noiseReduction": "off", "mpegNoiseReduction": "off", "smoothGradation": "off", "realCinema": "on", "dolbyPrecisionDetail": "off", "whiteBalanceMethod": "22", "whiteBalanceRed": [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "whiteBalanceGreen": [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "whiteBalanceBlue": [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "whiteBalancePoint": "low", "whiteBalanceRedOffset": "-2", "whiteBalanceGreenOffset": "-2", "whiteBalanceBlueOffset": "-2", "whiteBalanceRedGain": "0", "whiteBalanceGreenGain": "0", "whiteBalanceBlueGain": "0", "whiteBalanceIre": "10"})
@@ -38,7 +43,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### dolbyHdrGame ###")
+    logger.info("\n### dolbyHdrGame ###")
     await client.set_system_picture_mode(pic_mode="dolbyHdrGame")
     await asyncio.sleep(3)
 
@@ -59,7 +64,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### dolbyHdrCinemaBright ###")
+    logger.info("\n### dolbyHdrCinemaBright ###")
     await client.set_system_picture_mode(pic_mode="dolbyHdrCinemaBright")
     await asyncio.sleep(3)
 
@@ -80,7 +85,7 @@ async def runloop():
     await asyncio.sleep(3)
 
     # Set preset
-    print("\n### dolbyHdrCinema ###")
+    logger.info("\n### dolbyHdrCinema ###")
     await client.set_system_picture_mode(pic_mode="dolbyHdrCinema")
     await asyncio.sleep(3)
 

@@ -10,7 +10,9 @@ from bscpylgtv import WebOsClient
 async def list_keys(path_key_file):
     client = await WebOsClient.create(None, key_file_path=path_key_file)
     storage = await client.get_storage()
-    await storage.list_keys()
+    keys = await storage.list_keys()
+    for key, value in keys.items():
+        print(key, value)
 
 async def runloop(args):
     # parse multiple commands with parameters separated by ","

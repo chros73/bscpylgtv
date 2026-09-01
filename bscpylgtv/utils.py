@@ -8,6 +8,7 @@ from bscpylgtv import WebOsClient
 
 
 async def list_keys(path_key_file):
+    """Print all saved client keys from the configured key store."""
     client = await WebOsClient.create(None, key_file_path=path_key_file)
     storage = await client.get_storage()
     keys = await storage.list_keys()
@@ -15,6 +16,7 @@ async def list_keys(path_key_file):
         print(key, value)
 
 async def runloop(args):
+    """Execute a series of LG webOS commands provided via the command-line parser."""
     # parse multiple commands with parameters separated by ","
     commands = []
     current = []
@@ -53,6 +55,7 @@ async def runloop(args):
 
 
 def convert_arg(arg):
+    """Coerce a command-line string argument to a JSON-like Python value."""
     try:
         return int(arg)
     except ValueError:
@@ -73,6 +76,7 @@ def convert_arg(arg):
 
 
 def bscpylgtvcommand():
+    """Entry point for the command-line interface used to control LG webOS TVs."""
     parser = argparse.ArgumentParser(description="Send command to LG WebOs TV.")
     parser.add_argument(
         "-v", "--version",

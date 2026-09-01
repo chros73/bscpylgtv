@@ -75,7 +75,7 @@ class WebOsClient:
         without_ssl=False,
         storage: StorageProto=None,
     ):
-        """Initialize the client."""
+        """Initialize a webOS client connection and state model."""
         self.ip = ip
         self.port = (3000 if without_ssl else 3001)
         self.proto = ('ws' if without_ssl else 'wss')
@@ -147,12 +147,14 @@ class WebOsClient:
 
     @classmethod
     async def create(cls, *args, **kwargs):
+        """Construct a client instance and run its async initialization."""
         client = cls(*args, **kwargs)
         await client.async_init()
         return client
 
     async def async_init(self):
-        """Load client key from storage if it's required."""
+        """Load the stored client key and prepare the client for use.
+        @private"""
         if self.client_key is None:
             if self.storage is None:
                 self.storage = await StorageSqliteDict.create(self.key_file_path)
@@ -162,15 +164,18 @@ class WebOsClient:
             self.client_key = await self.storage.get_key(self.ip)
 
     async def get_storage(self):
+        """Return the storage backend used to persist client metadata."""
         return self.storage
 
     async def connect(self):
+        """Open the websocket connection to the TV and wait for registration to finish."""
         if not self.is_connected():
             self.connect_result = asyncio.Future()
             self.connect_task = asyncio.create_task(self.connect_handler(self.connect_result))
         return await self.connect_result
 
     async def disconnect(self):
+        """Close the active websocket connection and cancel pending work."""
         if self.is_connected():
             self.connect_task.cancel()
             try:
@@ -179,13 +184,16 @@ class WebOsClient:
                 pass
 
     def is_registered(self):
-        """Paired with the tv."""
+        """Return True when the client has a stored pairing key for the TV."""
         return self.client_key is not None
 
     def is_connected(self):
+        """Return True while the websocket connection task is still active."""
         return self.connect_task is not None and not self.connect_task.done()
 
     def registration_msg(self):
+        """Build the payload used to register the client with the TV.
+        @private"""
         return {
             "type": "register",
             "id": "register_0",
@@ -198,6 +206,7 @@ class WebOsClient:
         }
 
     async def connect_handler(self, res):
+        """@private"""
         ws = None
         try:
             # Try connecting up to 5 times to mitigate transient timeouts
@@ -381,6 +390,7 @@ class WebOsClient:
             self._picture_settings = None
 
     async def ping_handler(self, ws):
+        """@private"""
         try:
             while True:
                 await asyncio.sleep(self.ping_interval)
@@ -396,6 +406,7 @@ class WebOsClient:
             pass
 
     async def callback_handler(self, queue, callback, future):
+        """@private"""
         try:
             while True:
                 msg = await queue.get()
@@ -407,6 +418,7 @@ class WebOsClient:
             pass
 
     async def consumer_handler(self, ws):
+        """@private"""
         callback_queues = {}
         callback_tasks = {}
 
@@ -453,7 +465,8 @@ class WebOsClient:
                         pass
 
     def __output_result(self, res, jsonOutput=False, sortKeys=True, indent=4):
-        """Output result as it is (e.g. dictionary) or JSON string."""
+        """Output result as it is (e.g. dictionary) or JSON string.
+        @private"""
         if jsonOutput:
             return json.dumps(res, sort_keys=sortKeys, indent=indent)
         else:
@@ -541,24 +554,30 @@ class WebOsClient:
         return False
 
     async def register_state_update_callback(self, callback):
+        """Register state update callback."""
         self.state_update_callbacks.append(callback)
         if self.doStateUpdate:
             await callback(self)
 
     def unregister_state_update_callback(self, callback):
+        """Unregister state update callback."""
         if callback in self.state_update_callbacks:
             self.state_update_callbacks.remove(callback)
 
     def clear_state_update_callbacks(self):
+        """Clear state update callbacks."""
         self.state_update_callbacks = []
 
     async def print(self, message):
+        """Expose print function that can be used in scripts."""
         print(message)
 
     async def sleep(self, seconds):
+        """Expose sleep function that can be used in scripts."""
         await asyncio.sleep(seconds)
 
     async def do_state_update_callbacks(self):
+        """@private"""
         callbacks = set()
         for callback in self.state_update_callbacks:
             callbacks.add(callback(self))
@@ -567,6 +586,7 @@ class WebOsClient:
             await asyncio.gather(*callbacks)
 
     async def set_power_state(self, payload):
+        """@private"""
         self._power_state = {"state": payload.get("state", "Unknown")}
 
         if not self.is_on:
@@ -575,7 +595,12 @@ class WebOsClient:
             await self.do_state_update_callbacks()
 
     async def set_current_app_state(self, appId):
-        """Set current app state variable.  This function also handles subscriptions to current channel and channel list, since the current channel subscription can only succeed when Live TV is running, and the channel list subscription can only succeed after channels have been configured."""
+        """Set current app state variable.
+        This function also handles subscriptions to current channel and
+        channel list, since the current channel subscription can only
+        succeed when Live TV is running, and the channel list subscription
+        can only succeed after channels have been configured.
+        @private"""
         self._current_appId = appId
 
         if self._channels is None:
@@ -594,25 +619,32 @@ class WebOsClient:
             await self.do_state_update_callbacks()
 
     async def set_muted_state(self, muted):
+        """@private"""
         self._muted = muted
 
         if self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()
 
     async def set_volume_state(self, volume):
+        """@private"""
         self._volume = volume
 
         if self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()
 
     async def set_channels_state(self, channels):
+        """@private"""
         self._channels = channels
 
         if self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()
 
     async def set_current_channel_state(self, channel):
-        """Set current channel state variable.  This function also handles the channel info subscription, since that call may fail if channel information is not available when it's called."""
+        """Set current channel state variable.
+        This function also handles the channel info subscription,
+        since that call may fail if channel information is not available
+        when it's called.
+        @private"""
         self._current_channel = channel
 
         if self._channel_info is None:
@@ -625,12 +657,14 @@ class WebOsClient:
             await self.do_state_update_callbacks()
 
     async def set_channel_info_state(self, channel_info):
+        """@private"""
         self._channel_info = channel_info
 
         if self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()
 
     async def set_apps_state(self, payload):
+        """@private"""
         apps = payload.get("launchPoints")
         if apps is not None:
             self._apps = {}
@@ -648,6 +682,7 @@ class WebOsClient:
             await self.do_state_update_callbacks()
 
     async def set_inputs_state(self, extinputs):
+        """@private"""
         self._extinputs = {}
         for extinput in extinputs:
             self._extinputs[extinput["appId"]] = extinput
@@ -656,12 +691,14 @@ class WebOsClient:
             await self.do_state_update_callbacks()
 
     async def set_sound_output_state(self, sound_output):
+        """@private"""
         self._sound_output = sound_output
 
         if self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()
 
     async def set_picture_settings_state(self, picture_settings):
+        """@private"""
         if isinstance(self._picture_settings, dict) and isinstance(picture_settings, dict):
             self._picture_settings.update(picture_settings)
         else:
@@ -673,7 +710,8 @@ class WebOsClient:
     # low level request handling
 
     async def command(self, request_type, uri, payload=None, uid=None):
-        """Build and send a command."""
+        """Send a serialized low-level webOS command over the active websocket.
+        @private"""
         if uid is None:
             uid = self.command_count
             self.command_count += 1
@@ -694,7 +732,8 @@ class WebOsClient:
         await self.connection.send(json.dumps(message))
 
     async def request(self, uri, payload=None, cmd_type="request", uid=None):
-        """Send a request and wait for response."""
+        """Send a request to a webOS service and return the parsed payload.
+        @private"""
         if uid is None:
             uid = self.command_count
             self.command_count += 1
@@ -737,7 +776,8 @@ class WebOsClient:
         return payload
 
     async def subscribe(self, callback, uri, payload=None):
-        """Subscribe to updates."""
+        """Subscribe to a webOS service and route updates to the provided callback.
+        @private"""
         uid = self.command_count
         self.command_count += 1
         self.callbacks[uid] = callback
@@ -751,6 +791,7 @@ class WebOsClient:
             raise
 
     async def input_command(self, message):
+        """@private"""
         inputws = None
         try:
             # open additional connection needed to send button commands
@@ -932,7 +973,8 @@ class WebOsClient:
         await self.command("request", ep.POWER_OFF)
 
     async def power_on(self):
-        """Power on TV. NOTE: this method does not work anymore on newer WebOS versions."""
+        """Power on TV.
+        NOTE: this method does not work anymore on newer WebOS versions."""
         return await self.request(ep.POWER_ON)
 
     async def turn_screen_off(self, webos_ver=""):
@@ -959,11 +1001,13 @@ class WebOsClient:
 
     # 3D Mode
     async def turn_3d_on(self):
-        """Turn 3D on. NOTE: this method does not work anymore on newer WebOS versions."""
+        """Turn 3D on.
+        NOTE: this method does not work anymore on newer WebOS versions."""
         return await self.request(ep.SET_3D_ON)
 
     async def turn_3d_off(self):
-        """Turn 3D off. NOTE: this method does not work anymore on newer WebOS versions."""
+        """Turn 3D off.
+        NOTE: this method does not work anymore on newer WebOS versions."""
         return await self.request(ep.SET_3D_OFF)
 
     # Inputs
@@ -1043,7 +1087,8 @@ class WebOsClient:
         return await self._volume_step(ep.VOLUME_DOWN)
 
     async def _volume_step(self, endpoint):
-        """Volume step and conditionally sleep afterwards if a consecutive volume step shouldn't be possible to perform immediately after."""
+        """Volume step and conditionally sleep afterwards if a consecutive
+        volume step shouldn't be possible to perform immediately after."""
         if (
             self.sound_output in SOUND_OUTPUTS_TO_DELAY_CONSECUTIVE_VOLUME_STEPS
             and self._volume_step_delay is not None
@@ -1221,12 +1266,14 @@ class WebOsClient:
     async def get_picture_settings(
         self, keys=["contrast", "backlight", "brightness", "color"], jsonOutput=False
     ):
+        """Get picture settings. See available settings docs for details."""
         res = await self.get_system_settings("picture", keys)
         return self.__output_result(res["settings"], jsonOutput)
 
     async def subscribe_picture_settings(
         self, callback, keys=["contrast", "backlight", "brightness", "color"]
     ):
+        """Subscribe to changes in selected picture settings. See available settings docs for details."""
         async def settings(payload):
             await callback(payload.get("settings"))
 
@@ -1242,7 +1289,8 @@ class WebOsClient:
 
     # Luna
     async def luna_request(self, uri, params):
-        """luna api call."""
+        """luna api call.
+        @private"""
         # n.b. this is a hack which abuses the alert API
         # to call the internal luna API which is otherwise
         # not exposed through the websocket interface
@@ -1419,6 +1467,7 @@ class WebOsClient:
     # Calibration
 
     def calibration_support_info(self):
+        """"@private"""
         if not self._calibration_info:
             if self._software_info is None:
                 raise PyLGTVCmdException(f"Software info is not available, -s command line switch is required.")
@@ -1446,12 +1495,14 @@ class WebOsClient:
 
     if np:
         def check_calibration_support(self, property="lut3d", message="3D LUT Upload"):
+            """"@private"""
             self.calibration_support_info()
             if not self._calibration_info[property]:
                 model = self._software_info["model_name"]
                 raise PyLGTVCmdException(f"{message} not supported by model {model}.")
 
         def validateCalibrationData(self, data, shape, dtype, range=None, count=None):
+            """"@private"""
             if not isinstance(data, np.ndarray):
                 raise TypeError(f"data must be of type ndarray but is instead {type(data)}")
             if data.shape != shape:
@@ -1464,6 +1515,7 @@ class WebOsClient:
                 raise ValueError(f"data should have size {count} but instead has {data.size}")
 
         async def get_calibration_data(self, command, shape, filename=""):
+            """"@private"""
             if command not in [cal.GET_GAMMA_2_2_TRANSFORM, cal.GET_GAMMA_0_45_TRANSFORM, cal.GET_3BY3_GAMUT_DATA, cal.GET_HDR_3BY3_GAMUT_DATA, cal.GET_1D_LUT, cal.GET_3D_LUT]:
                 raise PyLGTVCmdException(f"Invalid Get Calibration command {command}.")
             if filename and filename.split(".")[-1].lower() not in ["1dlut", "matrix", "3dlut"]:
@@ -1496,27 +1548,34 @@ class WebOsClient:
                 return data if shape != (1, ) else data[0]
 
         async def get_1d_en_2_2(self):
+            """Get the 1D gamma-to-linear transform enable flag."""
             return await self.get_calibration_data(cal.GET_GAMMA_2_2_TRANSFORM, (1, ))
 
         async def get_1d_en_0_45(self):
+            """Get the 1D linear-to-gamma transform enable flag."""
             return await self.get_calibration_data(cal.GET_GAMMA_0_45_TRANSFORM, (1, ))
 
         async def get_3by3_gamut_data(self, filename=""):
+            """Get the 3x3 gamut matrix."""
             return await self.get_calibration_data(cal.GET_3BY3_GAMUT_DATA, (3, 3), filename)
 
         async def get_3by3_gamut_data_hdr(self, filename=""):
+            """Get the HDR 3x3 gamut matrix."""
             return await self.get_calibration_data(cal.GET_HDR_3BY3_GAMUT_DATA, (3, 3), filename)
 
         async def get_1d_lut(self, filename=""):
+            """Get 1D LUT."""
             return await self.get_calibration_data(cal.GET_1D_LUT, (3, 1024), filename)
 
         async def get_3d_lut(self, filename=""):
+            """Get 3D LUT."""
             self.check_calibration_support("lut3d", "3D LUT Upload")
             lut3d_size = self._calibration_info["lut3d"]
             lut3d_shape = (lut3d_size, lut3d_size, lut3d_size, 3)
             return await self.get_calibration_data(cal.GET_3D_LUT, lut3d_shape, filename)
 
         async def calibration_request(self, command, data=None, dataOpt=1, picture_mode=None):
+            """"@private"""
             # dataOpt: 0 - Apply, 1 - Apply and Save, 2 - Reset
             if dataOpt < 0 or dataOpt > 2:
                 raise ValueError(f"Invalid dataOpt {dataOpt}, must be between 0. and 2.")
@@ -1540,15 +1599,18 @@ class WebOsClient:
             return await self.request(ep.CALIBRATION, payload)
 
         async def start_calibration(self, picture_mode):
+            """Start calibration session."""
             if not any(picture_mode in ls for ls in [SDR_PICTURE_MODES, HDR10_PICTURE_MODES, DV_PICTURE_MODES]):
                 raise PyLGTVCmdException(f"Invalid picture_mode {picture_mode}.")
 
             return await self.calibration_request(cal.CAL_START, None, 1, picture_mode)
 
         async def end_calibration(self):
+            """End calibration session."""
             return await self.calibration_request(cal.CAL_END)
 
         async def set_ui_data(self, command, value):
+            """"@private"""
             if command not in [cal.BACKLIGHT_UI_DATA, cal.CONTRAST_UI_DATA, cal.BRIGHTNESS_UI_DATA, cal.COLOR_UI_DATA]:
                 raise PyLGTVCmdException(f"Invalid UI Data command {command}.")
             if type(value) is not int or value < 0 or value > 100:
@@ -1558,18 +1620,23 @@ class WebOsClient:
             return await self.calibration_request(command, data)
 
         async def set_oled_light(self, value=33):
+            """Set OLED light."""
             return await self.set_ui_data(cal.BACKLIGHT_UI_DATA, value)
 
         async def set_contrast(self, value=85):
+            """Set contrast."""
             return await self.set_ui_data(cal.CONTRAST_UI_DATA, value)
 
         async def set_brightness(self, value=50):
+            """Set brightness."""
             return await self.set_ui_data(cal.BRIGHTNESS_UI_DATA, value)
 
         async def set_color(self, value=50):
+            """Set color."""
             return await self.set_ui_data(cal.COLOR_UI_DATA, value)
 
         async def upload_1d_lut(self, data=None):
+            """Upload 1D LUT."""
             if type(data) is list and len(data) == 0:
                 # Reset uploaded data
                 data = np.array([], dtype=np.uint16)
@@ -1583,6 +1650,7 @@ class WebOsClient:
             return await self.calibration_request(cal.UPLOAD_1D_LUT, data, dataOpt)
 
         async def upload_1d_lut_from_file(self, filename):
+            """Upload 1D LUT from file."""
             ext = filename.split(".")[-1].lower()
             if ext == "cal":
                 lut = await asyncio.get_running_loop().run_in_executor(
@@ -1604,7 +1672,8 @@ class WebOsClient:
             return await self.upload_1d_lut(lut)
 
         async def toggle_calibration_flag(self, command, enable):
-            """Toggle various calibration flags."""
+            """Toggle various calibration flags.
+            @private"""
             if command not in [cal.ENABLE_GAMMA_2_2_TRANSFORM, cal.ENABLE_GAMMA_0_45_TRANSFORM, cal.ENABLE_1D_LUT, cal.ENABLE_3BY3_GAMUT]:
                 raise PyLGTVCmdException(f"Invalid calibration flag command {command}.")
             if not ((type(enable) is list and len(enable) == 0)
@@ -1627,6 +1696,7 @@ class WebOsClient:
             return await self.toggle_calibration_flag(cal.ENABLE_1D_LUT, enable)
 
         async def upload_3d_lut(self, command, data):
+            """"@private"""
             if command not in [cal.UPLOAD_3D_LUT_BT709, cal.UPLOAD_3D_LUT_BT2020]:
                 raise PyLGTVCmdException(f"Invalid 3D LUT Upload command {command}.")
 
@@ -1649,12 +1719,16 @@ class WebOsClient:
             return await self.calibration_request(command, data, dataOpt)
 
         async def upload_3d_lut_bt709(self, data=None):
+            """Upload or reset the BT.709 3D LUT for the active calibration profile."""
             return await self.upload_3d_lut(cal.UPLOAD_3D_LUT_BT709, data)
 
         async def upload_3d_lut_bt2020(self, data=None):
+            """Upload or reset the BT.2020 3D LUT for the active calibration profile."""
             return await self.upload_3d_lut(cal.UPLOAD_3D_LUT_BT2020, data)
 
         async def upload_3d_lut_from_file(self, command, filename):
+            """Load a 3D LUT from a .cube or .3dlut file and upload it to the TV.
+            @private"""
             ext = filename.split(".")[-1].lower()
             if ext == "cube":
                 lut = await asyncio.get_running_loop().run_in_executor(
@@ -1673,20 +1747,23 @@ class WebOsClient:
             return await self.upload_3d_lut(command, lut)
 
         async def upload_3d_lut_bt709_from_file(self, filename):
+            """Load a BT.709 3D LUT from disk and upload it to the TV."""
             return await self.upload_3d_lut_from_file(cal.UPLOAD_3D_LUT_BT709, filename)
 
         async def upload_3d_lut_bt2020_from_file(self, filename):
+            """Load a BT.2020 3D LUT from disk and upload it to the TV."""
             return await self.upload_3d_lut_from_file(cal.UPLOAD_3D_LUT_BT2020, filename)
 
         async def set_1d_en_2_2(self, enable=False):
-            """Toggle 1D LUT de-gamma flag (gamma to linear space transformation)."""
+            """Toggle the 1D gamma-to-linear transform enable flag."""
             return await self.toggle_calibration_flag(cal.ENABLE_GAMMA_2_2_TRANSFORM, enable)
 
         async def set_1d_en_0_45(self, enable=False):
-            """Toggle 1D LUT re-gamma flag (linear to gamma space transformation)."""
+            """Toggle the 1D linear-to-gamma transform enable flag."""
             return await self.toggle_calibration_flag(cal.ENABLE_GAMMA_0_45_TRANSFORM, enable)
 
         async def set_3by3_gamut_data(self, command, data):
+            """"@private"""
             if command not in [cal.BT709_3BY3_GAMUT_DATA, cal.BT2020_3BY3_GAMUT_DATA, cal.HDR_3BY3_GAMUT_DATA]:
                 raise PyLGTVCmdException(f"Invalid 3by3 Gamut Data Upload command {command}.")
 
@@ -1705,18 +1782,19 @@ class WebOsClient:
             return await self.calibration_request(command, data, dataOpt)
 
         async def set_3by3_gamut_data_bt709(self, data=None):
-            """Set BT709 slot 3x3 color matrix (color gamut space transformation in linear space)."""
+            """Upload or reset the BT.709 3x3 gamut matrix used in SDR calibration."""
             return await self.set_3by3_gamut_data(cal.BT709_3BY3_GAMUT_DATA, data)
 
         async def set_3by3_gamut_data_bt2020(self, data=None):
-            """Set BT2020 slot 3x3 color matrix (color gamut space transformation in linear space)."""
+            """Upload or reset the BT.2020 3x3 gamut matrix used in SDR calibration."""
             return await self.set_3by3_gamut_data(cal.BT2020_3BY3_GAMUT_DATA, data)
 
         async def set_3by3_gamut_data_hdr(self, data=None):
-            """Set HDR 3x3 color matrix used only in 2019 models (color gamut space transformation in linear space)."""
+            """Upload or reset the HDR 3x3 gamut matrix used on supported 2019-era models."""
             return await self.set_3by3_gamut_data(cal.HDR_3BY3_GAMUT_DATA, data)
 
         async def set_3by3_gamut_data_from_file(self, type, filename):
+            """Upload the 3x3 gamut matrix from file."""
             methodName = f'set_3by3_gamut_data_{type}'
             if not callable(getattr(self, methodName, None)):
                 raise PyLGTVCmdException(f"Invalid 3by3 gamut type {type}, must be: bt709 or bt2020 or hdr")
@@ -1735,11 +1813,11 @@ class WebOsClient:
             return await method(lut)
 
         async def set_3by3_gamut_en(self, enable=False):
-            """Toggle 3x3 color matrix flag (color gamut space transformation in linear space)."""
+            """Toggle the 3x3 gamut transform enable flag for SDR/HDR calibration."""
             return await self.toggle_calibration_flag(cal.ENABLE_3BY3_GAMUT, enable)
 
         async def set_bypass_modes_sdr(self, unity_1d_lut=False):
-            """Set SDR bypass modes."""
+            """Apply the standard SDR bypass-state calibration sequence to the TV."""
             if not isinstance(unity_1d_lut, bool):
                 raise TypeError(
                     f"unity_1d_lut should be a bool, instead got {unity_1d_lut} of type {type(unity_1d_lut)}."
@@ -1757,7 +1835,7 @@ class WebOsClient:
             return True
 
         async def reset_factory_data_sdr(self):
-            """Reset SDR factory calibration data."""
+            """Reset the SDR calibration data back to the manufacturer defaults."""
             await self.set_1d_en_2_2([])
             await self.set_1d_en_0_45([])
             await self.set_3by3_gamut_data_bt709([])
@@ -1769,7 +1847,7 @@ class WebOsClient:
             return True
 
         async def set_bypass_modes_hdr10(self, unity_3d_lut=False):
-            """Set HDR10 bypass modes."""
+            """Apply the standard HDR10 bypass-state calibration sequence to the TV."""
             if not isinstance(unity_3d_lut, bool):
                 raise TypeError(
                     f"unity_3d_lut should be a bool, instead got {unity_3d_lut} of type {type(unity_3d_lut)}."
@@ -1787,7 +1865,7 @@ class WebOsClient:
             return True
 
         async def reset_factory_data_hdr10(self, picture_mode=None, tonemap_params=False):
-            """Reset HDR10 factory calibration data."""
+            """Reset the HDR10 calibration data and optional tone-mapping settings."""
             if not isinstance(tonemap_params, bool):
                 raise TypeError(
                     f"tonemap_params should be a bool, instead got {tonemap_params} of type {type(tonemap_params)}."
@@ -1806,13 +1884,13 @@ class WebOsClient:
             return True
 
         async def set_bypass_modes_dovi(self):
-            """Set DoVi bypass modes."""
+            """Apply the standard Dolby Vision bypass-state calibration sequence."""
             await self.upload_1d_lut()
 
             return True
 
         async def reset_factory_data_dovi(self, picture_mode=None, dovi_config=False):
-            """Reset DoVi factory calibration data."""
+            """Reset the Dolby Vision calibration state and optional per-mode config."""
             if not isinstance(dovi_config, bool):
                 raise TypeError(
                     f"dovi_config should be a bool, instead got {dovi_config} of type {type(dovi_config)}."
@@ -1872,7 +1950,9 @@ class WebOsClient:
         async def set_dolby_vision_config_data(
             self, picture_mode, white_level=700.0, black_level=DV_BLACK_LEVEL, gamma=DV_GAMMA, primaries=BT2020_PRIMARIES
         ):
-            """This method is NOT recommended since it uses the calibration API,
+            """Upload a Dolby Vision config directly to the TV using the calibration API.
+            
+            NOTE: This method is NOT recommended since it uses the calibration API,
             use generate_dolby_vision_config method instead!"""
 
             if type(white_level) is list and len(white_level) == 0:
@@ -1900,7 +1980,7 @@ class WebOsClient:
             return await self.calibration_request(cal.DOLBY_CFG_DATA, data, dataOpt)
 
         async def write_dolby_vision_config_file(self, data, apply_to_all_modes=False, full_path=""):
-            """Writes Dolby Vision config file for USB upload."""
+            """Write one or more Dolby Vision config blocks to a file for USB upload."""
 
             self.check_calibration_support("dovi", "Dolby Vision Configuration Generation")
             if not isinstance(apply_to_all_modes, bool):

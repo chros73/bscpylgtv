@@ -27,7 +27,7 @@ pip install --upgrade .[with_calibration]
 Portable Windows binaries can be found under [releases](https://github.com/chros73/bscpylgtv/releases), along with [First use](https://github.com/chros73/bscpylgtv/tree/master/docs/guides/first_use.md) guide.
 
 ## Examples
-Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory, also available [buttons](https://github.com/chros73/bscpylgtv/tree/master/bscpylgtv/buttons.py).
+Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory, also available [buttons](https://github.com/chros73/bscpylgtv/tree/master/bscpylgtv/buttons.py), along with [API documnetation](https://github.com/chros73/bscpylgtv/tree/master/docs/api).
 ```bash
 # Get list of apps (including hidden ones as well)
 bscpylgtvcommand 192.168.1.18 get_apps_all true
@@ -545,7 +545,7 @@ A collection of calibration guides can be found under [docs directory](https://g
 
 ## Development of `bscpylgtv`
 
-Pull requests must target the develop branch.
+Pull requests must target the `develop` branch.
 
 ### Adding available settings for newer models
 
@@ -557,6 +557,14 @@ Only 3D LUT and Dolby Vision config related calibration commands require chip ty
 The `model_name` field of the response of `get_software_info` method contains the chip type:
 ```bash
 bscpylgtvcommand 192.168.1.18 get_software_info true
+```
+
+### Updating API documentation
+
+Required extra packages and running the command:
+```bash
+pip install pdoc
+pdoc -o docs/api bscpylgtv
 ```
 
 ### Unit testing

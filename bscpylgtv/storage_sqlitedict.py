@@ -3,6 +3,7 @@ from sqlitedict import SqliteDict
 
 class StorageSqliteDict:
     def __init__(self, db_path=None, table="unnamed"):
+        """Create a SQLite-backed key/value storage for client state."""
         KEY_FILE_NAME = ".aiopylgtv.sqlite"
         USER_HOME = "HOME"
 
@@ -21,16 +22,18 @@ class StorageSqliteDict:
 
     @classmethod
     async def create(cls, *args, **kwargs):
+        """Create and initialize a SQLite-backed storage instance."""
         storage = cls(*args, **kwargs)
         await storage.async_init()
         return storage
 
     async def async_init(self):
-        """Create db."""
+        """Open the SQLite database and prepare the storage table.
+        @private"""
         self.db = SqliteDict(self.db_path, self.table)
 
     async def set_key(self, key, val):
-        """Set the key value pair into storage."""
+        """Persist a key/value pair in the SQLite storage."""
         if key is None or val is None:
             return
 
@@ -38,12 +41,12 @@ class StorageSqliteDict:
         self.db.commit()
 
     async def get_key(self, key):
-        """Get value of key from storage."""
+        """Return the stored value for a given key."""
         if key is None:
             return
 
         return self.db.get(key)
 
     async def list_keys(self):
-        """Return all key value pairs from storage."""
+        """Return all stored key/value pairs as a dictionary."""
         return dict(self.db.iteritems())

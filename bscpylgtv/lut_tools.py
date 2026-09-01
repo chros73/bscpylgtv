@@ -9,6 +9,8 @@ if np:
 
 
     def unity_lut_1d():
+        """Create a neutral 1D LUT with equal red, green, and blue values.
+        @private"""
         lutmono = np.linspace(0.0, 32767.0, 1024, dtype=np.float64)
         lut = np.stack([lutmono] * 3, axis=0)
         lut = np.rint(lut).astype(np.uint16)
@@ -16,6 +18,8 @@ if np:
 
 
     def unity_lut_3d(n=33):
+        """Create a neutral 3D LUT with unity content across all channels.
+        @private"""
         spacing = complex(0, n)
         endpoint = 4096.0
         lut = np.mgrid[0.0:endpoint:spacing, 0.0:endpoint:spacing, 0.0:endpoint:spacing]
@@ -27,6 +31,8 @@ if np:
 
 
     def read_cube_file(filename):  # noqa: C901
+        """Read a .cube LUT file and return the normalized LUT as a NumPy array.
+        @private"""
         nheader = 0
         lut_1d_size = None
         lut_3d_size = None
@@ -124,6 +130,8 @@ if np:
 
 
     def read_cal_file(filename):
+        """Read an ArgyllCMS .cal file and decode it into the internal 1D LUT format.
+        @private"""
         with open(filename, "r") as f:
             caldata = f.readlines()
 
@@ -158,6 +166,8 @@ if np:
 
 
     def backup_lut_into_file(filename, data):
+        """Write a LUT array to disk using the project’s basic file-backup format.
+        @private"""
         if data.shape == (3,3):
             np.savetxt(filename, data, fmt='%f')
         elif data.shape == (3,1024):
@@ -175,6 +185,8 @@ if np:
 
 
     def read_3by3_gamut_file(filename):
+        """Read a 3x3 gamut matrix file and validate its expected shape and range.
+        @private"""
         lut = np.loadtxt(filename, dtype=np.float32)
         shape = (3,3)
         range = (-1024, 1024)
@@ -188,6 +200,8 @@ if np:
 
 
     def read_1dlut_file(filename):
+        """Read a 1D LUT file and validate its 3x1024 structure and bounds.
+        @private"""
         lut = np.loadtxt(filename, dtype=np.uint16)
         shape = (3,1024)
         range = (0,32767)
@@ -201,6 +215,8 @@ if np:
 
 
     def read_3dlut_file(filename, lut3d_size):
+        """Read a 3D LUT file and validate its dimensional shape and value range.
+        @private"""
         shape = (lut3d_size, lut3d_size, lut3d_size, 3)
         range = (0, 4095)
         lut = np.loadtxt(filename, dtype=np.uint16).reshape(shape)
@@ -214,6 +230,8 @@ if np:
 
 
     def lms2rgb_matrix(primaries=BT2020_PRIMARIES):
+        """Build the LMS-to-RGB conversion matrix for the supplied color primaries.
+        @private"""
         xy = np.array(primaries, dtype=np.float64)
 
         xy = np.resize(xy, (4, 2))
@@ -254,6 +272,8 @@ if np:
         primaries=BT2020_PRIMARIES,
         add_header=False
     ):
+        """Generate a single Dolby Vision config block for one picture mode.
+        @private"""
 
         if picture_mode not in DV_PICTURE_MODES:
             raise ValueError(
@@ -316,6 +336,8 @@ TPrimaries = {xr:.4f} {yr:.4f} {xg:.4f} {yg:.4f} {xb:.4f} {yb:.4f} {xw:.4f} {yw:
 
 
     def generate_dolby_vision_config(data, version=2019):
+        """Generate a complete Dolby Vision config file from a list of mode definitions.
+        @private"""
         #def write_dolby_vision_config(data, apply_to_all_modes=False, version=2019):
         if type(data) is list and len(data) > 0 and len(data) < 4:
             config=''
@@ -356,6 +378,8 @@ TPrimaries = {xr:.4f} {yr:.4f} {xg:.4f} {yg:.4f} {xb:.4f} {yb:.4f} {xw:.4f} {yw:
         raise ValueError("Invalid arguments")
 
     def convert_1dlut_to_cal_format(in_file):
+        """Convert a 1D LUT file into the ArgyllCMS CAL text format.
+        @private"""
         content = ''
         today = date.today().isoformat()
         sets = len(LUT1D_POINTS)

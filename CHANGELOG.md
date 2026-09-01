@@ -1,11 +1,24 @@
 # Change Log
 
+## [v0.5.4](https://github.com/chros73/bscpylgtv/tree/v0.5.4) (2025-09-01)
+**Implemented enhancements:**
+
+- Add logging (https://github.com/chros73/bscpylgtv/pull/6 thanks to @llamafilm)
+- Change `list_keys()` in `storage_proto` to return keys instead of printing them (https://github.com/chros73/bscpylgtv/pull/6 thanks to @llamafilm)
+- Add API documentation to `docs/api` directory
+- Add more unit tests
+
+**Fixed bugs:**
+
+- Fix teardown closeout crash on Python 3.11+ (https://github.com/chros73/bscpylgtv/pull/8 thanks to @belikh)
+- Stabilize DoVi matrix generation for 2018 models across platforms
+
 ## [v0.5.3](https://github.com/chros73/bscpylgtv/tree/v0.5.3) (2025-08-25)
 **Implemented enhancements:**
 
 - Add support for all available pairing types
     - Add optional `-t` command line parameter
-- Add compatibility manifest for webOS26 and later versions to `docs/manifests`
+- Add compatibility manifest for webOS26 and later versions to `docs/manifests` directory
 - Remove deprecated `newshape` parameter from `numpy` (https://github.com/chros73/bscpylgtv/pull/7 thanks to @mrbjarksen)
 - Add available settings doc of 2026 models
 

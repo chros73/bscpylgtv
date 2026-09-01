@@ -571,14 +571,14 @@ pdoc -o docs/api bscpylgtv
 
 Required extra packages:
 ```bash
-pip install numpy pytest pytest-asyncio pytest-mock
+pip install numpy pytest pytest-asyncio pytest-mock pytest-cov
 ```
 
 Running unit tests against the installed package:
 ```bash
-# Run all the tests in all files in tests/ directory
-pytest tests
-# Run all the tests in one file
+# Run all the tests in all files in tests/ directory with coverage
+pytest tests --cov --cov-report=html
+# Run all the tests in one file with coverage
 pytest tests/test_webos_client_lite.py
 # Run a specific test in one file
 pytest tests/test_webos_client_calibration.py -k test_set_ui_data_methods

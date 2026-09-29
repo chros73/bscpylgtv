@@ -1,4 +1,4 @@
-### OLED C2 (2022) firmware v33.31.20, webOS v10.3.0
+### OLED C2 (2022) firmware v43.21.74, webOS v11.2.0
 Available settings per category that can be used with various methods.
 
 #### Inputs
@@ -10,15 +10,17 @@ pictest, rgb, scart, smhl, usbc1, usbc2
 
 #### Picture modes (presets)
 ```
-cinema, dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrDarkAmazon, dolbyHdrGame, 
-dolbyHdrPersonalized, dolbyHdrStandard, dolbyHdrVivid, eco, expert1, expert2, filmMaker, 
-game, hdrCinema, hdrCinemaBright, hdrEco, hdrExternal, hdrFilmMaker, hdrGame, 
-hdrPersonalized, hdrStandard, hdrVivid, normal, personalized, photo, sports, vivid
+cinema, creator, dolbyHdrCinema, dolbyHdrCinemaBright, dolbyHdrCreator, 
+dolbyHdrDarkAmazon, dolbyHdrGame, dolbyHdrPersonalized, dolbyHdrStandard, dolbyHdrVivid, 
+eco, expert1, expert2, filmMaker, game, hdrCinema, hdrCinemaBright, hdrCreator, hdrEco, 
+hdrExternal, hdrFilmMaker, hdrGame, hdrPersonalized, hdrStandard, hdrVivid, normal, 
+personalized, photo, sports, vivid
 ```
 
 #### Dynamic range modes
 ```
-dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorHdrALLM
+dolbyHdr, dolbyHdrALLM, dolbyHdrFMM, hdr, hdrALLM, hdrFMM, sdr, sdrALLM, sdrFMM, 
+technicolorHdr, technicolorHdrALLM
 ```
 
 #### `""` category - available settings (used by `set_settings` method)
@@ -180,6 +182,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "customAdAllowed": false,
         "customadsAllowed": false,
         "generalTermsAllowed": false,
+        "installerTermsOnAllowed": false,
         "marketingOnAllowed": false,
         "networkAllowed": true,
         "remoteDiagAllowed": false,
@@ -323,7 +326,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 #### `"caption"` category - available settings (used by `set_settings` method)
 ```json
 {
+    "aiCaptionBackgroundEnabled": false,
     "aiCaptionEnable": "off",
+    "aiCaptionFontSize": "medium",
+    "aiCaptionPosition": "bottom",
+    "aiCaptionSubtitleLanguage": "ko",
     "caption608PosOption": "auto",
     "caption608PosX": "0",
     "caption608PosY": "0",
@@ -360,6 +367,27 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 ##### `"caption"` category - available non-trivial values
 ```json
 {
+    "aiCaptionFontSize": [
+        "small",
+        "medium",
+        "large"
+    ],
+    "aiCaptionPosition": [
+        "bottom",
+        "top",
+        "right",
+        "left"
+    ],
+    "aiCaptionSubtitleLanguage": [
+        "auto",
+        "ko",
+        "en",
+        "de",
+        "fr",
+        "pt",
+        "it",
+        "es"
+    ],
     "caption608PosOption": [
         "auto",
         "manual"
@@ -558,6 +586,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "autoscanTerrestrialDigitalOnlySearch": "off",
     "autoscanTerrestrialScan": "off",
     "autoscanTerrestrialSecamlSearch": "off",
+    "backgroundTuning": false,
     "channelMute": "on",
     "channelsInHome": "on",
     "digitalPlus": {
@@ -746,6 +775,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "primary_channel",
         "all_channel"
     ],
+    "autoscanFastscanSatellite": [
+        "on",
+        "off",
+        "instant"
+    ],
     "satelliteHDSD": [
         "HD",
         "SD"
@@ -757,42 +791,171 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 }
 ```
 
+#### `"cloud"` category - available settings (used by `set_settings` method)
+```json
+{
+    "cloudBlackStabilizer": 13,
+    "cloudBlueLight": "off",
+    "cloudDarkMode": "off",
+    "cloudEnableQuickGame": "on",
+    "cloudGameAdjustContrast": 100,
+    "cloudGameBlackLevel": 50,
+    "cloudGameColorDepth": 65,
+    "cloudGameSharpness": 25,
+    "cloudGameUIColor": "violet",
+    "cloudSupportGameOptimizer": false,
+    "cloudWhiteStabilizer": 13
+}
+```
+
+##### `"cloud"` category - available non-trivial values
+```json
+{
+    "cloudBlackStabilizer": {
+        "interval": 1,
+        "max": 20,
+        "min": 0
+    },
+    "cloudBlueLight": [
+        "off",
+        "level1",
+        "level2"
+    ],
+    "cloudDarkMode": [
+        "off",
+        "level1",
+        "level2"
+    ],
+    "cloudGameAdjustContrast": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
+    "cloudGameBlackLevel": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
+    "cloudGameColorDepth": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
+    "cloudGameSharpness": {
+        "interval": 1,
+        "max": 50,
+        "min": 0
+    },
+    "cloudGameUIColor": [
+        "violet",
+        "orange",
+        "green"
+    ],
+    "cloudWhiteStabilizer": {
+        "interval": 1,
+        "max": 20,
+        "min": 0
+    }
+}
+```
+
 #### `"commercial"` category - available settings (used by `set_settings` method)
 ```json
 {
-    "15MinAutoOff": "disable",
     "AV1En": "1",
     "AV2En": "1",
     "HPDControl": "Low",
+    "HTNGAudioOnlyDisplay": "on",
+    "HTNGOSDLock": "off",
+    "LGServiceXmlVersion": "0",
     "RGBOverlayInRF": "disable",
+    "STCLipSyncMaster": "on",
     "aMuteTime": "0",
     "acOn": "0",
     "ackMask": "0",
+    "additionalPixelRefresher": "none",
+    "adminInput": "none",
+    "airplayBrokerMode": true,
+    "airplayBrokerPreSharedKey": "",
+    "airplayBrokerPskIdentity": "",
+    "airplayBrokerQrCode": "",
+    "airplayBrokerReceiverUuid": "",
+    "airplayBrokerServerIp": "",
+    "airplayBrokerServerPort": "",
+    "airplayCaptivePortalAuthToken": "",
+    "airplayGuestWiFiSsid": "",
+    "airplayGuestWifiPassword": "",
+    "airplayOnOff": "off",
+    "alarmScreenOption": "tv",
     "alarmTimer": "disable",
     "alarmTimerHour": "0",
     "alarmTimerMinute": "0",
+    "alljoyn": "off",
+    "aodClockType": "typeA",
+    "aodDateDay": "",
+    "aodDateInfo": "",
+    "aodDateMonth": "",
+    "aodDateYear": "",
+    "aodEnterCount": 0,
+    "aodGuideEnterCount": 0,
+    "aodInfoUIVisibleCount": 0,
+    "aodInitialMode": "clock",
+    "aodLastCategory": "category-artpiece",
+    "aodMotionSelectedIdx": 1,
+    "aodMovementsTheme": "",
+    "aodSetByTheGuest": "off",
+    "aodSlideShowSpeed": 1,
+    "aodUserChangeAutoOff": false,
+    "aplAutoControl": "on",
     "appLaunchMode": "none",
+    "appLaunchModeDeviceId": "",
+    "appType": "zip",
+    "aslMode": false,
     "aspectRatioLock": "0",
+    "assistiveMenuList": [],
+    "atsc30Band": "catv",
     "atscBand": "4",
     "atscTuneMode": "1",
     "audioOutput": "7",
-    "audioPtsOffset": "1000",
+    "audioPtsOffset": "0",
     "audioSourceDp": "hdmi",
-    "audioSourceHdmi1": "hdmi",
-    "audioSourceHdmi2": "hdmi",
-    "audioVolumeWatt": "6",
+    "audioSourceHdmi1": "on",
+    "audioSourceHdmi2": "on",
+    "audioVolumeWatt": "8",
     "autoCamport": "0",
+    "autoOtaUpdate": "off",
     "autoRearAux": "0",
     "autoRearYC": "0",
     "autoSensing": "0",
     "autoServerIp": "0.0.0.0",
+    "autoServerIpv6": "0:0:0:0:0:0:0:0",
+    "autoSet": "off",
+    "autoSetDeviceId": "",
+    "autoStart": "portalMode",
+    "autoStartAppId": "off",
     "autoTeletext": "disable",
     "autoYPrPb": "0",
+    "autoplayList": {
+        "path": "",
+        "udn": ""
+    },
+    "autoplayOnOff": "off",
+    "autoplayRepeat": "true",
     "auxInputAll": "0",
     "auxInputIndependently": "0",
     "auxStatus": "0",
     "bLanPowerSaving": "3",
-    "backlighting": "202",
+    "backlighting": "255",
+    "backupHcapVideoSize": {
+        "height": 0,
+        "positionX": 0,
+        "positionY": 0,
+        "width": 0
+    },
+    "backupViaStorage": "off",
+    "backupViaStorageFile": "",
+    "backupViaStorageInterval": "30",
+    "backupViaStorageStatus": "false",
     "bandAfc": "1",
     "bannerEn": "1",
     "bckAudioM": "0",
@@ -801,25 +964,100 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "bckSetupM": "0",
     "bckSrcM": "0",
     "bckVideoM": "0",
+    "beaconMajor": "0",
+    "beaconMinor": "0",
+    "beaconMode": "off",
+    "beaconType": "iBeacon",
+    "beaconUuid": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
     "bed12": "0",
     "bigUI": "disable",
+    "blockedPortList": [],
+    "calibrationScheduleCycle": "monthly",
+    "calibrationScheduleDate": "1",
+    "calibrationScheduleDayOfWeek": "sun",
+    "calibrationScheduleHour": "0",
+    "calibrationScheduleMin": "0",
+    "calibrationScheduleSetting": "off",
+    "calibrationScreenPosition": "1",
+    "captionDvb": "off",
     "captionLock": "0",
     "care365Enable": "off",
+    "castSecurityMode": "off",
     "chNotAvble": "0",
     "chTimeSize": "0",
     "channelLock": "0",
     "channelOverride": "1",
+    "checkOnLine": "off",
     "checkScreen": "off",
     "chksumError": "1",
+    "chromecastOnOff": "on",
+    "chromecastOptIn": false,
+    "cityForWeather": "",
+    "clockType": "analog",
+    "cloudServerType": "lgCloud",
+    "cmsProxyIp": "0.0.0.0",
+    "cmsProxyMode": "off",
+    "cmsProxyPassword": "",
+    "cmsProxyPort": "0",
+    "cmsProxyUserName": "",
     "commer365CareServiceMode": "release",
-    "commercialFlag": "0",
+    "commerServiceOperater": "off",
+    "commerSyncMode": "slave",
+    "commercialFlag": "1",
     "component1En": "1",
+    "contentPlayDuration": "30",
+    "contentPlayScreenRatio": "original",
+    "contentPlayTransitionEffect": "fade",
+    "contentRotation": "off",
+    "contentSync": "off",
     "contentsRotation": "off",
     "contentsSync": "off",
+    "crestronAuthenticationOn": "off",
+    "crestronAutoDiscovery": "off",
+    "crestronControlServerIp": "0.0.0.0",
+    "crestronControlServerIpId": 5,
+    "crestronControlServerPort": "41794",
+    "crestronEnable": "off",
+    "crestronFusionMethod": "DeviceToFusion",
+    "crestronFusionPort": "443",
+    "crestronFusionURL": "",
+    "crestronMode": "off",
+    "crestronPassword": "",
+    "crestronRoomID": "",
+    "crestronSSLOn": "off",
+    "crestronUsername": "",
+    "crestronVerifyCertificate": "off",
+    "crestronXioEnable": "off",
+    "crestronXioURL": "Production",
+    "customPortalHospitalType": "launcher",
+    "customPortalHotelVideo": "off",
+    "customPortalItem": [],
+    "customPortalPipInfo": {
+        "displayOutput": {
+            "height": 1080,
+            "width": 1920,
+            "x": 0,
+            "y": 0
+        },
+        "pipMode": false
+    },
+    "customPortalType": "launcher",
+    "customPortalVertical": "hotel",
+    "dataCollectionStatus": "disagree",
+    "dateFormat": "noneDateFormat",
     "defaultArc": "2",
+    "defaultPortalBgType": "default",
+    "defaultPortalHotelName": "THE HOTEL",
+    "defaultSoundout": "off",
     "defeatXds": "0",
+    "delScreenShareBySoftAP": "0",
+    "deleteRemotePcData": "on",
     "destination_ip": "0.0.0.0",
     "destination_port": "0",
+    "detectUSBwithDZM": "false",
+    "deviceTags": "",
+    "dial": "off",
+    "digitalAudioForcedMute": "off",
     "digitalAudioInput": "hdmi",
     "digitalAudioInputList": "hdmi1",
     "direction_path": "none",
@@ -831,9 +1069,33 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "disVideoM": "0",
     "dispSourceM": "0",
     "dmrEn": "0",
-    "dpmMode": "5sec",
+    "doNotClearCP": [],
+    "domainName": "",
+    "downloadProtection": "off",
+    "dpmMode": "off",
+    "dpmWakeUpControl": "clockAndData",
+    "dstEndDayOfWeek": "0",
+    "dstEndHour": "0",
+    "dstEndMonth": "1",
+    "dstEndWeek": "1",
+    "dstMode": "off",
+    "dstStartDayOfWeek": "0",
+    "dstStartHour": "0",
+    "dstStartMonth": "1",
+    "dstStartWeek": "1",
     "dtvChannelUpdate": "Auto",
-    "dynamicBrightness": "on",
+    "dvbCBandwidth": "8m",
+    "dvbCEn": "disable",
+    "dxpProvisionCode": "000000",
+    "dxpProvisionStatus": "none",
+    "dynamicEdid": "auto",
+    "easyBrightnessMode": "off",
+    "easyBrightnessSchedule": [],
+    "eddyStoneFrame": "url",
+    "eddyStoneUrl": "",
+    "eddyStoneUrlExCode": "noneValue",
+    "eddyStoneUrlPrefix": "http",
+    "eddyStoneUuid": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
     "enAlarm": "1",
     "enAudioCol": "0",
     "enChTCol": "1",
@@ -846,18 +1108,49 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "enVchip": "1",
     "enVideoCol": "0",
     "enVideoMute": "0",
-    "enableResetToInitial": "on",
-    "enableSpeaker": "off",
+    "enableBootLogo": "on",
+    "enableDeviceDiscovery": false,
+    "enableHomeOffice": "off",
+    "enableLGApps": "on",
+    "enableLgPresenter": "disable",
+    "enableResetToInitial": "off",
+    "enableSnmp": "on",
+    "enableSpeaker": "on",
     "enableUsb": "on",
-    "extClockDimmingPowerOn": "70",
-    "extClockDimmingStandBy": "15",
+    "enableWifi": "on",
+    "enableWired": "on",
+    "energySavingMinBacklight": 0,
+    "enterpriseCode": "0",
+    "epdActivePowerMode": "alwaysOn",
+    "epdAutoRefreshPeriod": 24,
+    "epdAutoRefreshTime": 0,
+    "epdIdleScreenImage": "",
+    "epdIdleScreenMode": "last",
+    "epdPictureMode": "standard",
+    "epdWakeUpIntervalOnOff": "off",
+    "epdWakeUpIntervalTime": 180,
+    "epdWhiteWashPeriod": 72,
+    "eulaInstallation": {
+        "generalTermsAllowed": false
+    },
+    "eulaInstallationChanged": false,
+    "extClockDimmingPowerOn": "5",
+    "extClockDimmingStandBy": "2",
     "extClockDisplay": "disable",
+    "extClockProCentricInput": "RF",
     "extClockProgram": "2",
     "extClockSource": "off",
+    "extClockTvInput": "off",
     "extOffsetTTXClock": "0",
-    "extSpkVolumeControl": "3",
-    "ezmgr_update_status": "0",
+    "extSpkVolumeControl": "0",
+    "extendSyncMode": "off",
+    "externalServerEnable": false,
+    "externalServerIntervalEnable": false,
+    "externalServerIntervalPeriod": "30",
+    "externalServerUrl": "",
+    "ezmgr_update_status": 0,
     "factoryReset": "0",
+    "factoryWinStatus": "none",
     "failover": "off",
     "failoverPriority": [
         "hdmi1",
@@ -868,19 +1161,53 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "hdmi1"
     ],
     "failoverPriority1": "hdmi1",
-    "failoverPriority2": "hdmi2",
-    "failoverPriority3": "dp",
-    "failoverPriority4": "dvi",
-    "failoverPriority5": "internal_usb",
+    "failoverPriority2": "hdmi1",
+    "failoverPriority3": "hdmi1",
+    "failoverPriority4": "hdmi1",
+    "failoverPriority5": "hdmi1",
+    "failoverPriority6": "livetv",
+    "fanControlTableCL": [],
+    "fanControlTableNormal": [],
+    "fanControlTableOL": [],
+    "fanControlTablePSU": [],
+    "fanMode": "auto",
+    "fanSpeed": "1",
+    "flashSize": "8GB",
     "forAudioM": "0",
     "forChTime": "2",
     "forPtlM": "0",
     "forSetupM": "0",
     "forSrcM": "0",
     "forVideoM": "0",
+    "fotaGroup": "LGE",
+    "fqdnAddr": "http",
+    "fqdnMode": "off",
     "frntYCEn": "0",
     "functionPre": "0",
     "gostChannel": "0",
+    "greetingMessage": "WELCOME TO",
+    "grhAdminPassword": "",
+    "grhCheckOutMode": "powerCycle",
+    "grhCheckOutStatus": "none",
+    "grhDailyCheckOutHour": 0,
+    "grhDailyCheckOutMinute": 0,
+    "grhDeviceType": "slave",
+    "grhGeneralPassword": "",
+    "grhGroups": {},
+    "grhInitPassword": "",
+    "grhMasterIp": "",
+    "grhPasswordConfigured": "",
+    "grhPmsMode": "single",
+    "grhPmsOperation": "serverOff",
+    "grhRoomId": "",
+    "grhRoomInfo": {},
+    "grhRoomList": {},
+    "grhRoomNumber": "",
+    "grhSchedule": {},
+    "grhTokens": {},
+    "groupDeviceMode": "master",
+    "groupInfo": {},
+    "groupList": [],
     "guestMenuState": "0",
     "guestSetting": "disable",
     "handshkTime": "5",
@@ -889,11 +1216,22 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "hcapStartChSSID2": "0",
     "hcapStartChSSID3": "0",
     "hcapStartChSSID4": "0",
+    "hcapStartPlpId": "0",
+    "hcapStartPolarization": "0",
     "hcapStartRfChBandType": "0",
     "hcapStartRfChType": "0",
     "hcapStartRfFreqHz": "0",
     "hcapStartRfProgNumber": "0",
-    "hcapTuneCmIpProtocol": "0",
+    "hcapStartSatId": "0",
+    "hcapStartSourceIp": "0",
+    "hcapStartSymbolRate": "0",
+    "hcapVideoSize": {
+        "height": 1080,
+        "positionX": 0,
+        "positionY": 0,
+        "width": 1920
+    },
+    "hcap_rs232c_mode": "0",
     "hcapalarmStartChType": "0",
     "hcapalarmStartFreq": "0",
     "hcapalarmStartHour": "0",
@@ -905,6 +1243,8 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "hcapalarmStartMajor": "0",
     "hcapalarmStartMinor": "0",
     "hcapalarmStartMinute": "0",
+    "hcapalarmStartPlpId": "0",
+    "hcapalarmStartPolarization": "0",
     "hcapalarmStartProgramNumber": "0",
     "hcapalarmStartRfBandType": "0",
     "hcapalarmStartSSID0": "0",
@@ -912,11 +1252,54 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "hcapalarmStartSSID2": "0",
     "hcapalarmStartSSID3": "0",
     "hcapalarmStartSSID4": "0",
+    "hcapalarmStartSatId": "0",
+    "hcapalarmStartSourceIp": "0",
+    "hcapalarmStartSymbolRate": "0",
     "hcapalarmStartVolume": "0",
     "hdmi1En": "1",
     "hdmi2En": "1",
     "hdmi3En": "1",
-    "hospitalMode": "0",
+    "hdmi4En": "0",
+    "hdmiItContents": "disable",
+    "healthcareAudioControl": "tvSpeaker",
+    "healthcareHeadphoneMode": "off",
+    "hideOsd": "on",
+    "historyIntervalSeconds": "60",
+    "holidaySchedule": [],
+    "hospitalLogoName": "default_hospital.png",
+    "hospitalMode": "254",
+    "hospitalName": "THE HOSPITAL",
+    "hospitalSpeakerCodeVoltage": "lgZenith",
+    "hospitalSpeakerSelection": "tvOnly",
+    "hotelDirectoryDetails1": "",
+    "hotelDirectoryDetails2": "",
+    "hotelDirectoryDetails3": "",
+    "hotelDirectoryDetails4": "",
+    "hotelDirectoryDetails5": "",
+    "hotelDirectoryDetails6": "",
+    "hotelDirectoryDetails7": "",
+    "hotelDirectoryName1": "",
+    "hotelDirectoryName2": "",
+    "hotelDirectoryName3": "",
+    "hotelDirectoryName4": "",
+    "hotelDirectoryName5": "",
+    "hotelDirectoryName6": "",
+    "hotelDirectoryName7": "",
+    "hotelDirectoryOnOff": "off",
+    "hotelDirectoryPlayList1": [],
+    "hotelDirectoryPlayList2": [],
+    "hotelDirectoryPlayList3": [],
+    "hotelDirectoryPlayList4": [],
+    "hotelDirectoryPlayList5": [],
+    "hotelDirectoryPlayList6": [],
+    "hotelDirectoryPlayList7": [],
+    "hotelLogoName": "default.png",
+    "hotelName": "THE HOTEL",
+    "hotel_id": "",
+    "iBeaconMajor": "0",
+    "iBeaconMinor": "0",
+    "iBeaconUuid": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+    "idHTNGKeyLock": "0",
     "idHTNGSettingAudioOnlyDisplay": "off",
     "idHTNGSettingLockChannel": "disable",
     "idHTNGSettingLockInput": "disable",
@@ -930,19 +1313,108 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "idHTNGSettingWakeUpSet": "0",
     "idHTNGSettingWakeUpVolume": "off",
     "idHTNGSettingWakeUpVolumeRampUpTime": "0",
+    "idbEmailAccount": {
+        "id": "",
+        "password": "",
+        "smtpPort": "",
+        "smtpServer": "",
+        "ssl": true
+    },
+    "identifierCode": "",
+    "ieee8021xCACertFile": "",
+    "ieee8021xClientCertFile": "",
+    "ieee8021xPrivateKeyFile": "",
+    "ieee8021xUseCACert": "false",
     "igmpVersion": "2",
+    "imAcOn": "standby",
+    "imAfterAc": "off",
+    "imAnalogCc": "cc1",
+    "imAspRatioLock": "defaultAsp",
+    "imAtscBand": "sameNtsc",
+    "imAtscMode": "physical",
+    "imAutoHdmi1": "off",
+    "imAutoHdmi2": "off",
+    "imAutoHdmi3": "off",
+    "imBackLight": "userSet",
+    "imBannerMode": "full",
+    "imBedNum": 1,
+    "imChLock": "off",
+    "imChNotAvail": "off",
+    "imChOverride": "on",
+    "imClosedCap": "off",
+    "imDefAspRatio": "16x9",
+    "imDefaultAudio": "tvSpeakerOn",
+    "imDigitalCc": "off",
+    "imDisAudioM": "off",
+    "imDisChBanner": "off",
+    "imEnAlarm": "on",
+    "imEnTimer": "off",
+    "imExtControl": "none",
+    "imForceReboot": "off",
+    "imHdmi1En": "enDTV",
+    "imHdmi2En": "enDTV",
+    "imHdmi3En": "disable",
+    "imInactiveHrs": "off",
+    "imInstSeq": "9876",
+    "imIrFeedback": "on",
+    "imIrMode": "disable",
+    "imKeyLock": "off",
+    "imLightLevel": 100,
+    "imMaxBlkHrs": 12,
+    "imMaxVol": 100,
+    "imMinBacklight": 0,
+    "imMinVol": 0,
+    "imMuteDisable": "off",
+    "imMuteIcon": "off",
+    "imNoiseMute": "on",
+    "imPermBlk": "off",
+    "imRemapAux": "off",
+    "imSapMenu": "on",
+    "imSimplinkEn": "off",
+    "imSleepTimer": "on",
+    "imStartAux": "lastAux",
+    "imStartChMaj": 2,
+    "imStartChMin": 0,
+    "imStartChType": "lastChannel",
+    "imStartVol": 20,
+    "imTuningBand": "cable",
+    "imUsbPower": "powerOn",
+    "imUseLastVol": "on",
+    "imVchip": "on",
+    "imVideoMute": "normal",
+    "inputAutoSwitching": "on",
     "inputSensingAV1": "0",
     "inputSensingAll": "0",
     "inputSensingComp1": "0",
     "inputSensingHDMI1": "0",
     "inputSensingHDMI2": "0",
     "inputSensingHDMI3": "0",
+    "insertImage": "off",
     "installerSeq": "0",
     "instantOn": "disable",
     "intelligentAuto": "on",
+    "interfaceSelection": "display",
+    "ipInputType": "number",
+    "ipenvFirstEntry": true,
     "irBankEn": "0",
-    "irBlaster": "0",
+    "irBlaster": "off",
     "irMode": "0",
+    "isBrowserDebugMode": "false",
+    "ismBarColor": "red",
+    "ismBarDirection": "leftToRight",
+    "ismBarImage": "off",
+    "ismBarTransparency": "off",
+    "ismDays": [],
+    "ismEndTime": "1439",
+    "ismInversionTime": "1",
+    "ismMode": "normal",
+    "ismOrbiterRepeat": "always",
+    "ismOrbiterTime": "1",
+    "ismPeriod": 1,
+    "ismStartTime": "0",
+    "ismTime": "1",
+    "ismTimer": "immediately",
+    "ismUserImage": "photo",
     "istm_reserved_3": "0",
     "istm_reserved_4": "0",
     "istm_reserved_5": "0",
@@ -951,26 +1423,77 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "keyDefeat": "0",
     "keyLock": "0",
     "keyOperation": "off",
-    "keylessOffHours": "1",
+    "keylessOffHours": 1,
     "keylessOffHoursEn": "disable",
+    "lanDaisyChain": "off",
+    "lastForegroundAppId": "",
+    "launcherEditMode": "off",
+    "launcher_version": "",
     "ledCalibrator": "off",
+    "ledLayout": {},
+    "ledLight": "0",
+    "linkAutoServerIp": "0.0.0.0",
     "linkSecuredConnection": "on",
-    "linkServerEnable": "off",
+    "linkServerEnable": "on",
     "linkServerIP": "0.0.0.0",
     "linkServerIPv6": "0:0:0:0:0:0:0:0",
+    "linkServerIpMode": "ipAutoSetting",
     "linkServerIpType": "ipv4",
-    "linkServerPort": "3001",
+    "linkServerName": "Link Server",
+    "linkServerPort": "3333",
     "linkServerStatus": "notConnected",
+    "loadingSplashImage": "enable",
     "localAppUpgrade": "fromUsb",
+    "localAppUpgradeDeviceId": "",
+    "localeContinent": "NorthAmerica",
+    "localeCountry": "US",
     "lockModeFactory": "enable",
     "lockModeUSB": "enable",
     "log_forwarding_mode": "0",
     "log_level": "0",
     "mainSpeaker": "on",
+    "manualNetworkDnsServer": "",
+    "manualNetworkGateway": "",
+    "manualNetworkIpAddress": "",
+    "manualNetworkSubnetMask": "",
     "manualServerIp": "0.0.0.0",
+    "manualServerIpv6": "0:0:0:0:0:0:0:0",
+    "maxBacklight": "100",
     "maxBlockHour": "12",
     "maxVolume": "100",
+    "meetingRoomAgenda": "Agenda",
+    "meetingRoomAgendaEnabled": "off",
+    "meetingRoomName": "Room Name",
+    "meetingRoomNameEnabled": "on",
+    "meetingRoomNote": "Note",
+    "meetingRoomNoteEnabled": "off",
+    "meetingRoomSolutionEnabled": "off",
+    "meetingRoomTime": "on",
+    "menuAppId": "com.palm.app.settings",
+    "minBacklight": "15",
     "minVolume": "0",
+    "miracastListenMode": "off",
+    "mirrorMode": "off",
+    "mobileRemoteNotification": "on",
+    "mobileRemoteNotificationShown": "off",
+    "mobileRemoteOnOff": "off",
+    "mobileRemoteRemindLater": "",
+    "moduleHeight": "180",
+    "moduleWidth": "192",
+    "moodClock": "off",
+    "moodClockAutoOnTime": "30",
+    "moodClockDoNotDisturbEndTime": 7,
+    "moodClockDoNotDisturbSetUp": "on",
+    "moodClockDoNotDisturbStartTime": 1,
+    "moodClockScreenOffTime": "60",
+    "moodClockSetUp": "off",
+    "moodClockSkinColor": "white",
+    "moodClockSkinPosition": "middle",
+    "moodClockSkinSize": "medium",
+    "moodClockSkinTheme": "off",
+    "moodClockSkinType": 0,
+    "multiDisplayMode": "off",
+    "multiEnergySaving": "off",
     "multiOffTimerHour": [
         "0",
         "0",
@@ -1035,48 +1558,74 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "0"
     ],
     "multiRemoteKey": "disable",
+    "multiScreenMainInput": "",
+    "multiScreenMode": "off",
+    "multiScreenSub1Input": "",
+    "multiScreenSub2Input": "",
+    "multiScreenSub3Input": "",
     "muteDisable": "0",
+    "muteIconStayVisible": "off",
+    "nativeEPG": "enable",
     "naturalMode": "off",
+    "needToNotifyPtc": "false",
+    "noActivityOff": "off",
+    "noSignalBgImageDownloaded": "false",
+    "noSignalImage": "default",
+    "noSignalText": "on",
+    "ntpServerIpv4": "0.0.0.0",
+    "ntpServerIpv6": "0:0:0:0:0:0:0:0",
+    "ntpServerMode": "auto",
+    "ntpServerType": "ipv4",
+    "ntpServerUrl": "",
     "ntscScancard": "0",
+    "ocfRunning": "off",
     "offTimerCount": 0,
-    "offTimerSchedule": [
-        "0",
-        "0",
-        "0",
-        "0",
-        "0",
-        "0",
-        "0"
-    ],
+    "offTimerSchedule": [],
+    "officeMeetingMode": "off",
     "oldOcv": "0",
+    "onOffTimeSchedule": [],
+    "onTimerAppIdPTC": "com.webos.app.livetv",
+    "onTimerChannelPTC": "noChannel",
     "onTimerCount": 0,
     "onTimerOperation": "once",
-    "onTimerSchedule": [
-        "0",
-        "0",
-        "0",
-        "0",
-        "0",
-        "0",
-        "0"
-    ],
+    "onTimerSchedule": [],
+    "onTimerSourcePTC": "dtv",
     "oneChannelMap": "enable",
+    "onequicksharePreload": "false",
+    "opsConnection": "false",
+    "opsPowerControl": "SyncOnOff",
+    "opsReady": "off",
     "osdEn": "1",
     "osdPortraitMode": "off",
+    "osdPosition": "leftTop",
     "panelCom": "0",
+    "panelDelay": "8",
     "panelHandshake": "0",
     "panelMaxVol": "0",
     "panelMinVol": "0",
+    "panelOffset": "0",
     "panelStartVol": "0",
     "panelTunerOnDelay": "0",
     "panelType": "0",
     "panelVolRepeat": "0",
+    "pbrmEn": "false",
+    "pcHSize": "0",
     "pcrOffset": "0",
     "permanentBlk": "0",
     "permanentBlock": "0",
     "pictureId": "0",
+    "pillowMode": "off",
+    "pincodeBlockedTime": 0,
+    "pivotMode": "off",
+    "playViaUrl": "",
+    "playViaUrlMode": "off",
+    "playingContents": "",
+    "pmMode": "powerOff",
+    "pmModeTvSignage": "powerOff",
     "pokeEnable": "0",
     "pollRate": "94",
+    "portalMode": "defaultPortal",
+    "powerLight": "on",
     "powerManage": "0",
     "powerOnDelay": "0",
     "powerOnOffHistoroy": [
@@ -1102,8 +1651,31 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "",
         ""
     ],
-    "powerOnOffHistory": "",
+    "powerOnOffHistory": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ],
     "ppvChannelMode": "0",
+    "preChannelIndex": -1,
     "preLoadedApp": {
         "App1": {
             "order": 0,
@@ -1226,7 +1798,12 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
             "value": 0
         }
     },
+    "presentationTimerEnabled": "on",
     "proCentricClockUpdate": "0",
+    "proCentricServerType": "onPremises",
+    "proInstallationCode": "",
+    "proServerStatus": "notConnected",
+    "procCompleteDownloadFlag": "on",
     "procentricClockFreq": "0",
     "procentricClockIPAdd_a": "0",
     "procentricClockIPAdd_b": "0",
@@ -1237,25 +1814,38 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "procentricClockServiceID": "0",
     "procentricClockUpdate": "0",
     "procentricDataCarouselEn": "0",
-    "procentricDataChannel": "0",
-    "procentricDataChannelSlt": "0",
+    "procentricDataChannel": "255",
+    "procentricDataChannelSlt": "1",
     "procentricIPAddr_a": "0",
     "procentricIPAddr_b": "0",
     "procentricIPAddr_c": "0",
     "procentricIPAddr_d": "0",
     "procentricIPPort": "0",
+    "procentricIpv6Address": "0:0:0:0:0:0:0:0",
     "procentricMediaType": "RF",
-    "procentricMode": "0",
+    "procentricMode": "255",
     "procentricModulation": "16",
     "procentricRFFreq": "0",
     "procentricRFType": "DVB-C",
+    "procentricServerIpType": "ipv4",
     "procentricSymbol": "0",
+    "promotaOnOff": "off",
+    "propertyAlternativeLGServiceXml": "",
+    "propertyAlternativeUrl": "",
     "propertyAppUpdateShutDown": "1",
     "propertyAppUpdateStartUp": "0",
     "propertyApplicationChannelControl": "0",
+    "propertyBlockExternalInput": "0",
+    "propertyBlockHiddenMenu": "0",
+    "propertyBlockHotkey": "0",
+    "propertyBlockIr": "0",
+    "propertyBlockLauncher": "0",
+    "propertyBlockLocalKey": "0",
     "propertyBootSequenceOption": "0",
-    "propertyBrowserHttpsSecurityLevel": "0",
-    "propertyBrowserNetworkErrorHandling": "1",
+    "propertyBrowserHttpsSecurityLevel": "1",
+    "propertyBrowserNetworkErrorHandling": "0",
+    "propertyCecDeviceControl": "0",
+    "propertyChannelplus": "off",
     "propertyCountry": "en",
     "propertyDefaultAudioLanguage": "en",
     "propertyDefaultAudioLanguageList": "en",
@@ -1263,7 +1853,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "propertyDefaultSubtitleLanguageList": "en",
     "propertyDefaultSubtitleLanguageListUsAnalog": "en",
     "propertyDefaultSubtitleLanguageUsAnalog": "en",
-    "propertyFullBrowserStartPageUrl": "http://lge.com/index.html",
+    "propertyDst": "0",
+    "propertyFullBrowserStartPageUrl": "",
+    "propertyGmtOffsetInMs": "0",
+    "propertyHttpsXaitXml": "0",
     "propertyInbandDataServiceHbbtv": "0",
     "propertyInbandDataServiceMheg": "0",
     "propertyInbandDataServiceMhp": "0",
@@ -1274,22 +1867,21 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "propertyNumberOfTuner": "1",
     "propertyOsdLayerId": "4",
     "propertyPcrRecovery": "1",
+    "propertyRMSTrustedIP": "0.0.0.0",
+    "propertyRcuLowBatteryToast": "1",
     "propertyReserved0": "0",
     "propertyReserved1": "0",
     "propertyReserved2": "0",
     "propertyReserved3": "0",
     "propertyReserved4": "0",
-    "propertyReserved5": "0",
+    "propertyReserved5": "1",
+    "propertyScreensaverControl": "off",
+    "propertySecureMmrPairing": "0",
     "propertySecurityLevel": "1",
     "propertySingleDecoding": "0",
     "propertySmartPairing": "0",
-    "propertyStrReserved0": "",
-    "propertyStrReserved1": "",
-    "propertyStrReserved2": "",
-    "propertyStrReserved3": "",
-    "propertyStrReserved4": "",
-    "propertyStrReserved5": "",
     "propertySupportLanguageList": "en",
+    "propertyTvBTSourceUi": "1",
     "propertyTvCaptionUi": "1",
     "propertyTvChannelControl": "2",
     "propertyTvChannelLockUi": "0",
@@ -1298,47 +1890,104 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "propertyTvMhegUi": "1",
     "propertyTvPreloadedAppLauncherUi": "1",
     "propertyTvVolumeUi": "1",
+    "propertyValidateHcapWebsocket": "1",
+    "propertystrReserved2": "",
+    "proximitySensor": "on",
+    "proxyAuthentication": "basic",
+    "proxyBypassList": "",
+    "proxyEnable": "off",
+    "proxyMode": "single",
+    "proxyServerIpType": "ipv4",
+    "proxySingleAddress": "0.0.0.0",
+    "proxySinglePassword": "",
+    "proxySinglePort": "0",
+    "proxySingleUsername": "",
     "pseudoPwrOff": "0",
+    "ptcMode": "CPU-CTV",
+    "ptcPowerOnDefault": "0",
     "ptc_Download_Fail": "0",
+    "qiKeycode": "00000000",
     "quickShutoff": "0",
+    "quietMode": "off",
     "radioEn": "0",
     "radioNameDisplay": "disable",
+    "radiusServerIP": "0.0.0.0",
+    "radiusServerKey": "",
+    "radiusServerPort": "1812",
     "rbg1En": "0",
+    "readerMode": "off",
     "rearYCEn": "0",
+    "referenceRgb": "initial",
     "remainingBlockHr": "12",
     "remoteJackPack": "0",
-    "reorderLaunchPoint": "1",
+    "reorderLaunchPoint": "0",
     "revertCh": "0",
     "rfUpdateTImeMin": "0",
+    "rfUpdateTImeMinPre": "-1",
+    "rfUpdateTime": "0",
     "rfUpdateTimeHr": "14",
     "rfUpdateTimeHrEn": "0",
+    "rfUpdateTimeRandomMin": "off",
     "rfWakeUpEventEnable": "0",
     "rfWakeUpEventHour": "0",
     "rfWakeUpEventMin": "0",
     "rgb1En": "0",
     "rjpAvailable": "0",
-    "rmsEn": "0",
+    "rmsApiKey": "",
+    "rmsEn": "1",
     "roomNumber": "",
-    "rs232Baudrate": "9600",
+    "rotationAspectRatio": "full",
+    "rs232Baudrate": "115200",
+    "rssAddress": "",
+    "rssScrollSpeed": "normal",
+    "ruleData": "",
+    "salAuthToken": {},
     "sapLock": "0",
     "sapMenuEn": "1",
+    "scanInversion": "off",
+    "scanInversionSync": "off",
     "scanMode": "0",
+    "scanModeBelowAppId": "",
+    "scanModeBelowChannelId": "",
+    "scanModeHighestAppId": "",
+    "scanModeHighestChannelId": "",
+    "scanModeLowestAppId": "",
+    "scanModeLowestChannelId": "",
     "scartOut": "enable",
     "sclActiveStatus": "0",
     "sclDisplayMode": "0",
+    "screenSharePinEn": "off",
+    "screenTouch": "on",
+    "secureConnection": "off",
+    "selectBanner": "full",
+    "sendStatusMailResult": "true",
     "sendToRs232": "1",
+    "serverCertificateList": [],
     "serverIpMode": "ipAutoSetting",
     "serverIpPort": "0",
     "serverStatus": "notConnected",
     "serviceIp": "0.0.0.0",
+    "setKeyLock": "null",
+    "showRSSFeed": "off",
+    "showWeatherInfo": "off",
+    "siName": "",
+    "siNameNL": "",
+    "siServerIp": "0.0.0.0",
     "signage365CareAccountName": "",
-    "signage365CareAccountNumber": "0",
+    "signage365CareAccountNumber": "000000",
     "signage365CareInstall": "off",
     "signageMode": "off",
-    "signageName": "SIGNAGE_MNT",
+    "signageName": "LG SIGNAGE",
     "signageSetId": "1",
     "simplinkEn": "0",
+    "simplinkOutEnable": "off",
     "sixKeySys": "0",
+    "smAttr": 0,
+    "smAudio": 0,
+    "smMajor": 0,
+    "smMinor": 0,
+    "smVideo": 0,
+    "smartCalibrationColorTemperature": "optimalTarget",
     "smartEnergy": "off",
     "smartParing": "disable",
     "smartShareEn": "0",
@@ -1348,18 +1997,35 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "smoovieRing1": "disable",
     "smoovieRing2": "disable",
     "smoovieStandard": "disable",
+    "softapChannel": "0",
+    "softapChannelWidth": "80",
     "softapDefault": "0",
     "softapDefaultSecurityKey": "123456",
     "softapEnable": "0",
+    "softapHidden": "off",
+    "softapMode": "nat",
     "softapOnOff": "0",
-    "softapSecurityKey": "000000",
+    "softapSecurityKey": "00000000",
+    "softapSecurityType": "psk",
     "softapSsid": "LGSoftap",
+    "softapTxpower": "0",
+    "softapVlanId": "0",
+    "speakerOutputForcedMute": "off",
     "splashTime": "0",
     "splitscreenEnable": "off",
+    "ssScreenshotEnable": "on",
+    "ssScreenshotUploadLock": "off",
+    "ssnData": [],
+    "sswSecuredConnection": "on",
+    "sswServerEnable": "on",
+    "sswServerIpType": "ipv4",
+    "sswServerName": "SuperSign Server",
+    "sswServerPort": "8443",
     "standByMode": "level1",
     "startAuxSrc": "7",
     "startChInSm": "0",
     "startChMajorNum": "255",
+    "startChannelId": "2_2_2_0_0_0_0",
     "startChnumMinor": "0",
     "startIpAddress": "0.0.0.0",
     "startIpAddress_a": "0",
@@ -1373,13 +2039,41 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "startSourceIpAddress_b": "0",
     "startSourceIpAddress_c": "0",
     "startSourceIpAddress_d": "0",
-    "startVolume": "0",
+    "startVolume": "255",
     "staticSaving": "100",
+    "statusReportAccount": {
+        "id": "",
+        "password": "",
+        "smtpServer": ""
+    },
+    "statusReportMode": "off",
+    "statusReportRecipient": [],
+    "statusReportSchedule": {
+        "hour": 0,
+        "min": 0,
+        "repeat": "failure",
+        "wday": [
+            "mon"
+        ]
+    },
+    "statusReportUserEmail": "",
+    "stbHdcpRepeaterEnable": "on",
+    "stbResolution": "0",
+    "stbVideoInterface": "1",
+    "stillImageDetecting": "on",
+    "superSignTvMode": "signage",
+    "supportFHD": "false",
+    "sustainAspectRatio": "off",
+    "tconLocalDimming": "on",
+    "temperatureUnit": "celsius",
     "textMode": "0",
-    "tileCol": "1",
-    "tileId": "1",
+    "tileCol": 2,
+    "tileId": 1,
     "tileMode": "off",
-    "tileRow": "1",
+    "tileNaturalSize": 100,
+    "tileRow": 2,
+    "timeSync": "off",
+    "timeSyncMode": "off",
     "timeoutEn": "1",
     "timingPulse": "207",
     "tuneAudioPid": 255,
@@ -1394,13 +2088,19 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "tuneProgram": 0,
     "tuneVideoPid": 255,
     "tuneVideoType": 0,
+    "tvGuideEn": "0",
+    "tvManagerUpdateInfo": {},
+    "tvSpeakerOff": "off",
     "tvlinkHcecControl": "0",
-    "tvlinkHcecDeviceID": "14",
+    "tvlinkHcecDeviceID": "0",
     "tvlinkHcecForcedInitialize": "disable",
-    "tvlinkHcecHotelmode": "disable",
     "tvlinkHcecIrDecoding": "disable",
     "tvlinkHcecStandby": "0",
+    "tvlinkIntOSDString": "notProgrammed",
+    "tvmanagerPin": "",
+    "uPnP": "on",
     "uartPowerOutlet": "off",
+    "updateDetectNoti": "off",
     "upnLsb": "0",
     "upnMsb": "0",
     "upnMsb1": "0",
@@ -1408,15 +2108,45 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "usbAutoPlayBack": "disable",
     "usbAutoPlayback": "off",
     "usbAutoPlaybackPath": "",
+    "usbEn": "1",
+    "usbPowerControl": "default",
+    "useSpeakerSound": "on",
     "vMuteTime": "0",
     "vidOutFormat": "0",
     "videoInterface": "0",
-    "videoPtsOffset": "1000",
-    "wifiScreenShareEn": "0",
+    "videoPtsOffset": "0",
+    "vlanIdForAuxLan": 0,
+    "vlanIdForLan": 0,
+    "vlanOnOff": "off",
+    "voiceEnabledApp": "false",
+    "volumePreset": "100",
+    "webhookCertVeri": false,
+    "webhookFormat": "",
+    "webhookHost": "",
+    "webhookTopic": "",
+    "websiteShortcut1": "disable",
+    "websiteShortcut2": "disable",
+    "websiteShortcut3": "disable",
+    "websiteShortcut4": "disable",
+    "websiteShortcut5": "disable",
+    "welcomeHospitalMessage": "WELCOME TO",
+    "welcomeMessage": "WELCOME TO",
+    "welcomeVideoMode": "off",
+    "welcomeVideoPath": "",
+    "whiteBalanceMenuPosition": "topRight",
+    "whiteBalanceRemoteKey": "general",
+    "wifiScreenShareEn": "disable",
     "wifiZone": "0",
+    "wired8021xEap": "peap",
+    "wired8021xEnable": "off",
+    "wired8021xIdentity": "",
+    "wired8021xPassphrase": "",
+    "wired8021xPhase2Auth": "MSCHAPV2",
+    "wired8021xUIEnable": "off",
     "wolEnable": "0",
     "wolMagicPacket": "0",
     "ycLoopOut": "0",
+    "zenithIrCode": "zenithBed1",
     "zone": "0"
 }
 ```
@@ -1428,6 +2158,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "High",
         "Low"
     ],
+    "LGServiceXmlVersion": {
+        "interval": 1,
+        "max": 2147483647,
+        "min": 0
+    },
     "aMuteTime": {
         "interval": 1,
         "max": 255,
@@ -1439,6 +2174,20 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "2",
         "3"
     ],
+    "additionalPixelRefresher": [
+        "none",
+        "powerPlugin"
+    ],
+    "adminInput": [
+        "none",
+        "htng",
+        "protocol",
+        "hcap"
+    ],
+    "alarmScreenOption": [
+        "tv",
+        "clock"
+    ],
     "alarmTimerHour": {
         "interval": 1,
         "max": 23,
@@ -1449,19 +2198,68 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 59,
         "min": 0
     },
+    "aodClockType": [
+        "typeA",
+        "typeB",
+        "typeC",
+        "typeD"
+    ],
+    "aodGuideEnterCount": {
+        "interval": 1,
+        "max": 10,
+        "min": 0
+    },
+    "aodInfoUIVisibleCount": {
+        "interval": 1,
+        "max": 10,
+        "min": 0
+    },
+    "aodInitialMode": [
+        "clock",
+        "artPiece",
+        "movements",
+        "moments"
+    ],
+    "aodLastCategory": [
+        "category-clock",
+        "category-artpiece",
+        "category-movements",
+        "category-yourmoments",
+        "category-soundpalette"
+    ],
+    "aodMotionSelectedIdx": [
+        0,
+        1,
+        2,
+        3
+    ],
+    "aodSlideShowSpeed": [
+        0,
+        1,
+        2
+    ],
     "appLaunchMode": [
         "none",
         "local",
         "remote",
         "usb"
     ],
-    "atscBand": [
-        "0",
-        "1",
-        "2",
-        "3",
-        "4"
+    "appType": [
+        "zip",
+        "ipk"
     ],
+    "atsc30Band": [
+        "broadcast",
+        "catv",
+        "hrc",
+        "irc",
+        "sameAsNtsc"
+    ],
+    "atscBand": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
     "audioOutput": [
         "0",
         "1",
@@ -1472,17 +2270,37 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "6",
         "7",
         "8",
-        "9"
+        "9",
+        "10",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40",
+        "41",
+        "42"
     ],
+    "audioPtsOffset": {
+        "interval": 10,
+        "max": 500,
+        "min": -500
+    },
     "audioSourceDp": [
-        "hdmi",
-        "audioIn"
-    ],
-    "audioSourceHdmi1": [
-        "hdmi",
-        "audioIn"
-    ],
-    "audioSourceHdmi2": [
         "hdmi",
         "audioIn"
     ],
@@ -1493,18 +2311,54 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "3",
         "4",
         "5",
-        "6"
+        "6",
+        "7",
+        "8"
+    ],
+    "autoOtaUpdate": [
+        "on",
+        "off",
+        "once"
     ],
     "autoSensing": {
         "interval": 1,
         "max": 255,
         "min": 0
     },
+    "autoStart": [
+        "off",
+        "websiteShortcut1",
+        "websiteShortcut2",
+        "websiteShortcut3",
+        "websiteShortcut4",
+        "websiteShortcut5",
+        "portalMode",
+        "app"
+    ],
+    "autoTeletext": [
+        "off",
+        "disable",
+        "enable",
+        "auto"
+    ],
     "bLanPowerSaving": [
         "1",
         "3",
         "7",
         "9"
+    ],
+    "backupViaStorage": [
+        "off",
+        "auto",
+        "manual",
+        "supersign",
+        "siapp"
+    ],
+    "backupViaStorageInterval": [
+        "30",
+        "60",
+        "120",
+        "180"
     ],
     "bandAfc": [
         "0",
@@ -1547,6 +2401,20 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 255,
         "min": 0
     },
+    "beaconMajor": {
+        "interval": 1,
+        "max": 65535,
+        "min": 0
+    },
+    "beaconMinor": {
+        "interval": 1,
+        "max": 65535,
+        "min": 0
+    },
+    "beaconType": [
+        "iBeacon",
+        "eddystone"
+    ],
     "bed12": [
         "0",
         "1",
@@ -1557,11 +2425,81 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "6",
         "7",
         "8",
-        "9"
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16"
+    ],
+    "calibrationScheduleCycle": [
+        "monthly",
+        "weekly"
+    ],
+    "calibrationScheduleDate": {
+        "interval": 1,
+        "max": 31,
+        "min": 1
+    },
+    "calibrationScheduleDayOfWeek": [
+        "sun",
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+    ],
+    "calibrationScheduleHour": {
+        "interval": 1,
+        "max": 23,
+        "min": 0
+    },
+    "calibrationScheduleMin": {
+        "interval": 1,
+        "max": 59,
+        "min": 0
+    },
+    "calibrationScreenPosition": {
+        "interval": 1,
+        "max": 24,
+        "min": 1
+    },
+    "captionDvb": [
+        "off",
+        "sv1",
+        "sv2",
+        "sv3",
+        "sv4",
+        "sv5",
+        "sv6",
+        "cc1",
+        "cc2",
+        "cc3",
+        "cc4",
+        "tx1",
+        "tx2",
+        "tx3",
+        "tx4"
     ],
     "chTimeSize": {
         "interval": 1,
         "max": 255,
+        "min": 0
+    },
+    "clockType": [
+        "analog",
+        "digital"
+    ],
+    "cloudServerType": [
+        "lgCloud",
+        "lgQi"
+    ],
+    "cmsProxyPort": {
+        "interval": 1,
+        "max": 65535,
         "min": 0
     },
     "commer365CareServiceMode": [
@@ -1574,17 +2512,135 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "dev6",
         "dev7"
     ],
+    "commerSyncMode": [
+        "master",
+        "slave"
+    ],
+    "contentPlayDuration": {
+        "interval": 1,
+        "max": 86400,
+        "min": 300
+    },
+    "contentPlayScreenRatio": [
+        "original",
+        "full"
+    ],
+    "contentPlayTransitionEffect": [
+        "none",
+        "slide",
+        "scale",
+        "spiral",
+        "fade",
+        "expand",
+        "reveal",
+        "door",
+        "circle",
+        "pivot",
+        "wipe",
+        "card",
+        "drift",
+        "ellipse",
+        "rect",
+        "half",
+        "random"
+    ],
+    "contentRotation": [
+        "off",
+        "90",
+        "270"
+    ],
     "contentsSync": [
         "off",
         "master",
         "slave"
+    ],
+    "crestronControlServerIpId": {
+        "interval": 1,
+        "max": 254,
+        "min": 3
+    },
+    "crestronControlServerPort": {
+        "interval": 1,
+        "max": 65535,
+        "min": 1024
+    },
+    "crestronEnable": [
+        "on",
+        "off",
+        "cs",
+        "vc4",
+        "fitc",
+        "rv"
+    ],
+    "crestronFusionMethod": [
+        "DeviceToFusion",
+        "FusionToDevice"
+    ],
+    "crestronFusionPort": [
+        "80",
+        "443"
+    ],
+    "crestronMode": [
+        "off",
+        "cs",
+        "vc4",
+        "fitc"
+    ],
+    "crestronXioURL": [
+        "QE",
+        "Pre-Production",
+        "Integration",
+        "Production"
+    ],
+    "customPortalHospitalType": [
+        "launcher",
+        "icon",
+        "fullscreenA",
+        "fullscreenB",
+        "fullscreenC",
+        "fullscreenD",
+        "fullscreenE"
+    ],
+    "customPortalType": [
+        "launcher",
+        "icon",
+        "fullscreenA",
+        "fullscreenB",
+        "fullscreenC",
+        "fullscreenD",
+        "fullscreenE"
+    ],
+    "customPortalVertical": [
+        "hotel",
+        "hospital"
+    ],
+    "dataCollectionStatus": [
+        "agree",
+        "disagree"
+    ],
+    "dateFormat": [
+        "noneDateFormat",
+        "MMDDdateFormat",
+        "DDMMdateFormat"
     ],
     "defaultArc": [
         "0",
         "1",
         "2",
         "3",
-        "4"
+        "4",
+        "5"
+    ],
+    "defaultPortalBgType": [
+        "default",
+        "downloaded"
+    ],
+    "defaultSoundout": [
+        "off",
+        "tvspeaker",
+        "optical",
+        "optical_lgsoundsync",
+        "external_arc"
     ],
     "defeatXds": {
         "interval": 1,
@@ -1603,22 +2659,107 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     ],
     "disAudioMenu": {
         "interval": 1,
-        "max": 7,
+        "max": 20,
         "min": 0
     },
     "dpmMode": [
         "off",
-        "5sec",
-        "10sec",
-        "15sec",
         "1min",
         "3min",
         "5min",
         "10min"
     ],
+    "dpmWakeUpControl": [
+        "clock",
+        "clockAndData"
+    ],
+    "dstEndDayOfWeek": {
+        "interval": 1,
+        "max": 6,
+        "min": 0
+    },
+    "dstEndHour": {
+        "interval": 1,
+        "max": 23,
+        "min": 0
+    },
+    "dstEndMonth": {
+        "interval": 1,
+        "max": 12,
+        "min": 1
+    },
+    "dstEndWeek": {
+        "interval": 1,
+        "max": 5,
+        "min": 1
+    },
+    "dstStartDayOfWeek": {
+        "interval": 1,
+        "max": 6,
+        "min": 0
+    },
+    "dstStartHour": {
+        "interval": 1,
+        "max": 23,
+        "min": 0
+    },
+    "dstStartMonth": {
+        "interval": 1,
+        "max": 12,
+        "min": 1
+    },
+    "dstStartWeek": {
+        "interval": 1,
+        "max": 5,
+        "min": 1
+    },
     "dtvChannelUpdate": [
         "Auto",
         "Manual"
+    ],
+    "dvbCBandwidth": [
+        "6m",
+        "8m"
+    ],
+    "dxpProvisionStatus": [
+        "none",
+        "searching",
+        "downloading",
+        "completed"
+    ],
+    "dynamicEdid": [
+        "auto",
+        "1screen",
+        "2screen",
+        "3screen",
+        "4screen"
+    ],
+    "eddyStoneFrame": [
+        "uid",
+        "url"
+    ],
+    "eddyStoneUrlExCode": [
+        "noneValue",
+        "comEx",
+        "orgEx",
+        "eduEx",
+        "netEx",
+        "infoEx",
+        "bizEx",
+        "govEx",
+        "com",
+        "org",
+        "edu",
+        "net",
+        "info",
+        "biz",
+        "gov"
+    ],
+    "eddyStoneUrlPrefix": [
+        "http",
+        "httpEx",
+        "https",
+        "httpsEx"
     ],
     "enAudioCol": {
         "interval": 1,
@@ -1645,6 +2786,47 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 255,
         "min": 0
     },
+    "energySavingMinBacklight": {
+        "interval": 1,
+        "max": 50,
+        "min": 0
+    },
+    "epdActivePowerMode": [
+        "alwaysOn",
+        "powerSaving"
+    ],
+    "epdAutoRefreshPeriod": [
+        24,
+        48
+    ],
+    "epdAutoRefreshTime": {
+        "interval": 1,
+        "max": 1439,
+        "min": 0
+    },
+    "epdIdleScreenMode": [
+        "last",
+        "user"
+    ],
+    "epdPictureMode": [
+        "standard",
+        "warm",
+        "cool",
+        "colorful",
+        "monochrome",
+        "sharpen",
+        "vivid"
+    ],
+    "epdWakeUpIntervalTime": {
+        "interval": 1,
+        "max": 1440,
+        "min": 10
+    },
+    "epdWhiteWashPeriod": [
+        24,
+        48,
+        72
+    ],
     "extClockDimmingPowerOn": {
         "interval": 1,
         "max": 99,
@@ -1652,17 +2834,37 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     },
     "extClockDimmingStandBy": {
         "interval": 1,
-        "max": 15,
+        "max": 99,
         "min": 0
     },
+    "extClockProCentricInput": [
+        "RF",
+        "IP"
+    ],
     "extClockSource": [
+        "off",
+        "proCentric",
+        "tv",
+        "ntp",
+        "admin"
+    ],
+    "extClockTvInput": [
         "off",
         "ATV",
         "DTV",
         "RADIO",
         "CATV",
         "CADTV",
-        "CA-RADIO"
+        "CA-RADIO",
+        "SDTV",
+        "S-RADIO",
+        "UHDTV",
+        "CAUHDTV",
+        "S-BS",
+        "S-CS1",
+        "S-CS2",
+        "S-BSP",
+        "S-CSP"
     ],
     "extOffsetTTXClock": {
         "interval": 1,
@@ -1673,22 +2875,31 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "0",
         "1",
         "2",
-        "3",
-        "4"
+        "3"
     ],
-    "ezmgr_update_status": [
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11"
+    "extendSyncMode": [
+        "off",
+        "rs232c",
+        "network"
+    ],
+    "externalServerIntervalPeriod": {
+        "interval": 1,
+        "max": 1440,
+        "min": 10
+    },
+    "ezmgr_update_status": {
+        "interval": 1,
+        "max": 30,
+        "min": 0
+    },
+    "factoryWinStatus": [
+        "none",
+        "instart",
+        "ezadjust",
+        "patternTest",
+        "localDimmingTest",
+        "3dPatternTest",
+        "powerOnlyWhite"
     ],
     "failover": [
         "off",
@@ -1723,40 +2934,65 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "usb"
     ],
     "failoverPriority1": [
+        "av1",
+        "av2",
+        "av3",
         "hdmi1",
         "hdmi2",
-        "dp",
-        "dvi",
-        "internal_usb"
+        "hdmi3",
+        "hdmi4"
     ],
     "failoverPriority2": [
+        "av1",
+        "av2",
+        "av3",
         "hdmi1",
         "hdmi2",
-        "dp",
-        "dvi",
-        "internal_usb"
+        "hdmi3",
+        "hdmi4"
     ],
     "failoverPriority3": [
+        "av1",
+        "av2",
+        "av3",
         "hdmi1",
         "hdmi2",
-        "dp",
-        "dvi",
-        "internal_usb"
+        "hdmi3",
+        "hdmi4"
     ],
     "failoverPriority4": [
+        "av1",
+        "av2",
+        "av3",
         "hdmi1",
         "hdmi2",
-        "dp",
-        "dvi",
-        "internal_usb"
+        "hdmi3",
+        "hdmi4"
     ],
     "failoverPriority5": [
+        "av1",
+        "av2",
+        "av3",
         "hdmi1",
         "hdmi2",
-        "dp",
-        "dvi",
-        "internal_usb"
+        "hdmi3",
+        "hdmi4"
     ],
+    "failoverPriority6": [
+        "livetv",
+        "internalMemory",
+        "usb"
+    ],
+    "fanMode": [
+        "off",
+        "auto",
+        "on"
+    ],
+    "fanSpeed": {
+        "interval": 1,
+        "max": 6,
+        "min": 0
+    },
     "forAudioM": {
         "interval": 1,
         "max": 255,
@@ -1797,6 +3033,41 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 255,
         "min": 0
     },
+    "grhCheckOutMode": [
+        "powerCycle",
+        "daily"
+    ],
+    "grhCheckOutStatus": [
+        "none",
+        "powerOff"
+    ],
+    "grhDailyCheckOutHour": {
+        "interval": 1,
+        "max": 23,
+        "min": 0
+    },
+    "grhDailyCheckOutMinute": {
+        "interval": 1,
+        "max": 59,
+        "min": 0
+    },
+    "grhDeviceType": [
+        "master",
+        "subMaster",
+        "slave"
+    ],
+    "grhPmsMode": [
+        "single",
+        "multi"
+    ],
+    "grhPmsOperation": [
+        "serverOff",
+        "serverOn"
+    ],
+    "groupDeviceMode": [
+        "master",
+        "slave"
+    ],
     "guestMenuState": {
         "interval": 1,
         "max": 255,
@@ -1810,6 +3081,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "4",
         "5"
     ],
+    "hdmi1En": [
+        "0",
+        "1",
+        "2"
+    ],
     "hdmi2En": [
         "0",
         "1",
@@ -1820,6 +3096,50 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "1",
         "2"
     ],
+    "hdmi4En": [
+        "0",
+        "1",
+        "2"
+    ],
+    "healthcareAudioControl": [
+        "tvSpeaker",
+        "headphone"
+    ],
+    "historyIntervalSeconds": {
+        "interval": 1,
+        "max": 21600,
+        "min": 1
+    },
+    "hospitalMode": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
+    "hospitalSpeakerCodeVoltage": [
+        "lgZenith",
+        "philips",
+        "rca"
+    ],
+    "hospitalSpeakerSelection": [
+        "pillowOnly",
+        "tvOnly",
+        "pillowAndTv"
+    ],
+    "iBeaconMajor": {
+        "interval": 1,
+        "max": 65535,
+        "min": 0
+    },
+    "iBeaconMinor": {
+        "interval": 1,
+        "max": 65535,
+        "min": 0
+    },
+    "idHTNGKeyLock": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
     "idHTNGSettingWakeUpHour": {
         "interval": 1,
         "max": 255,
@@ -1839,19 +3159,209 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "2",
         "3"
     ],
+    "imAcOn": [
+        "standby",
+        "alwaysOn",
+        "reboot",
+        "mute"
+    ],
+    "imAnalogCc": [
+        "cc1",
+        "cc2",
+        "cc3",
+        "cc4",
+        "text1",
+        "text2",
+        "text3",
+        "text4"
+    ],
+    "imAspRatioLock": [
+        "defaultAsp",
+        "userAsp"
+    ],
+    "imAtscBand": [
+        "broadcast",
+        "cable",
+        "HRC",
+        "IRC",
+        "sameNtsc"
+    ],
+    "imAtscMode": [
+        "virtual",
+        "physical"
+    ],
+    "imBackLight": [
+        "manualStatic",
+        "manualDynamic",
+        "autoStatic",
+        "autoDynamic",
+        "userSet"
+    ],
+    "imBannerMode": [
+        "small",
+        "full"
+    ],
+    "imBedNum": {
+        "interval": 1,
+        "max": 16,
+        "min": 1
+    },
+    "imClosedCap": [
+        "off",
+        "last",
+        "start"
+    ],
+    "imDefAspRatio": [
+        "setByProgram",
+        "4x3",
+        "16x9",
+        "justScan",
+        "zoom1"
+    ],
+    "imDefaultAudio": [
+        "tvSpeakerOn",
+        "optical",
+        "lgSoundSyncOpt",
+        "bluetooth",
+        "tvSpeakerOpt",
+        "hdmiArc",
+        "tvSpeakerBt",
+        "tvSpeakerOff"
+    ],
+    "imDigitalCc": [
+        "off",
+        "service1",
+        "service2",
+        "service3",
+        "service4",
+        "service5",
+        "service6"
+    ],
+    "imExtControl": [
+        "none",
+        "ext232Control",
+        "lanTlt"
+    ],
+    "imHdmi1En": [
+        "disable",
+        "enDTV",
+        "enPC"
+    ],
+    "imHdmi2En": [
+        "disable",
+        "enDTV",
+        "enPC"
+    ],
+    "imHdmi3En": [
+        "disable",
+        "enDTV",
+        "enPC"
+    ],
+    "imInactiveHrs": [
+        "off",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+    ],
+    "imInstSeq": [
+        "9876",
+        "4321",
+        "1478",
+        "3698"
+    ],
+    "imIrMode": [
+        "disable",
+        "multiCode"
+    ],
+    "imLightLevel": {
+        "interval": 1,
+        "max": 100,
+        "min": 1
+    },
+    "imMaxBlkHrs": {
+        "interval": 1,
+        "max": 99,
+        "min": 0
+    },
+    "imMaxVol": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
+    "imMinBacklight": {
+        "interval": 1,
+        "max": 50,
+        "min": 0
+    },
+    "imMinVol": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
+    "imStartAux": [
+        "hdmi1",
+        "hdmi2",
+        "hdmi3",
+        "lastAux"
+    ],
+    "imStartChMaj": {
+        "interval": 1,
+        "max": 999,
+        "min": 1
+    },
+    "imStartChMin": {
+        "interval": 1,
+        "max": 999,
+        "min": 0
+    },
+    "imStartChType": [
+        "auxInput",
+        "rfChannel",
+        "lastChannel",
+        "ipChannel"
+    ],
+    "imStartVol": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
+    "imTuningBand": [
+        "broadcast",
+        "cable",
+        "HRC",
+        "IRC"
+    ],
+    "imUsbPower": [
+        "instOn",
+        "powerOn",
+        "alwaysOff"
+    ],
+    "imVideoMute": [
+        "normal",
+        "blankScreen"
+    ],
     "installerSeq": [
         "0",
         "1",
         "2",
         "3"
     ],
-    "irBlaster": {
-        "interval": 1,
-        "max": 255,
-        "min": 0
-    },
+    "interfaceSelection": [
+        "display",
+        "ops"
+    ],
+    "ipInputType": [
+        "number",
+        "domain"
+    ],
     "irMode": [
         "0",
+        "1",
+        "2",
         "16",
         "17",
         "18",
@@ -1860,7 +3370,126 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "21",
         "22",
         "23",
-        "24"
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "64",
+        "65",
+        "66"
+    ],
+    "ismBarColor": [
+        "red",
+        "green",
+        "blue",
+        "white",
+        "black",
+        "gray"
+    ],
+    "ismBarDirection": [
+        "leftToRight",
+        "rightToLeft"
+    ],
+    "ismEndTime": {
+        "interval": 1,
+        "max": 1439,
+        "min": 0
+    },
+    "ismInversionTime": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "20",
+        "30",
+        "60",
+        "90",
+        "120",
+        "180",
+        "240"
+    ],
+    "ismMode": [
+        "normal",
+        "inversion",
+        "orbiter",
+        "whiteWash",
+        "colorWash",
+        "washingBar",
+        "userImage",
+        "userVideo"
+    ],
+    "ismOrbiterRepeat": [
+        "immediately",
+        "repeat",
+        "always",
+        "scheduling"
+    ],
+    "ismOrbiterTime": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "20",
+        "30",
+        "60",
+        "90",
+        "120",
+        "180",
+        "240"
+    ],
+    "ismPeriod": {
+        "interval": 1,
+        "max": 24,
+        "min": 1
+    },
+    "ismStartTime": {
+        "interval": 1,
+        "max": 1439,
+        "min": 0
+    },
+    "ismTime": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "20",
+        "30",
+        "60",
+        "90",
+        "120",
+        "180",
+        "240"
+    ],
+    "ismTimer": [
+        "immediately",
+        "repeat",
+        "scheduling"
+    ],
+    "ismUserImage": [
+        "movie",
+        "photo"
     ],
     "istm_reserved_3": {
         "interval": 1,
@@ -1892,6 +3521,20 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 99,
         "min": 1
     },
+    "launcherEditMode": [
+        "on",
+        "onWithoutWol",
+        "off"
+    ],
+    "ledLight": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
+    "linkServerIpMode": [
+        "ipAutoSetting",
+        "ipManualSetting"
+    ],
     "linkServerIpType": [
         "ipv4",
         "ipv6"
@@ -1911,6 +3554,29 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "fromUsb",
         "fromRemote"
     ],
+    "maxBacklight": [
+        "0",
+        "5",
+        "10",
+        "15",
+        "20",
+        "25",
+        "30",
+        "35",
+        "40",
+        "45",
+        "50",
+        "55",
+        "60",
+        "65",
+        "70",
+        "75",
+        "80",
+        "85",
+        "90",
+        "95",
+        "100"
+    ],
     "maxBlockHour": {
         "interval": 1,
         "max": 99,
@@ -1921,11 +3587,81 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 63,
         "min": 0
     },
+    "menuAppId": [
+        "com.palm.app.settings",
+        "com.webos.app.simplesettings"
+    ],
+    "minBacklight": [
+        "0",
+        "5",
+        "10",
+        "15",
+        "20",
+        "25",
+        "30",
+        "35",
+        "40",
+        "45",
+        "50",
+        "55",
+        "60",
+        "65",
+        "70",
+        "75",
+        "80",
+        "85",
+        "90",
+        "95",
+        "100"
+    ],
     "minVolume": {
         "interval": 1,
         "max": 63,
         "min": 0
     },
+    "moduleHeight": [
+        "90",
+        "180"
+    ],
+    "moduleWidth": [
+        "192",
+        "384"
+    ],
+    "moodClockAutoOnTime": [
+        "0",
+        "15",
+        "30",
+        "60"
+    ],
+    "moodClockDoNotDisturbEndTime": {
+        "interval": 1,
+        "max": 24,
+        "min": 0
+    },
+    "moodClockDoNotDisturbStartTime": {
+        "interval": 1,
+        "max": 24,
+        "min": 0
+    },
+    "moodClockScreenOffTime": [
+        "20",
+        "60"
+    ],
+    "moodClockSkinColor": [
+        "white",
+        "burgundy",
+        "skyblue"
+    ],
+    "moodClockSkinPosition": [
+        "top",
+        "middle",
+        "bottom"
+    ],
+    "moodClockSkinSize": [
+        "big",
+        "medium",
+        "small"
+    ],
     "multiOffTimerHour": {
         "interval": 1,
         "max": 24,
@@ -1983,6 +3719,38 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 255,
         "min": 0
     },
+    "multiScreenMode": [
+        "off",
+        "pip",
+        "pbp2",
+        "pbp3",
+        "pbp121",
+        "pbp4"
+    ],
+    "muteDisable": [
+        "1",
+        "0",
+        "2",
+        "3"
+    ],
+    "noActivityOff": [
+        "off",
+        "4hours"
+    ],
+    "noSignalImage": [
+        "off",
+        "default",
+        "downloaded"
+    ],
+    "ntpServerMode": [
+        "auto",
+        "manual"
+    ],
+    "ntpServerType": [
+        "ipv4",
+        "ipv6",
+        "url"
+    ],
     "ntscScancard": {
         "interval": 1,
         "max": 255,
@@ -2012,14 +3780,51 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "once",
         "repeat"
     ],
+    "onTimerSourcePTC": [
+        "dtv",
+        "atv",
+        "av1",
+        "av2",
+        "pictest",
+        "comp1",
+        "comp2",
+        "comp3",
+        "rgb",
+        "hdmi1",
+        "hdmi2",
+        "hdmi3",
+        "hdmi4",
+        "hdmi1_pc",
+        "hdmi2_pc",
+        "hdmi3_pc",
+        "hdmi4_pc",
+        "program",
+        "scart",
+        "smhl"
+    ],
+    "opsPowerControl": [
+        "Disable",
+        "SyncOn",
+        "SyncOnOff"
+    ],
     "osdPortraitMode": [
         "off",
         "90",
         "270"
     ],
+    "osdPosition": [
+        "leftTop",
+        "middle",
+        "rightBottom"
+    ],
     "panelCom": {
         "interval": 1,
         "max": 255,
+        "min": 0
+    },
+    "panelDelay": {
+        "interval": 1,
+        "max": 20,
         "min": 0
     },
     "panelHandshake": {
@@ -2036,6 +3841,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "interval": 1,
         "max": 255,
         "min": 0
+    },
+    "panelOffset": {
+        "interval": 1,
+        "max": 50,
+        "min": -50
     },
     "panelStartVol": {
         "interval": 1,
@@ -2057,6 +3867,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 255,
         "min": 0
     },
+    "pcHSize": {
+        "interval": 1,
+        "max": 3,
+        "min": 0
+    },
     "pcrOffset": {
         "interval": 1,
         "max": 500,
@@ -2064,9 +3879,30 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     },
     "pictureId": {
         "interval": 1,
-        "max": 255,
+        "max": 1000,
         "min": 0
     },
+    "pillowMode": [
+        "off",
+        "pillowOnly",
+        "pillow+tv"
+    ],
+    "pincodeBlockedTime": {
+        "interval": 1,
+        "max": 300,
+        "min": 0
+    },
+    "pmMode": [
+        "powerOff",
+        "sustainAspectRatio",
+        "screenOff",
+        "screenOffAlways"
+    ],
+    "pmModeTvSignage": [
+        "powerOff",
+        "sustainAspectRatio",
+        "networkReady"
+    ],
     "pokeEnable": {
         "interval": 1,
         "max": 255,
@@ -2077,6 +3913,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 169,
         "min": 20
     },
+    "portalMode": [
+        "defaultPortal",
+        "customizablePortal",
+        "none"
+    ],
     "powerManage": [
         "0",
         "1",
@@ -2103,10 +3944,23 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "7",
         "8"
     ],
+    "preChannelIndex": {
+        "interval": 1,
+        "max": 9999,
+        "min": -1
+    },
     "proCentricClockUpdate": [
         "0",
         "1",
         "2"
+    ],
+    "proCentricServerType": [
+        "onPremises",
+        "proCentricCloud"
+    ],
+    "proServerStatus": [
+        "notConnected",
+        "connected"
     ],
     "procentricMediaType": [
         "IP",
@@ -2114,9 +3968,8 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     ],
     "procentricMode": [
         "0",
-        "1",
-        "2",
-        "3"
+        "3",
+        "255"
     ],
     "procentricModulation": [
         "16",
@@ -2129,10 +3982,28 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "DVB-T",
         "DVB-C"
     ],
+    "procentricServerIpType": [
+        "ipv4",
+        "ipv6"
+    ],
+    "propertyHttpsXaitXml": [
+        "0",
+        "1",
+        "2"
+    ],
     "propertyNumberOfTuner": [
         "0",
         "1",
         "2"
+    ],
+    "propertyReserved1": {
+        "interval": 1,
+        "max": 1000,
+        "min": -1000
+    },
+    "propertyScreensaverControl": [
+        "off",
+        "app"
     ],
     "propertySecurityLevel": [
         "1",
@@ -2143,15 +4014,54 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "1",
         "2"
     ],
+    "proxyAuthentication": [
+        "basic",
+        "digest",
+        "negotiate",
+        "ntlm"
+    ],
+    "proxyMode": [
+        "single",
+        "perprotocol"
+    ],
+    "proxyServerIpType": [
+        "ipv4",
+        "ipv6"
+    ],
+    "proxySinglePort": {
+        "interval": 1,
+        "max": 65535,
+        "min": 0
+    },
+    "ptcMode": [
+        "CPU-CTV",
+        "PTC-CTV",
+        "MPI-EXT",
+        "MPI-FTG",
+        "MPI-LNT",
+        "EBL-FTG",
+        "EBL-LNT",
+        "CPU-PRC",
+        "CPU-FTG"
+    ],
     "quickShutoff": {
         "interval": 1,
         "max": 255,
+        "min": 0
+    },
+    "radiusServerPort": {
+        "interval": 1,
+        "max": 65535,
         "min": 0
     },
     "rbg1En": [
         "0",
         "1",
         "17"
+    ],
+    "referenceRgb": [
+        "current",
+        "initial"
     ],
     "remainingBlockHr": {
         "interval": 1,
@@ -2172,9 +4082,19 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 59,
         "min": 0
     },
+    "rfUpdateTImeMinPre": {
+        "interval": 1,
+        "max": 59,
+        "min": -1
+    },
+    "rfUpdateTime": [
+        "2",
+        "1",
+        "0"
+    ],
     "rfUpdateTimeHr": {
         "interval": 1,
-        "max": 23,
+        "max": 24,
         "min": 0
     },
     "rfWakeUpEventEnable": [
@@ -2192,6 +4112,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 59,
         "min": 0
     },
+    "rgb1En": [
+        "0",
+        "1",
+        "17"
+    ],
     "rjpAvailable": [
         "0",
         "1",
@@ -2199,9 +4124,22 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "5",
         "6"
     ],
+    "rotationAspectRatio": [
+        "full",
+        "original"
+    ],
     "rs232Baudrate": [
         "9600",
         "115200"
+    ],
+    "rssScrollSpeed": [
+        "slow",
+        "normal",
+        "fast"
+    ],
+    "selectBanner": [
+        "full",
+        "small"
     ],
     "sendToRs232": {
         "interval": 1,
@@ -2217,6 +4155,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "notConnected",
         "notApproval",
         "reject"
+    ],
+    "setKeyLock": [
+        "on",
+        "off",
+        "null"
     ],
     "signage365CareAccountNumber": {
         "interval": 1,
@@ -2234,11 +4177,46 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "2",
         "3"
     ],
+    "simplinkOutEnable": [
+        "off",
+        "powersync",
+        "configure"
+    ],
     "sixKeySys": {
         "interval": 1,
         "max": 255,
         "min": 0
     },
+    "smAttr": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
+    "smAudio": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
+    "smMajor": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
+    "smMinor": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
+    "smVideo": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
+    "smartCalibrationColorTemperature": [
+        "optimalTarget",
+        "original",
+        "3000K"
+    ],
     "smoovieInputSource": [
         "ATV",
         "DTV",
@@ -2252,6 +4230,53 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 65535,
         "min": 0
     },
+    "softapChannel": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "36",
+        "40",
+        "44",
+        "48",
+        "149",
+        "153",
+        "157",
+        "161",
+        "165"
+    ],
+    "softapChannelWidth": [
+        "20",
+        "40",
+        "80"
+    ],
+    "softapMode": [
+        "nat",
+        "bridge"
+    ],
+    "softapSecurityType": [
+        "psk",
+        "eap",
+        "open"
+    ],
+    "softapTxpower": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+    ],
     "splashTime": [
         "0",
         "1",
@@ -2265,6 +4290,15 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "9",
         "10"
     ],
+    "sswServerIpType": [
+        "ipv4",
+        "ipv6"
+    ],
+    "sswServerPort": {
+        "interval": 1,
+        "max": 65535,
+        "min": 0
+    },
     "standByMode": [
         "level1",
         "level2",
@@ -2290,16 +4324,30 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 255,
         "min": 0
     },
-    "startVolume": {
-        "interval": 1,
-        "max": 63,
-        "min": 0
-    },
     "staticSaving": {
-        "interval": 10,
+        "interval": 1,
         "max": 100,
         "min": 0
     },
+    "stbResolution": {
+        "interval": 1,
+        "max": 255,
+        "min": 0
+    },
+    "stbVideoInterface": [
+        "1",
+        "2",
+        "3",
+        "4"
+    ],
+    "superSignTvMode": [
+        "signage",
+        "hotel"
+    ],
+    "temperatureUnit": [
+        "celsius",
+        "fahrenheit"
+    ],
     "textMode": {
         "interval": 1,
         "max": 255,
@@ -2315,11 +4363,21 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 255,
         "min": 1
     },
+    "tileNaturalSize": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
     "tileRow": {
         "interval": 1,
         "max": 15,
         "min": 1
     },
+    "timeSyncMode": [
+        "master",
+        "slave",
+        "off"
+    ],
     "timingPulse": {
         "interval": 1,
         "max": 227,
@@ -2331,6 +4389,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "2"
     ],
     "tvlinkHcecDeviceID": [
+        "0",
         "1",
         "2",
         "3",
@@ -2352,6 +4411,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "2",
         "3"
     ],
+    "tvlinkIntOSDString": [
+        "notProgrammed",
+        "channelNot24Hour"
+    ],
     "uartPowerOutlet": [
         "off",
         "5v",
@@ -2360,7 +4423,15 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "usbAutoPlayback": [
         "off",
         "movie",
-        "photo"
+        "photo",
+        "epd_manual",
+        "epd_auto"
+    ],
+    "usbPowerControl": [
+        "default",
+        "warmOff",
+        "alwaysOff",
+        "alwaysOn"
     ],
     "vMuteTime": {
         "interval": 1,
@@ -2377,6 +4448,57 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 255,
         "min": 0
     },
+    "videoPtsOffset": {
+        "interval": 10,
+        "max": 500,
+        "min": -500
+    },
+    "vlanIdForAuxLan": {
+        "interval": 1,
+        "max": 4094,
+        "min": 0
+    },
+    "vlanIdForLan": {
+        "interval": 1,
+        "max": 4094,
+        "min": 0
+    },
+    "volumePreset": {
+        "interval": 1,
+        "max": 100,
+        "min": 0
+    },
+    "welcomeVideoMode": [
+        "off",
+        "once",
+        "repeat"
+    ],
+    "whiteBalanceMenuPosition": [
+        "topLeft",
+        "topRight",
+        "center",
+        "bottomLeft",
+        "bottomRight"
+    ],
+    "whiteBalanceRemoteKey": [
+        "general",
+        "advanced"
+    ],
+    "wifiScreenShareEn": [
+        "disable",
+        "enable",
+        "enablePin"
+    ],
+    "wired8021xEap": [
+        "peap",
+        "tls",
+        "ttls"
+    ],
+    "wired8021xPhase2Auth": [
+        "MSCHAPV2",
+        "GTC",
+        "PAP"
+    ],
     "wolEnable": [
         "0",
         "1",
@@ -2391,6 +4513,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "0",
         "1",
         "2"
+    ],
+    "zenithIrCode": [
+        "zenithBed1",
+        "zenithBed2"
     ],
     "zone": [
         "0",
@@ -2409,16 +4535,32 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 #### `"commercialTv"` category - available settings (used by `set_settings` method)
 ```json
 {
+    "backupHcapVideoSize": {
+        "height": 0,
+        "positionX": 0,
+        "positionY": 0,
+        "width": 0
+    },
     "hcapStartChSSID0": "0",
     "hcapStartChSSID1": "0",
     "hcapStartChSSID2": "0",
     "hcapStartChSSID3": "0",
     "hcapStartChSSID4": "0",
+    "hcapStartPlpId": "0",
+    "hcapStartPolarization": "0",
     "hcapStartRfChBandType": "0",
     "hcapStartRfChType": "0",
     "hcapStartRfFreqHz": "0",
     "hcapStartRfProgNumber": "0",
-    "hcapTuneCmIpProtocol": "0",
+    "hcapStartSatId": "0",
+    "hcapStartSourceIp": "0",
+    "hcapStartSymbolRate": "0",
+    "hcapVideoSize": {
+        "height": 1080,
+        "positionX": 0,
+        "positionY": 0,
+        "width": 1920
+    },
     "hcapalarmStartChType": "0",
     "hcapalarmStartFreq": "0",
     "hcapalarmStartHour": "0",
@@ -2430,6 +4572,8 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "hcapalarmStartMajor": "0",
     "hcapalarmStartMinor": "0",
     "hcapalarmStartMinute": "0",
+    "hcapalarmStartPlpId": "0",
+    "hcapalarmStartPolarization": "0",
     "hcapalarmStartProgramNumber": "0",
     "hcapalarmStartRfBandType": "0",
     "hcapalarmStartSSID0": "0",
@@ -2437,13 +4581,27 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "hcapalarmStartSSID2": "0",
     "hcapalarmStartSSID3": "0",
     "hcapalarmStartSSID4": "0",
+    "hcapalarmStartSatId": "0",
+    "hcapalarmStartSourceIp": "0",
+    "hcapalarmStartSymbolRate": "0",
     "hcapalarmStartVolume": "0",
+    "identifierCode": "",
+    "propertyAlternativeLGServiceXml": "",
+    "propertyAlternativeUrl": "",
     "propertyAppUpdateShutDown": "1",
     "propertyAppUpdateStartUp": "0",
     "propertyApplicationChannelControl": "0",
+    "propertyBlockExternalInput": "0",
+    "propertyBlockHiddenMenu": "0",
+    "propertyBlockHotkey": "0",
+    "propertyBlockIr": "0",
+    "propertyBlockLauncher": "0",
+    "propertyBlockLocalKey": "0",
     "propertyBootSequenceOption": "0",
-    "propertyBrowserHttpsSecurityLevel": "0",
-    "propertyBrowserNetworkErrorHandling": "1",
+    "propertyBrowserHttpsSecurityLevel": "1",
+    "propertyBrowserNetworkErrorHandling": "0",
+    "propertyCecDeviceControl": "0",
+    "propertyChannelplus": "off",
     "propertyCountry": "en",
     "propertyDefaultAudioLanguage": "en",
     "propertyDefaultAudioLanguageList": "en",
@@ -2451,7 +4609,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "propertyDefaultSubtitleLanguageList": "en",
     "propertyDefaultSubtitleLanguageListUsAnalog": "en",
     "propertyDefaultSubtitleLanguageUsAnalog": "en",
-    "propertyFullBrowserStartPageUrl": "http://lge.com/index.html",
+    "propertyDst": "0",
+    "propertyFullBrowserStartPageUrl": "",
+    "propertyGmtOffsetInMs": "0",
+    "propertyHttpsXaitXml": "0",
     "propertyInbandDataServiceHbbtv": "0",
     "propertyInbandDataServiceMheg": "0",
     "propertyInbandDataServiceMhp": "0",
@@ -2462,22 +4623,21 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "propertyNumberOfTuner": "1",
     "propertyOsdLayerId": "4",
     "propertyPcrRecovery": "1",
+    "propertyRMSTrustedIP": "0.0.0.0",
+    "propertyRcuLowBatteryToast": "1",
     "propertyReserved0": "0",
     "propertyReserved1": "0",
     "propertyReserved2": "0",
     "propertyReserved3": "0",
     "propertyReserved4": "0",
-    "propertyReserved5": "0",
+    "propertyReserved5": "1",
+    "propertyScreensaverControl": "off",
+    "propertySecureMmrPairing": "0",
     "propertySecurityLevel": "1",
     "propertySingleDecoding": "0",
     "propertySmartPairing": "0",
-    "propertyStrReserved0": "",
-    "propertyStrReserved1": "",
-    "propertyStrReserved2": "",
-    "propertyStrReserved3": "",
-    "propertyStrReserved4": "",
-    "propertyStrReserved5": "",
     "propertySupportLanguageList": "en",
+    "propertyTvBTSourceUi": "1",
     "propertyTvCaptionUi": "1",
     "propertyTvChannelControl": "2",
     "propertyTvChannelLockUi": "0",
@@ -2485,17 +4645,34 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "propertyTvFloatingUi": "1",
     "propertyTvMhegUi": "1",
     "propertyTvPreloadedAppLauncherUi": "1",
-    "propertyTvVolumeUi": "1"
+    "propertyTvVolumeUi": "1",
+    "propertyValidateHcapWebsocket": "1",
+    "propertystrReserved2": "",
+    "siName": ""
 }
 ```
 
 ##### `"commercialTv"` category - available non-trivial values
 ```json
 {
+    "propertyHttpsXaitXml": [
+        "0",
+        "1",
+        "2"
+    ],
     "propertyNumberOfTuner": [
         "0",
         "1",
         "2"
+    ],
+    "propertyReserved1": {
+        "interval": 1,
+        "max": 1000,
+        "min": -1000
+    },
+    "propertyScreensaverControl": [
+        "off",
+        "app"
     ],
     "propertySecurityLevel": [
         "1",
@@ -2523,26 +4700,40 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "alwaysOnDisableEndMinute": "0",
     "alwaysOnDisableStartHour": "1",
     "alwaysOnDisableStartMinute": "0",
+    "autoBackupEnabled": false,
     "avmsd": "off",
     "bendableSound": "on",
     "blueToothSpeakerMode": "on",
     "checkForcedInputPowerOn": "off",
     "checkHomeAutoLaunchValue": "default",
     "customizedAd": "off",
+    "defaultApps": {
+        "kidsApp": "com.webos.app.familycare"
+    },
     "doNotSellMyPersonalInformation": "off",
     "gameAlarm": [],
+    "generalBackupList": [],
     "globalConditions": "off",
     "homeAutoLaunch": "on",
+    "homeBackupList": [],
     "homeEffect": "on",
     "homePromotion": "on",
     "lastAppHandlerPolicy": "idleApp",
+    "lastBackupTime": {
+        "date": 0,
+        "hour": 0,
+        "minute": 0,
+        "month": 0,
+        "year": 0
+    },
     "lastInputApp": "com.webos.app.livetv",
     "lastInputAppType": "DTV",
     "launchEulaByHome": false,
+    "lgChannelAutoLaunch": "off",
     "lifeAlarm": "on",
     "lifeOnScreenMode": "none",
     "lmt": "off",
-    "mySportAppList": [],
+    "mySportAppList": "[]",
     "mySportTeamList": [],
     "nativeConsentAd": [],
     "noSignalGuideArea": "on",
@@ -2716,6 +4907,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "enableFullscreen": "off",
     "enableFunctionStatus": "",
     "enableHIDDevice": true,
+    "enableHidKey": "off",
     "enableHotelMode": "off",
     "enableInputSourceChange": "false",
     "enableIrRemote": "normal",
@@ -2734,9 +4926,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "enableStartVolume": "off",
     "enableSystemProviderMode": "off",
     "enterStationMenu": "on",
+    "keyLockedBeforeUnplug": "off",
     "keyManagement": "off",
-    "maximumVolume": "100",
-    "minimumVolume": "0",
+    "maximumVolume": 100,
+    "minimumVolume": 0,
     "noActivityPowerOffHours": "off",
     "password": "1105",
     "powerOnAspectRatio": "disable",
@@ -2752,9 +4945,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "radioProgramStart": "1",
     "swUpdateEnable": "on",
     "swUpdateNotice": "off",
+    "tvlinkHcecHotelmode": "disable",
     "tvlinkHid": "null",
     "tvlinkKeylock": "null",
-    "tvlinkMrcu": "null",
+    "tvlinkMrcu": "off",
     "tvlinkOsdDisplay": "null"
 }
 ```
@@ -2838,6 +5032,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "s-cs2",
         "s-bsp",
         "s-csp",
+        "hiptv",
         "av1",
         "av2",
         "av3",
@@ -2878,11 +5073,6 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "off",
         "null"
     ],
-    "tvlinkMrcu": [
-        "on",
-        "off",
-        "null"
-    ],
     "tvlinkOsdDisplay": [
         "on",
         "off",
@@ -2896,7 +5086,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 {
     "isVideoScreenSaverEnabled": false,
     "videoScreenSaverAppList": [
-        "com.webos.app.home"
+        "com.webos.app.home",
+        "com.webos.app.seniorhome",
+        "com.webos.app.tnativehome",
+        "com.webos.app.homeqml",
+        "com.webos.app.fullhome"
     ],
     "videoScreenSaverDisabledByError": false
 }
@@ -2905,6 +5099,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 #### `"lock"` category - available settings (used by `set_settings` method)
 ```json
 {
+    "appallowPerApp": false,
     "applockByAge": "generalAudience",
     "applockPerApp": false,
     "camPinCode": "N.A",
@@ -2916,6 +5111,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "initialPinCode": false,
     "inputBlock": "0",
     "installedApplockByAge": "generalAudience",
+    "kidsMode": false,
     "lockByAge": 0,
     "movieRating": "off",
     "offHearingProtectFlag": "off",
@@ -3216,6 +5412,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "VideoDescription",
         "AudioDescription",
         "AudioDescriptionAtsc",
+        "ColorWeakness",
         "GreyScale",
         "InvertColors",
         "Caption",
@@ -3243,49 +5440,49 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
             "category": "category-movements",
             "name": "Blooms",
             "subType": "igallery_littleflower",
-            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Little Flower.png"
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen-legacy/assets/list/main/Little Flower.png"
         },
         {
             "category": "category-movements",
             "name": "Plants",
             "subType": "igallery_leaf",
-            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Leaf.png"
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen-legacy/assets/list/main/Leaf.png"
         },
         {
             "category": "category-movements",
             "name": "Turtle in the Sea",
             "subType": "igallery_turtle",
-            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Turtle.png"
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen-legacy/assets/list/main/Turtle.png"
         },
         {
             "category": "category-movements",
             "name": "Aquarium",
             "subType": "igallery_aquarium",
-            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Aquarium.png"
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen-legacy/assets/list/main/Aquarium.png"
         },
         {
             "category": "category-movements",
             "name": "Chandelier",
             "subType": "igallery_chandelier",
-            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Chandelier.png"
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen-legacy/assets/list/main/Chandelier.png"
         },
         {
             "category": "category-movements",
             "name": "Reed Glass",
             "subType": "igallery_reedglass",
-            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/list/main/Reed Glass.png"
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen-legacy/assets/list/main/Reed Glass.png"
         },
         {
             "category": "category-information",
             "name": "Live Window",
             "subType": "liveWindow",
-            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/information/img_category_live_window.png"
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen-legacy/assets/information/img_category_live_window.png"
         },
         {
             "category": "category-tbar",
             "name": "Space",
             "subType": "tbar_space",
-            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen/assets/tbar/img_tbar_space01.png"
+            "thumbUrl": "/usr/palm/applications/com.webos.app.lifeonscreen-legacy/assets/tbar/img_tbar_space01.png"
         }
     ],
     "appInstallDevice": {
@@ -3299,6 +5496,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "audioGuidanceSpeed": "fast",
     "audioGuidanceVolume": "medium",
     "autoComplete": false,
+    "autoSearchStatus": {
+        "ftmsStatus": true
+    },
     "autoSmartServiceCountry": "on",
     "avatar": "off",
     "backupPsm": {
@@ -3314,6 +5514,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "channelplus": "off",
     "channelplusPopup": "off",
     "checkChangedScreenSaverTimerByUser": "default",
+    "chinaNrtaCatvStbHdmiPort": "off",
     "cicNumber": [
         {
             "country": "default",
@@ -3414,6 +5615,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "hddEcoMode": "on",
     "helpOnSettings": "on",
     "highContrast": "off",
+    "homeSenseAbsence": "off",
+    "homeSenseAccount": "off",
+    "homeSensePresence": "off",
     "homeWallPaper": "opt1",
     "hybridCast": "off",
     "inputDevicesSupportStatus": {
@@ -3430,6 +5634,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "irBlaster": "off",
     "ismMethod": "normal",
     "japanCitySelection": "Tokyo",
+    "lgChannelAutoStart": "on",
     "lifeOnScreenEnergySaving": "auto",
     "lifeOnScreenNotification": true,
     "lifeOnScreenOnTimer": [],
@@ -3571,6 +5776,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "speakToTv": "off",
     "specialRemote": false,
     "standByLight": "on",
+    "storageManager": true,
     "storeHDR": "on",
     "storeLogo": "0",
     "storeMode": "home",
@@ -3581,6 +5787,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "subtitleLanguageFirst": "eng",
     "subtitleLanguageSecond": "eng",
     "supplementaryAudio": "off",
+    "supportSettingSafetyMenu": false,
     "syncMode": "off",
     "syncModeTvCondition": "none",
     "teletextLanguageFirst": "eng",
@@ -3661,10 +5868,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     ],
     "artisticDisplayTimer": [
         "off",
+        "5",
         "10",
-        "30",
-        "60",
-        "120"
+        "30"
     ],
     "audioGuidancePitch": [
         "veryLow",
@@ -3697,6 +5903,13 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "checkChangedScreenSaverTimerByUser": [
         "default",
         "user"
+    ],
+    "chinaNrtaCatvStbHdmiPort": [
+        "off",
+        "hdmi1",
+        "hdmi2",
+        "hdmi3",
+        "hdmi4"
     ],
     "dataService": [
         "mheg",
@@ -3814,6 +6027,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "large"
     ],
     "pointerSpeed": [
+        "very slow",
         "slow",
         "normal",
         "fast"
@@ -3866,7 +6080,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     },
     "signLanguageGuidanceAvatarType": [
         "female",
-        "male"
+        "female2",
+        "male",
+        "male2"
     ],
     "signLanguageGuidancePosition": [
         "rightTop",
@@ -3966,7 +6182,20 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "colorimetryHDMI3": "auto",
     "colorimetryHDMI4": "auto",
     "contentRecommendation": "on",
+    "crosshair": "off",
     "cursorAutoRemover": "on",
+    "customButtonHasPressed": false,
+    "customLongPress": {
+        "id": "com.webos.app.accessibility-overlay",
+        "params": {
+            "quickMode": true
+        },
+        "type": "app"
+    },
+    "customShortPress": {
+        "id": "0x71",
+        "type": "key"
+    },
     "darkMode": "off",
     "dolbyVSVDBVer": "v2",
     "dolbyVSVDBVerHDMI1": "v2",
@@ -3979,7 +6208,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     },
     "enable144HzBooster": "off",
     "enableALLM": "on",
+    "enableBatteryMenu": false,
+    "enableDolbyVision": "on",
     "enableDolbyVisionPC": "off",
+    "enableMotionBooster": "off",
     "enableQFT": "off",
     "enableQuickGame": "on",
     "eotf": "auto",
@@ -3990,11 +6222,13 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "epgRowCount": "1",
     "fitLogUsbDump": "off",
     "flickerPatternCtrl": false,
+    "fpsCounter": "off",
     "freesync": "off",
     "freesyncLCDHDMI1": "off",
     "freesyncLCDHDMI2": "off",
     "freesyncLCDHDMI3": "off",
     "freesyncLCDHDMI4": "off",
+    "freesyncMenuPosition": 0,
     "freesyncOLEDHDMI1": "off",
     "freesyncOLEDHDMI2": "off",
     "freesyncOLEDHDMI3": "off",
@@ -4017,6 +6251,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "hdmi3": "off",
         "hdmi4": "off"
     },
+    "gameMonitor": "off",
     "gameOptimization": "on",
     "gameOptimizationDP1": "on",
     "gameOptimizationDP2": "on",
@@ -4063,13 +6298,16 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "hueSyncManualEnable": false,
     "illuminanceThreshold": 0,
     "inputOptimization": "auto",
+    "inputRecoveryPopupShown": false,
     "isFirstCapture": "true",
     "isFirstShowSbmSpeaker": true,
     "isHdpOpAppPopupDone": false,
+    "isOrientationLock": false,
     "isSLZoomExecutable": false,
     "isSLZoomOn": "off",
     "isSLZoomOperable": false,
     "isfUpdated": "false",
+    "kidsUsageCareLaunched": "off",
     "lastSbmSpeakerState": false,
     "lgLogoDisplay": "on",
     "lightingAutoBrightness": "off",
@@ -4321,6 +6559,20 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
             }
         },
         {
+            "haystack": {
+                "app_id": "com.haystacktv.app",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
+            "abema": {
+                "app_id": "tv.abema.webos",
+                "isActive": true,
+                "launch_param": null
+            }
+        },
+        {
             "new": {
                 "app_id": null,
                 "isActive": false,
@@ -4350,10 +6602,12 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "maxFALLHDMI3": "auto",
     "maxFALLHDMI4": "auto",
     "multiViewLaunchMode": "sxs",
+    "mypageQuickGuideLaunched": "off",
     "netflixHotkeyIsActive": true,
     "newKey": "on",
     "oledCareMode": "off",
     "oledCareRecommendation": "off",
+    "orientationInLockStatus": "NotReady",
     "othersColorMode": 0,
     "playbackThreshold": 200,
     "pseudoTouchMode": "on",
@@ -4368,7 +6622,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "QuickSettings_screenOff_button",
         "QuickSettings_privacyTerms_button",
         "QuickSettings_multiview_button",
-        "QuickSettings_musicSearch_button"
+        "QuickSettings_customKey_button"
     ],
     "quickSettingsRecentMenu": "",
     "screenRemoteAutoShow": "true",
@@ -4407,6 +6661,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "uhdDeepColorHDMI2": "off",
     "uhdDeepColorHDMI3": "off",
     "uhdDeepColorHDMI4": "off",
+    "universalControl": "[]",
     "usbcPcMode": {
         "usbc1": false,
         "usbc2": false
@@ -4464,6 +6719,13 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "bt601",
         "bt2020",
         "p3D65"
+    ],
+    "crosshair": [
+        "off",
+        "redCross",
+        "greenCross",
+        "redDot",
+        "greenDot"
     ],
     "darkMode": [
         "off",
@@ -4525,6 +6787,13 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "st2084",
         "hlg"
     ],
+    "fpsCounter": [
+        "off",
+        "topLeft",
+        "topRight",
+        "bottomRight",
+        "bottomLeft"
+    ],
     "freesync": [
         "off",
         "high",
@@ -4550,6 +6819,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "high",
         "wide"
     ],
+    "freesyncMenuPosition": {
+        "interval": 1,
+        "max": 4,
+        "min": 0
+    },
     "gameAdjustContrast": {
         "interval": 1,
         "max": 100,
@@ -4874,6 +7148,12 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "cinemaCare",
         "kidsCare"
     ],
+    "orientationInLockStatus": [
+        "NotReady",
+        "landscape",
+        "portrait",
+        "reversed_portrait"
+    ],
     "othersColorMode": {
         "interval": 1,
         "max": 36,
@@ -4998,7 +7278,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "DtmMastering10k": 40,
     "DtmMastering1k": 80,
     "DtmMastering4k": 60,
+    "DtmMasteringLumMax": 0,
+    "DtmMasteringReset": false,
     "DtmProfessional": false,
+    "DtmToneMappingGain": 0,
     "RGBWDotPatternMax": 223,
     "RGBWDotPatternMin": 31,
     "RGBWDotPatternOnOff": "off",
@@ -5040,6 +7323,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         0,
         0
     ],
+    "aiHdrRemastering": "off",
     "ambientLightCompensation": "off",
     "applyToAllInput": "done",
     "aspectRatio": "16x9",
@@ -5081,6 +7365,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "value": "auto"
     },
     "aspectRatioTv": "16x9",
+    "autoCreatorMode": "off",
     "avMode": "off",
     "backlight": "100",
     "blackLevel": {
@@ -5124,6 +7409,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "colorManagementSaturationRed": "0",
     "colorManagementSaturationYellow": "0",
     "colorTemperature": "-50",
+    "colorWeakness": "off",
     "contrast": "80",
     "demandResponse": "off",
     "displayType": "1920X1080P_60HZ_16X9",
@@ -5287,16 +7573,20 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     },
     "pcScreenSaver": "20min",
     "peakBrightness": "off",
+    "personalPictureWizard": false,
     "pictureControlLimitation": "false",
     "pictureMode": "dolbyHdrCinemaBright",
     "pictureModeSettingsActive": "true",
     "pictureModeSettingsActivePerApp": "auto",
+    "pictureReset": false,
     "pictureSettingModified": {
         "aps": false,
         "bright": false,
         "cinema": false,
+        "creator": false,
         "dolbyHdrCinema": false,
         "dolbyHdrCinemaBright": false,
+        "dolbyHdrCreator": false,
         "dolbyHdrGame": false,
         "dolbyHdrPersonalized": false,
         "dolbyHdrStandard": false,
@@ -5309,6 +7599,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "game": false,
         "hdrCinema": false,
         "hdrCinemaBright": false,
+        "hdrCreator": false,
         "hdrEco": false,
         "hdrFilmMaker": false,
         "hdrGame": false,
@@ -5915,6 +8206,16 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 100,
         "min": 10
     },
+    "DtmMasteringLumMax": {
+        "interval": 1,
+        "max": 10000,
+        "min": 0
+    },
+    "DtmToneMappingGain": {
+        "interval": 1,
+        "max": 5,
+        "min": -5
+    },
     "RGBWDotPatternMax": {
         "interval": 1,
         "max": 255,
@@ -6277,8 +8578,8 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     ],
     "nearBlackDetail": {
         "interval": 1,
-        "max": 3,
-        "min": -3
+        "max": 10,
+        "min": -10
     },
     "noiseReduction": [
         "off",
@@ -6316,6 +8617,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "photo",
         "hdrGame",
         "filmMaker",
+        "creator",
+        "hdrCreator",
+        "dolbyHdrCreator",
         "hdrFilmMaker",
         "dolbyHdrVivid",
         "dolbyHdrStandard",
@@ -6464,7 +8768,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "min": -50
     },
     "whiteBalanceIre": [
-        "2.5",
+        "1",
+        "2",
+        "3",
         "5",
         "7.5",
         "10",
@@ -6507,9 +8813,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "whiteBalanceMethod": [
         "2",
         "10",
-        "22",
+        "24",
         "10code",
-        "22code"
+        "24code"
     ],
     "whiteBalancePoint": [
         "low",
@@ -6570,8 +8876,16 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "TTSMixingRatio": "0",
     "ac4DialogueEnhancer": "off",
     "aiSound": "off",
+    "aiSoundControlMasterKaraokePitch": 0,
+    "aiSoundControlMasterKaraokeVocal": -5,
+    "aiSoundControlMasterMode": "sports",
+    "aiSoundControlMasterSportsBackground": 0,
+    "aiSoundControlMasterSportsVoice": 0,
     "aigamesound": "on",
+    "ambientGroupLighting": true,
+    "ambientLightingBrightness": "mid",
     "analogOut": "headphone",
+    "apdtimer": 15,
     "applyToAllInputSSM": "done",
     "audioBalance": "0",
     "audioDescription": "off",
@@ -6581,8 +8895,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "audioLanguageSecond": "spa",
     "auracast": "off",
     "autoVolume": "off",
-    "autopower": "off",
+    "autopower": "on",
     "avSync": "on",
+    "avSyncBtSoundbar": "0",
     "avSyncBtSurround": "0",
     "avSyncBypass": "off",
     "avSyncBypassInput": "off",
@@ -6590,23 +8905,34 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "avSyncSpeaker": "0",
     "avSyncWisa": "0",
     "bass": 0,
+    "bassPhase": "0degree",
     "blegattSoundbar": {
         "connected": false,
         "soundbarName": ""
     },
     "bluetoothMode": "surroundMode",
+    "brightnessMaxValue": 30,
     "btSpeakerMode": "off",
     "centerlevel": 0,
+    "channelNum": 0,
     "clearVoice": "off",
+    "clearVoiceProLevel": "base",
     "coSoundOutput": "off",
     "coSoundOutputState": "off",
+    "currentLightingMode": "ambient",
+    "currentMotion": "wave",
+    "currentMotionColor": "default",
     "deviceCntOfBtGeneral": "singleConnection",
     "dialogEnhancementAtsc30": "off",
     "dialogEnhancementVolumeAtsc30": "3",
     "digitalAudioPriority": "auto",
     "display": "auto",
+    "drc": 2,
     "eArcSupport": "on",
+    "enableNetworkStandby": true,
+    "enableRepeat": false,
     "equalizerStatus": "on",
+    "extwooferlevel": 0,
     "forceOutputDDPLUS": "false",
     "gameTVEqualizer": "off",
     "gameTVEqualizer10band": [
@@ -6633,22 +8959,124 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "inputAudioFormatUSBC1": "bitstream",
     "inputAudioFormatUSBC2": "bitstream",
     "lastfunction": "com.webos.service.wififunction",
+    "lgRadioPlusAuthentication": "",
     "lgSoundSync": "off",
+    "lgxboomBudsAutoSearch": "on",
     "magicSoundModified": "false",
     "magicSoundTime": "0",
     "magicSpaceSound": "off",
     "midlevel": 0,
+    "motionColor": [
+        {
+            "b": 56,
+            "colorSetName": "mypick1",
+            "g": 143,
+            "r": 213
+        },
+        {
+            "b": 0,
+            "colorSetName": "mypick2",
+            "g": 30,
+            "r": 253
+        },
+        {
+            "b": 255,
+            "colorSetName": "mypick3",
+            "g": 178,
+            "r": 15
+        }
+    ],
+    "motionColorPairinfo": [
+        {
+            "colorSetName": "default",
+            "motion": "wave"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "rotation"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "glow"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "slide"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "flash"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "breathing"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "flickering"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "breeze"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "voice"
+        }
+    ],
     "multiAudioOutputWithBt": "off",
-    "mybtnApp": "none",
-    "mybtnSleepMinute": 0,
-    "mybtnSoundMode": "none",
-    "mybtnVolume": 101,
+    "muteStatus": false,
+    "mybtnLighting": {
+        "allLighting": {
+            "ambientLightingBrightness": "mid",
+            "lightingType": "off",
+            "motionColor": [
+                {
+                    "b": 56,
+                    "colorSetName": "mypick1",
+                    "g": 143,
+                    "r": 213
+                },
+                {
+                    "b": 0,
+                    "colorSetName": "mypick2",
+                    "g": 30,
+                    "r": 253
+                },
+                {
+                    "b": 255,
+                    "colorSetName": "mypick3",
+                    "g": 178,
+                    "r": 15
+                }
+            ],
+            "selectedMotionColor": "default"
+        },
+        "type": "all_lighting"
+    },
+    "mybtnOthers": {
+        "sleepMode": {
+            "timeMinute": 120,
+            "type": [
+                "shutdown"
+            ]
+        },
+        "soundMode": "aiSoundPlus",
+        "volume": 0,
+        "volumeChangeSet": false
+    },
+    "mybtnPlaylist": {
+        "playlist": [],
+        "type": "none"
+    },
+    "networkStandbyBrightness": "low",
     "night": "off",
     "prevSoundOutput": "tv_external_speaker",
-    "rearlevel": 0,
+    "repeatMode": "repeat_all",
     "sidelevel": 0,
     "slidingSpeaker": "openPowerOn",
     "slidingSpeakerMelody": "on",
+    "smartMixer": true,
     "smartSoundMode": "off",
     "sound": "on",
     "soundAlive": "off",
@@ -6757,13 +9185,18 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "soundOutputs": [
         "tv_speaker"
     ],
+    "spotifyCredentialsBlob": "",
+    "spotifyUri": "",
+    "spotifyUsername": "",
     "startupSound": "on",
     "supportATMOS": "on",
+    "supportSoundMode": "standard",
     "surround": "off",
     "toplevel": 0,
     "treble": 0,
     "tvPowerSound": "on",
     "tvSetupConfiguration": "stand",
+    "uacMode": "2.0",
     "userEqualizer": "on",
     "userEqualizerValues": [
         0,
@@ -6790,10 +9223,44 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 100,
         "min": 0
     },
+    "aiSoundControlMasterKaraokePitch": {
+        "interval": 1,
+        "max": 3,
+        "min": -3
+    },
+    "aiSoundControlMasterKaraokeVocal": {
+        "interval": 1,
+        "max": 0,
+        "min": -6
+    },
+    "aiSoundControlMasterMode": [
+        "sports",
+        "karaoke"
+    ],
+    "aiSoundControlMasterSportsBackground": {
+        "interval": 1,
+        "max": 4,
+        "min": -4
+    },
+    "aiSoundControlMasterSportsVoice": {
+        "interval": 1,
+        "max": 4,
+        "min": -4
+    },
+    "ambientLightingBrightness": [
+        "low",
+        "mid",
+        "high"
+    ],
     "analogOut": [
         "headphone",
         "external"
     ],
+    "apdtimer": {
+        "interval": 1,
+        "max": 15,
+        "min": 0
+    },
     "applyToAllInputSSM": [
         "sound",
         "done"
@@ -6807,6 +9274,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "interval": 1,
         "max": 15,
         "min": -15
+    },
+    "avSyncBtSoundbar": {
+        "interval": 1,
+        "max": 0,
+        "min": 0
     },
     "avSyncBtSurround": {
         "interval": 1,
@@ -6833,14 +9305,28 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 6,
         "min": -6
     },
+    "bassPhase": [
+        "0degree",
+        "180degree"
+    ],
     "bluetoothMode": [
         "surroundMode",
         "speakerMode"
     ],
+    "brightnessMaxValue": {
+        "interval": 1,
+        "max": 100,
+        "min": 1
+    },
     "centerlevel": {
         "interval": 1,
         "max": 6,
         "min": -6
+    },
+    "channelNum": {
+        "interval": 1,
+        "max": 20,
+        "min": 0
     },
     "clearVoice": [
         "off",
@@ -6848,12 +9334,42 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "level2",
         "level3"
     ],
+    "clearVoiceProLevel": [
+        "base",
+        "high"
+    ],
     "coSoundOutput": [
         "off",
         "tv_speaker",
         "external_speaker",
         "soundbar",
         "bt_soundbar"
+    ],
+    "currentLightingMode": [
+        "on",
+        "off",
+        "ai_lighting",
+        "repeat_all",
+        "repeat_shuffle",
+        "custom",
+        "ambient"
+    ],
+    "currentMotion": [
+        "wave",
+        "rotation",
+        "glow",
+        "slide",
+        "flash",
+        "breathing",
+        "flickering",
+        "breeze",
+        "voice"
+    ],
+    "currentMotionColor": [
+        "default",
+        "mypick1",
+        "mypick2",
+        "mypick3"
     ],
     "deviceCntOfBtGeneral": [
         "singleConnection",
@@ -6877,11 +9393,21 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "off",
         "on"
     ],
+    "drc": {
+        "interval": 1,
+        "max": 2,
+        "min": 0
+    },
     "equalizerStatus": [
         "on",
         "off",
         "bypass"
     ],
+    "extwooferlevel": {
+        "interval": 1,
+        "max": 12,
+        "min": -15
+    },
     "gameTVEqualizer10band": {
         "interval": 1,
         "max": 10,
@@ -6943,32 +9469,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 6,
         "min": -6
     },
-    "mybtnApp": [
-        "none",
-        "com.webos.service.spotifyfunction",
-        "com.webos.service.radiofunction"
+    "networkStandbyBrightness": [
+        "low",
+        "mid",
+        "high"
     ],
-    "mybtnSleepMinute": {
-        "interval": 1,
-        "max": 120,
-        "min": 1
-    },
-    "mybtnSoundMode": [
-        "none",
-        "standard",
-        "bassBlast",
-        "music",
-        "movie",
-        "sports",
-        "game",
-        "aiSoundPlus",
-        "news"
-    ],
-    "mybtnVolume": {
-        "interval": 1,
-        "max": 101,
-        "min": 0
-    },
     "prevSoundOutput": [
         "tv_speaker",
         "external_optical",
@@ -6986,11 +9491,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "wow_cast",
         "tv_speaker_wow_cast"
     ],
-    "rearlevel": {
-        "interval": 1,
-        "max": 6,
-        "min": -6
-    },
+    "repeatMode": [
+        "repeat_all",
+        "repeat_shuffle"
+    ],
     "sidelevel": {
         "interval": 1,
         "max": 6,
@@ -7002,13 +9506,29 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     ],
     "soundMode": [
         "aiSoundPlus",
+        "aiSound",
+        "aiSound_soundbar",
         "standard",
         "movie",
         "news",
+        "newsHigh",
         "sports",
         "music",
         "game",
-        "bassBlast"
+        "game_rts",
+        "game_fps",
+        "dtsVirtualX",
+        "custom",
+        "bassBlast",
+        "voiceEnhance",
+        "bassBoost",
+        "customEq",
+        "bass",
+        "treble",
+        "rock",
+        "pop",
+        "jazz",
+        "classical"
     ],
     "soundOptimizer": [
         "normal",
@@ -7052,6 +9572,15 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "builtin_soundbar",
         "headphone"
     ],
+    "supportSoundMode": [
+        "standard",
+        "bassBoost",
+        "aiSoundPlus",
+        "voiceEnhance",
+        "customEq",
+        "personalized",
+        "newsHigh"
+    ],
     "toplevel": {
         "interval": 1,
         "max": 6,
@@ -7065,6 +9594,10 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "tvSetupConfiguration": [
         "stand",
         "wall_mount"
+    ],
+    "uacMode": [
+        "1.0",
+        "2.0"
     ],
     "userEqualizerValues": {
         "interval": 1,
@@ -7093,7 +9626,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     },
     "wooferlevel": {
         "interval": 1,
-        "max": 6,
+        "max": 12,
         "min": -15
     }
 }
@@ -7102,22 +9635,142 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 #### `"soundbar"` category - available settings (used by `set_settings` method)
 ```json
 {
-    "autopower": "off",
+    "ambientGroupLighting": true,
+    "ambientLightingBrightness": "mid",
+    "apdtimer": 15,
+    "autopower": "on",
     "bass": 0,
+    "bassPhase": "0degree",
+    "brightnessMaxValue": 30,
     "centerlevel": 0,
+    "channelNum": 0,
+    "currentLightingMode": "ambient",
+    "currentMotion": "wave",
+    "currentMotionColor": "default",
     "display": "auto",
+    "drc": 2,
+    "enableNetworkStandby": true,
+    "enableRepeat": false,
+    "extwooferlevel": 0,
     "lastfunction": "com.webos.service.wififunction",
+    "lgRadioPlusAuthentication": "",
     "midlevel": 0,
-    "mybtnApp": "none",
-    "mybtnSleepMinute": 0,
-    "mybtnSoundMode": "none",
-    "mybtnVolume": 101,
+    "motionColor": [
+        {
+            "b": 56,
+            "colorSetName": "mypick1",
+            "g": 143,
+            "r": 213
+        },
+        {
+            "b": 0,
+            "colorSetName": "mypick2",
+            "g": 30,
+            "r": 253
+        },
+        {
+            "b": 255,
+            "colorSetName": "mypick3",
+            "g": 178,
+            "r": 15
+        }
+    ],
+    "motionColorPairinfo": [
+        {
+            "colorSetName": "default",
+            "motion": "wave"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "rotation"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "glow"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "slide"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "flash"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "breathing"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "flickering"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "breeze"
+        },
+        {
+            "colorSetName": "default",
+            "motion": "voice"
+        }
+    ],
+    "muteStatus": false,
+    "mybtnLighting": {
+        "allLighting": {
+            "ambientLightingBrightness": "mid",
+            "lightingType": "off",
+            "motionColor": [
+                {
+                    "b": 56,
+                    "colorSetName": "mypick1",
+                    "g": 143,
+                    "r": 213
+                },
+                {
+                    "b": 0,
+                    "colorSetName": "mypick2",
+                    "g": 30,
+                    "r": 253
+                },
+                {
+                    "b": 255,
+                    "colorSetName": "mypick3",
+                    "g": 178,
+                    "r": 15
+                }
+            ],
+            "selectedMotionColor": "default"
+        },
+        "type": "all_lighting"
+    },
+    "mybtnOthers": {
+        "sleepMode": {
+            "timeMinute": 120,
+            "type": [
+                "shutdown"
+            ]
+        },
+        "soundMode": "aiSoundPlus",
+        "volume": 0,
+        "volumeChangeSet": false
+    },
+    "mybtnPlaylist": {
+        "playlist": [],
+        "type": "none"
+    },
+    "networkStandbyBrightness": "low",
     "night": "off",
-    "rearlevel": 0,
+    "repeatMode": "repeat_all",
     "sidelevel": 0,
+    "smartMixer": true,
+    "soundAlive": "off",
+    "spotifyCredentialsBlob": "",
+    "spotifyUri": "",
+    "spotifyUsername": "",
+    "supportSoundMode": "standard",
     "surround": "off",
     "toplevel": 0,
     "treble": 0,
+    "uacMode": "2.0",
     "wooferlevel": 0
 }
 ```
@@ -7125,21 +9778,81 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 ##### `"soundbar"` category - available non-trivial values
 ```json
 {
+    "ambientLightingBrightness": [
+        "low",
+        "mid",
+        "high"
+    ],
+    "apdtimer": {
+        "interval": 1,
+        "max": 15,
+        "min": 0
+    },
     "bass": {
         "interval": 1,
         "max": 6,
         "min": -6
+    },
+    "bassPhase": [
+        "0degree",
+        "180degree"
+    ],
+    "brightnessMaxValue": {
+        "interval": 1,
+        "max": 100,
+        "min": 1
     },
     "centerlevel": {
         "interval": 1,
         "max": 6,
         "min": -6
     },
+    "channelNum": {
+        "interval": 1,
+        "max": 20,
+        "min": 0
+    },
+    "currentLightingMode": [
+        "on",
+        "off",
+        "ai_lighting",
+        "repeat_all",
+        "repeat_shuffle",
+        "custom",
+        "ambient"
+    ],
+    "currentMotion": [
+        "wave",
+        "rotation",
+        "glow",
+        "slide",
+        "flash",
+        "breathing",
+        "flickering",
+        "breeze",
+        "voice"
+    ],
+    "currentMotionColor": [
+        "default",
+        "mypick1",
+        "mypick2",
+        "mypick3"
+    ],
     "display": [
         "auto",
         "off",
         "on"
     ],
+    "drc": {
+        "interval": 1,
+        "max": 2,
+        "min": 0
+    },
+    "extwooferlevel": {
+        "interval": 1,
+        "max": 12,
+        "min": -15
+    },
     "lastfunction": [
         "com.webos.service.bluetoothfunction",
         "com.webos.service.wififunction",
@@ -7151,42 +9864,29 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 6,
         "min": -6
     },
-    "mybtnApp": [
-        "none",
-        "com.webos.service.spotifyfunction",
-        "com.webos.service.radiofunction"
+    "networkStandbyBrightness": [
+        "low",
+        "mid",
+        "high"
     ],
-    "mybtnSleepMinute": {
-        "interval": 1,
-        "max": 120,
-        "min": 1
-    },
-    "mybtnSoundMode": [
-        "none",
-        "standard",
-        "bassBlast",
-        "music",
-        "movie",
-        "sports",
-        "game",
-        "aiSoundPlus",
-        "news"
+    "repeatMode": [
+        "repeat_all",
+        "repeat_shuffle"
     ],
-    "mybtnVolume": {
-        "interval": 1,
-        "max": 101,
-        "min": 0
-    },
-    "rearlevel": {
-        "interval": 1,
-        "max": 6,
-        "min": -6
-    },
     "sidelevel": {
         "interval": 1,
         "max": 6,
         "min": -6
     },
+    "supportSoundMode": [
+        "standard",
+        "bassBoost",
+        "aiSoundPlus",
+        "voiceEnhance",
+        "customEq",
+        "personalized",
+        "newsHigh"
+    ],
     "toplevel": {
         "interval": 1,
         "max": 6,
@@ -7197,9 +9897,13 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "max": 6,
         "min": -6
     },
+    "uacMode": [
+        "1.0",
+        "2.0"
+    ],
     "wooferlevel": {
         "interval": 1,
-        "max": 6,
+        "max": 12,
         "min": -15
     }
 }
@@ -7210,7 +9914,8 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 {
     "automaticUpdate": "off",
     "launchPUGuideApp": false,
-    "softwareUpdateEnable": "true"
+    "softwareUpdateEnable": "true",
+    "updateHistory": []
 }
 ```
 
@@ -7330,6 +10035,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "devicePath": "",
         "subDeviceId": ""
     },
+    "use24HourFormat": false,
     "warmTimerEnable": "off",
     "warmTimerWeekday1Enable": "off",
     "warmTimerWeekday2Enable": "off",
@@ -7842,12 +10548,24 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
 #### `"voiceframework"` category - available settings (used by `set_settings` method)
 ```json
 {
+    "aiAssistantState": "default",
     "amazonAlexaLocale": "",
     "audioFeedback": false,
     "channelZapping": false,
     "countPowerOn": 0,
     "disclosureAccepted": false,
     "disclosureAcceptedVsn": "N/A",
+    "easyGuideCount": {
+        "aiAgent": {
+            "currentCount": 0,
+            "maxCount": 10
+        },
+        "aiConcierge": {
+            "currentCount": 0,
+            "maxCount": 1
+        }
+    },
+    "enableFarFieldTriggerSound": true,
     "epgLastUpdated": "",
     "googleAssistantLocale": "",
     "googleAssistantStateToken": "",
@@ -7855,6 +10573,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     "supportMasa": false,
     "supportNlp": false,
     "supportStt": false,
+    "supportThinQcnNlp": false,
     "supportThinQtvNlp": false,
     "vidStatus": "{}",
     "voiceModel": "",
@@ -7927,6 +10646,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "smartServiceCountryCode2",
         "smartServiceCountryCode3",
         "storeMode",
+        "standByLight",
         "addressInfo",
         "country",
         "japanCitySelection",
@@ -8012,6 +10732,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "avSyncSpdif",
         "avSyncBypassInput",
         "eArcSupport",
+        "lgSoundSync",
         "soundOutput",
         "soundOutputDigital",
         "tvPowerSound",
@@ -8048,6 +10769,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "homeAutoLaunch",
         "lifeOnScreenMode",
         "homePromotion"
+    ],
+    "hotelMode": [
+        "enableHotelMode"
     ],
     "lock": [
         "parentalGuidance",
@@ -8087,6 +10811,7 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "smartServiceCountryCode3",
         "syncMode",
         "storeMode",
+        "standByLight",
         "localeCountryGroup",
         "japanCitySelection",
         "countryBroadcastSystem",
@@ -8098,10 +10823,15 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "simplinkEnable",
         "ueiEnable",
         "gameWallpaper",
+        "uhdDeepColor",
         "uhdDeepColorHDMI1",
         "uhdDeepColorHDMI2",
         "uhdDeepColorHDMI3",
-        "uhdDeepColorHDMI4"
+        "uhdDeepColorHDMI4",
+        "444BypassHDMI1",
+        "444BypassHDMI2",
+        "444BypassHDMI3",
+        "444BypassHDMI4"
     ],
     "picture": [
         "brightness",
@@ -8171,7 +10901,9 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
         "avSync",
         "avSyncSpdif",
         "avSyncBypassInput",
+        "digitalAudioPriority",
         "eArcSupport",
+        "lgSoundSync",
         "soundOutput",
         "soundOutputDigital",
         "soundMode",
@@ -8182,7 +10914,11 @@ dolbyHdr, dolbyHdrALLM, hdr, hdrALLM, sdr, sdrALLM, technicolorHdr, technicolorH
     ],
     "time": [
         "onTimerVolume",
-        "timeZone"
+        "timeZone",
+        "timeOffset",
+        "offTimerEnable",
+        "autoOff2HourOnTimer",
+        "automaticStandBy"
     ],
     "twinTv": [
         "status",
@@ -8199,24 +10935,58 @@ amazon-alexa-adapter.*
 amazon.*
 audio.*
 broadcast.*
+commercial.broadcast.*
+commercial.com.palm.app.settings.*
+commercial.com.webos.app.channeledit.*
+commercial.com.webos.app.firstuse.*
+commercial.com.webos.app.home.*
+commercial.com.webos.applicationManager.*
+commercial.com.webos.service.attachedstoragemanager.*
+commercial.com.webos.service.sdx.*
+commercial.com.webos.service.update.*
+commercial.com.webos.surfacemanager.*
+commercial.controlServer.*
+commercial.enterprisecode.*
+commercial.hdmicec.*
+commercial.hw.hdmiswitch.*
+commercial.hw.*
+commercial.hw.usb.*
+commercial.media.welcomevideo.*
+commercial.nativeApp.*
+commercial.network.*
+commercial.protocol.*
+commercial.sdx.*
+commercial.supersign.cms.*
+commercial.supersign.control.*
+commercial.time.*
+commercial.timer.*
+commercial.tv.config.*
 com.palm.app.firstuse.*
 com.palm.app.settings.*
 com.palm.app.store-demo.*
 com.webos.app.camera.*
+com.webos.app.commercial.contentmanager.*
+com.webos.app.commercial.*
+com.webos.app.commercial.officemeetingmode.*
 com.webos.app.connectionwizard.*
+com.webos.app.dsmp.*
 com.webos.app.factorywin.*
 com.webos.app.familycare.*
 com.webos.app.favshows.*
 com.webos.app.home.*
 com.webos.app.igallery.*
 com.webos.app.inputcommon.*
+com.webos.app.lgchannels.*
 com.webos.app.mediadiscovery.*
 com.webos.app.quicksettings.*
+com.webos.app.siappsetting.*
 com.webos.app.systemmusic.*
 com.webos.app.tips.*
 com.webos.applicationManager.*
 com.webos.authenticationMethods.*
+com.webos.bootManager.*
 com.webos.keyaction.*
+com.webos.keyfilters.*
 com.webos.memorymanager.*
 com.webos.service.airplay.*
 com.webos.service.alwaysready.*
@@ -8225,12 +10995,18 @@ com.webos.service.attachedstoragemanager.*
 com.webos.service.btaudiosrc.*
 com.webos.service.bthidmanager.*
 com.webos.service.camera.*
+com.webos.service.commercial.ezimanager.*
+com.webos.service.commercial.*
+com.webos.service.commercial.remotemanagerservice.*
+com.webos.service.commercial.webgateway.*
 com.webos.service.cbox.*
 com.webos.service.config.*
 com.webos.service.datamigrator.*
+com.webos.service.ecm.*
 com.webos.service.eim.*
 com.webos.service.favoriteservice.*
 com.webos.service.fepg.*
+com.webos.service.hcapmw.*
 com.webos.service.homelaunchpoints.*
 com.webos.service.hybridtv.*
 com.webos.service.iepg.*
@@ -8240,6 +11016,7 @@ com.webos.service.jsserver.*
 com.webos.service.livepick.*
 com.webos.service.miracast.*
 com.webos.service.miracasttx.*
+com.webos.service.mrcu.*
 com.webos.service.msc.*
 com.webos.service.nlpmanager.*
 com.webos.service.nop.*

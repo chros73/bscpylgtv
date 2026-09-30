@@ -335,6 +335,27 @@ class TestWebOsClientLite():
 
         assert request_mock.call_count == 3
 
+    @pytest.mark.parametrize("enable", [False, True])
+    async def test_toggle_screen(self, mocker, enable):
+        client = await WebOsClient.create("x", states=[], client_key="x")
+        request_mock = mocker.patch.object(client, "request", return_value={"returnValue": True})
+
+        result = await client.toggle_screen(enable)
+
+        assert result == {"returnValue": True}
+        request_mock.assert_awaited_once_with(ep.TOGGLE_SCREEN, {"OnOff": enable})
+
+    @pytest.mark.parametrize("json_output", [False, True])
+    async def test_get_current_system_settings(self, mocker, json_output):
+        client = await WebOsClient.create("x", states=[], client_key="x")
+        response = {"settings": {"brightness": 50}}
+        request_mock = mocker.patch.object(client, "request", return_value=response)
+
+        result = await client.get_current_system_settings(jsonOutput=json_output)
+
+        assert result == (json.dumps(response, indent=4, sort_keys=True) if json_output else response)
+        request_mock.assert_awaited_once_with(ep.CURRENT_SYSTEM_SETTINGS, {})
+
     async def test_subscribe_helpers_and_callback_wrappers(self, mocker):
         client = await WebOsClient.create("x", states=[], client_key="x")
 

@@ -999,6 +999,10 @@ class WebOsClient:
 
         return await self.request(getattr(ep, epName), {"standbyMode": "active"})
 
+    async def toggle_screen(self, enable=False):
+        """Toggle TV Screen on / off. (It can behave differently than turn_screen_* methods)"""
+        return await self.request(ep.TOGGLE_SCREEN, {"OnOff": enable})
+
     # 3D Mode
     async def turn_3d_on(self):
         """Turn 3D on.

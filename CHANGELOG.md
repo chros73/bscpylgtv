@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.5.5](https://github.com/chros73/bscpylgtv/tree/v0.5.5) (2025-09-30)
+**Implemented enhancements:**
+
+- Add `toggle_screen` method
+- Add `get_current_system_settings` method
+- Update available settings doc of 2022 models
+
 ## [v0.5.4](https://github.com/chros73/bscpylgtv/tree/v0.5.4) (2025-09-01)
 **Implemented enhancements:**
 

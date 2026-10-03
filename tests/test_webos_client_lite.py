@@ -1,14 +1,181 @@
 import asyncio
 import base64
 import json
+from typing import List, Optional
 
 import pytest
 from bscpylgtv import WebOsClient
 from bscpylgtv import endpoints as ep
+from bscpylgtv.exceptions import PyLGTVCmdError
 
 
 @pytest.mark.asyncio
 class TestWebOsClientLite():
+
+    async def _client_with_static_state_response(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        states: List[str],
+        error_endpoint: Optional[str] = None,
+    ):
+        class FakeStorage:
+            async def set_key(self, key, value):
+                pass
+
+            async def get_key(self, key):
+                return None
+
+            async def list_keys(self):
+                return {}
+
+        class FakeWebSocket:
+            def __init__(self):
+                self.registration_responses = iter(
+                    (
+                        json.dumps(
+                            {
+                                "type": "response",
+                                "payload": {"pairingType": "PROMPT"},
+                            }
+                        ),
+                        json.dumps(
+                            {
+                                "type": "registered",
+                                "payload": {"client-key": "test-key"},
+                            }
+                        ),
+                    )
+                )
+                self.messages = asyncio.Queue()
+
+            async def send(self, raw_message):
+                message = json.loads(raw_message)
+                if "uri" not in message:
+                    return
+                if message["uri"] == f"ssap://{error_endpoint}":
+                    response = {
+                        "id": message["id"],
+                        "type": "error",
+                        "error": "401 insufficient permissions",
+                        "payload": {},
+                    }
+                else:
+                    response = {
+                        "id": message["id"],
+                        "type": "response",
+                        "payload": {"returnValue": True, "state": "Power On"},
+                    }
+                await self.messages.put(json.dumps(response))
+
+            async def recv(self):
+                return next(self.registration_responses)
+
+            def __aiter__(self):
+                return self
+
+            async def __anext__(self):
+                message = await self.messages.get()
+                if message is None:
+                    raise StopAsyncIteration
+                return message
+
+            async def close(self):
+                await self.messages.put(None)
+
+        websocket = FakeWebSocket()
+
+        async def fake_connect(*args, **kwargs):
+            return websocket
+
+        monkeypatch.setattr(
+            "bscpylgtv.webos_client.websockets.connect", fake_connect
+        )
+        return await WebOsClient.create(
+            "x",
+            states=states,
+            client_key="test-key",
+            ping_interval=None,
+            storage=FakeStorage(),
+        )
+
+    async def test_optional_static_software_info_error_does_not_abort_connect(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """An unavailable optional static state must not abort connection."""
+        client = await self._client_with_static_state_response(
+            monkeypatch, ["software_info", "power"], ep.GET_SOFTWARE_INFO
+        )
+
+        try:
+            await client.connect()
+            assert client.is_connected()
+            assert client.software_info is None
+            assert await client.get_power_state() == {
+                "returnValue": True,
+                "state": "Power On",
+            }
+            assert client.is_connected()
+        finally:
+            await client.disconnect()
+
+    async def test_required_static_system_info_error_still_aborts_connect(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """A required static-state error must still abort connection."""
+        client = await self._client_with_static_state_response(
+            monkeypatch, ["system_info"], ep.GET_SYSTEM_INFO
+        )
+
+        with pytest.raises(PyLGTVCmdError):
+            await client.connect()
+
+    async def test_successful_static_software_info_is_cached(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Successful static software info is still cached."""
+        client = await self._client_with_static_state_response(
+            monkeypatch, ["software_info"]
+        )
+
+        try:
+            await client.connect()
+            assert client.software_info == {
+                "returnValue": True,
+                "state": "Power On",
+            }
+        finally:
+            await client.disconnect()
+
+    async def test_direct_software_info_request_still_raises_command_error(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Explicit software info requests still propagate command errors."""
+        client = await self._client_with_static_state_response(
+            monkeypatch, [], ep.GET_SOFTWARE_INFO
+        )
+
+        try:
+            await client.connect()
+            with pytest.raises(PyLGTVCmdError):
+                await client.get_software_info()
+        finally:
+            await client.disconnect()
+
+    async def test_optional_static_software_info_transport_error_propagates(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Transport errors for optional states must still abort connection."""
+        client = await self._client_with_static_state_response(
+            monkeypatch, ["software_info"]
+        )
+
+        async def raise_transport_error():
+            raise OSError("simulated transport failure")
+
+        monkeypatch.setattr(client, "get_software_info", raise_transport_error)
+
+        with pytest.raises(OSError, match="simulated transport failure"):
+            await client.connect()
 
     async def test_connect_handler_invokes_state_update_callbacks_on_failed_connect(self, monkeypatch):
         async def fake_connect(*args, **kwargs):
@@ -492,4 +659,3 @@ class TestWebOsClientLite():
                 cal_info["dovi"] = dovi
 
         assert cal_info == client._calibration_info
-

@@ -47,11 +47,13 @@ class TestWebOsClientLite():
                     )
                 )
                 self.messages = asyncio.Queue()
+                self.request_uris = []
 
             async def send(self, raw_message):
                 message = json.loads(raw_message)
                 if "uri" not in message:
                     return
+                self.request_uris.append(message["uri"])
                 if message["uri"] == f"ssap://{error_endpoint}":
                     response = {
                         "id": message["id"],
@@ -82,27 +84,30 @@ class TestWebOsClientLite():
             async def close(self):
                 await self.messages.put(None)
 
-        websocket = FakeWebSocket()
+        websockets = []
 
         async def fake_connect(*args, **kwargs):
+            websocket = FakeWebSocket()
+            websockets.append(websocket)
             return websocket
 
         monkeypatch.setattr(
             "bscpylgtv.webos_client.websockets.connect", fake_connect
         )
-        return await WebOsClient.create(
+        client = await WebOsClient.create(
             "x",
             states=states,
             client_key="test-key",
             ping_interval=None,
             storage=FakeStorage(),
         )
+        return client, websockets
 
     async def test_optional_static_software_info_error_does_not_abort_connect(
         self, monkeypatch: pytest.MonkeyPatch
     ):
         """An unavailable optional static state must not abort connection."""
-        client = await self._client_with_static_state_response(
+        client, _ = await self._client_with_static_state_response(
             monkeypatch, ["software_info", "power"], ep.GET_SOFTWARE_INFO
         )
 
@@ -122,7 +127,7 @@ class TestWebOsClientLite():
         self, monkeypatch: pytest.MonkeyPatch
     ):
         """A required static-state error must still abort connection."""
-        client = await self._client_with_static_state_response(
+        client, _ = await self._client_with_static_state_response(
             monkeypatch, ["system_info"], ep.GET_SYSTEM_INFO
         )
 
@@ -133,7 +138,7 @@ class TestWebOsClientLite():
         self, monkeypatch: pytest.MonkeyPatch
     ):
         """Successful static software info is still cached."""
-        client = await self._client_with_static_state_response(
+        client, _ = await self._client_with_static_state_response(
             monkeypatch, ["software_info"]
         )
 
@@ -150,7 +155,7 @@ class TestWebOsClientLite():
         self, monkeypatch: pytest.MonkeyPatch
     ):
         """Explicit software info requests still propagate command errors."""
-        client = await self._client_with_static_state_response(
+        client, _ = await self._client_with_static_state_response(
             monkeypatch, [], ep.GET_SOFTWARE_INFO
         )
 
@@ -165,7 +170,7 @@ class TestWebOsClientLite():
         self, monkeypatch: pytest.MonkeyPatch
     ):
         """Transport errors for optional states must still abort connection."""
-        client = await self._client_with_static_state_response(
+        client, _ = await self._client_with_static_state_response(
             monkeypatch, ["software_info"]
         )
 
@@ -176,6 +181,44 @@ class TestWebOsClientLite():
 
         with pytest.raises(OSError, match="simulated transport failure"):
             await client.connect()
+
+    async def test_connect_does_not_mutate_configured_states(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Static-state setup leaves the configured state set unchanged."""
+        requested_states = {"software_info", "system_info", "power"}
+        client, _ = await self._client_with_static_state_response(
+            monkeypatch, list(requested_states)
+        )
+
+        try:
+            await client.connect()
+            assert client.states == requested_states
+            assert "system_info" in client.states
+        finally:
+            await client.disconnect()
+
+    async def test_connect_retries_optional_software_info_after_reconnect(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Optional software info is requested again after reconnecting."""
+        client, websockets = await self._client_with_static_state_response(
+            monkeypatch, ["software_info", "power"], ep.GET_SOFTWARE_INFO
+        )
+
+        try:
+            await client.connect()
+            assert client.states == {"software_info", "power"}
+            await client.disconnect()
+            await client.connect()
+            assert client.states == {"software_info", "power"}
+            assert len(websockets) == 2
+            assert all(
+                websocket.request_uris.count(f"ssap://{ep.GET_SOFTWARE_INFO}") == 1
+                for websocket in websockets
+            )
+        finally:
+            await client.disconnect()
 
     async def test_connect_handler_invokes_state_update_callbacks_on_failed_connect(self, monkeypatch):
         async def fake_connect(*args, **kwargs):

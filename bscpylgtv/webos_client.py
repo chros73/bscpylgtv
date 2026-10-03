@@ -282,7 +282,7 @@ class WebOsClient:
             self.connection = ws
 
             if self.states:
-                selectedStates = self.states
+                selectedStates = self.states.copy()
                 # set static states, possible values: ["system_info", "software_info"]
                 static_states = selectedStates.intersection(self.STATIC_STATES)
                 if static_states:

@@ -29,6 +29,8 @@ Portable Windows binaries can be found under [releases](https://github.com/chros
 ## Examples
 Available settings can be found in [docs](https://github.com/chros73/bscpylgtv/tree/master/docs) directory, also available [buttons](https://github.com/chros73/bscpylgtv/tree/master/bscpylgtv/buttons.py), along with [API documnetation](https://github.com/chros73/bscpylgtv/tree/master/docs/api).
 ```bash
+# Get network connection information (wired / Wi-Fi) as JSON
+bscpylgtvcommand 192.168.1.18 get_connection_info true
 # Get list of apps (including hidden ones as well)
 bscpylgtvcommand 192.168.1.18 get_apps_all true
 # Push info button
@@ -105,6 +107,8 @@ bscpylgtvcommand 192.168.1.18 reboot_soft
 # Turn the TV off (standby)
 bscpylgtvcommand 192.168.1.18 power_off
 ```
+
+The connection information is returned by the TV unchanged. Responses may include `wiredInfo`, `wifiInfo`, and `p2pInfo`; these sections may contain `macAddress`. Available fields depend on the TV and webOS version.
 
 Multiple commands with arguments can also be passed to `bscpylgtvcommand` separated by ` , `:
 ```bash

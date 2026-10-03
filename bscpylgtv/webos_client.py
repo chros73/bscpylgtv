@@ -949,6 +949,11 @@ class WebOsClient:
         res = await self.request(ep.GET_SYSTEM_INFO)
         return self.__output_result(res, jsonOutput)
 
+    async def get_connection_info(self, jsonOutput=False):
+        """Return network connection information."""
+        res = await self.request(ep.GET_CONNECTION_INFO)
+        return self.__output_result(res, jsonOutput)
+
     async def get_hello_info(self, jsonOutput=False):
         """Return hello information."""
         return self.__output_result(self._hello_info, jsonOutput)

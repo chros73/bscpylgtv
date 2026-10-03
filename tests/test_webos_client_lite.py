@@ -107,6 +107,20 @@ class TestWebOsClientLite():
         ("get_services", ep.GET_SERVICES, {"services": [{"id": "svc"}]}, [{"id": "svc"}]),
         ("get_software_info", ep.GET_SOFTWARE_INFO, {"software": "ok"}, {"software": "ok"}),
         ("get_system_info", ep.GET_SYSTEM_INFO, {"model_name": "x"}, {"model_name": "x"}),
+        (
+            "get_connection_info",
+            ep.GET_CONNECTION_INFO,
+            {
+                "returnValue": True,
+                "wiredInfo": {"macAddress": "00:11:22:33:44:55"},
+                "wifiInfo": {"macAddress": "66:77:88:99:AA:BB"},
+            },
+            {
+                "returnValue": True,
+                "wiredInfo": {"macAddress": "00:11:22:33:44:55"},
+                "wifiInfo": {"macAddress": "66:77:88:99:AA:BB"},
+            },
+        ),
         ("get_hello_info", None, {"hello": "ok"}, {"hello": "ok"}),
         ("get_inputs", ep.GET_INPUTS, {"devices": [{"appId": "in1"}]}, [{"appId": "in1"}]),
         ("get_audio_status", ep.GET_AUDIO_STATUS, {"mute": True}, {"mute": True}),
@@ -131,9 +145,26 @@ class TestWebOsClientLite():
             assert result == expected
         else:
             assert result == expected
+        if method_name == "get_connection_info":
+            assert result is request_result
 
         if endpoint is not None and method_name != "get_hello_info" and method_name != "get_calibration_info":
             client.request.assert_called_once_with(endpoint)
+
+    async def test_get_connection_info_json_output(self, mocker):
+        """Return connection information as JSON when requested."""
+        client = await WebOsClient.create("x", states=[], client_key="x")
+        response = {
+            "returnValue": True,
+            "wiredInfo": {"macAddress": "00:11:22:33:44:55"},
+            "wifiInfo": {"macAddress": "66:77:88:99:AA:BB"},
+        }
+        request_mock = mocker.patch.object(client, "request", return_value=response)
+
+        result = await client.get_connection_info(True)
+
+        assert result == json.dumps(response, sort_keys=True, indent=4)
+        request_mock.assert_awaited_once_with(ep.GET_CONNECTION_INFO)
 
     data_input_commands = [
         ("button", ("ok",), {"type": "button", "name": "ok"}),

@@ -54,6 +54,7 @@ SOUND_OUTPUTS_TO_DELAY_CONSECUTIVE_VOLUME_STEPS = {"external_arc"}
 
 class WebOsClient:
     STATIC_STATES = {"system_info", "software_info"}
+    OPTIONAL_STATIC_STATES = {"software_info"}
 
     def __init__(
         self,
@@ -281,15 +282,28 @@ class WebOsClient:
             self.connection = ws
 
             if self.states:
-                selectedStates = self.states
+                selectedStates = self.states.copy()
                 # set static states, possible values: ["system_info", "software_info"]
-                staticStates = selectedStates.intersection(self.STATIC_STATES)
-                if staticStates:
+                static_states = selectedStates.intersection(self.STATIC_STATES)
+                if static_states:
                     # e.g.: [self._system_info] = await asyncio.gather(self.get_system_info())
-                    for stateElem in staticStates:
-                        stateResult = await asyncio.gather(getattr(self, f'get_{stateElem}')())
-                        setattr(self, f'_{stateElem}', (stateResult or [None])[0])
-                        selectedStates.remove(stateElem)
+                    for state in static_states:
+                        try:
+                            state_result = await asyncio.gather(
+                                getattr(self, f'get_{state}')()
+                            )
+                        except PyLGTVCmdError as ex:
+                            if state not in self.OPTIONAL_STATIC_STATES:
+                                raise
+                            logger.debug(
+                                "Optional static state %s unavailable (%s)",
+                                state,
+                                type(ex).__name__,
+                            )
+                            setattr(self, f'_{state}', None)
+                        else:
+                            setattr(self, f'_{state}', (state_result or [None])[0])
+                        selectedStates.remove(state)
 
                 # subscribe to state updates, avoid partial updates during initial subscription
                 # possible values: ["power", "current_app", "muted", "volume", "apps", "inputs",

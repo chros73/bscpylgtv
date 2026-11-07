@@ -104,6 +104,7 @@ class WebOsClient:
         self._volume = None
         self._current_channel = None
         self._channel_info = None
+        self._resubscribing_channel = False
         self._channels = None
         self._apps = {}
         self._extinputs = {}
@@ -645,6 +646,25 @@ class WebOsClient:
         since that call may fail if channel information is not available
         when it's called.
         @private"""
+        if isinstance(channel, dict) and channel.get("returnValue") is False:
+            # The TV ends the subscription with an error payload, for example
+            # "broadcastId = ... is already closed" after leaving and
+            # re-entering Live TV. Drop it instead of storing it as the channel,
+            # and subscribe again if Live TV is still in the foreground.
+            self._current_channel = None
+            if self._current_appId == "com.webos.app.livetv" and not self._resubscribing_channel:
+                self._resubscribing_channel = True
+                try:
+                    await self.subscribe_current_channel(self.set_current_channel_state)
+                except PyLGTVCmdException:
+                    pass
+                finally:
+                    self._resubscribing_channel = False
+
+            if self.state_update_callbacks and self.doStateUpdate:
+                await self.do_state_update_callbacks()
+            return
+
         self._current_channel = channel
 
         if self._channel_info is None:

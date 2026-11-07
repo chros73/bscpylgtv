@@ -4,6 +4,7 @@ import json
 
 import pytest
 from bscpylgtv import WebOsClient
+from bscpylgtv.exceptions import PyLGTVCmdException
 from bscpylgtv import endpoints as ep
 
 
@@ -61,6 +62,48 @@ class TestWebOsClientLite():
         method = getattr(client, method_name)
         await method(payload)
         assert getattr(client, attr) == expected
+
+    data_channel_error = {
+        "returnValue": False,
+        "errorText": "broadcastId = 00000035 is already closed",
+    }
+
+    async def test_channel_error_payload_is_not_stored(self, mocker):
+        client = await WebOsClient.create("x", states=[], client_key="x")
+        client._current_channel = {"channelNumber": "106", "channelName": "BBC News"}
+        client._current_appId = "com.webos.app.hdmi1"
+        subscribe = mocker.patch.object(client, "subscribe_current_channel", mocker.AsyncMock())
+
+        await client.set_current_channel_state(self.data_channel_error)
+
+        assert client.current_channel is None
+        subscribe.assert_not_awaited()
+
+    async def test_channel_error_payload_resubscribes_on_live_tv(self, mocker):
+        client = await WebOsClient.create("x", states=[], client_key="x")
+        client._current_appId = "com.webos.app.livetv"
+        subscribe = mocker.patch.object(client, "subscribe_current_channel", mocker.AsyncMock())
+
+        await client.set_current_channel_state(self.data_channel_error)
+
+        assert client.current_channel is None
+        subscribe.assert_awaited_once_with(client.set_current_channel_state)
+
+    async def test_channel_error_payload_does_not_resubscribe_in_a_loop(self, mocker):
+        client = await WebOsClient.create("x", states=[], client_key="x")
+        client._current_appId = "com.webos.app.livetv"
+
+        async def failing_subscribe(callback):
+            # A failed subscribe reply reaches the callback before it raises.
+            await callback(self.data_channel_error)
+            raise PyLGTVCmdException("Request failed")
+
+        subscribe = mocker.patch.object(client, "subscribe_current_channel", side_effect=failing_subscribe)
+
+        await client.set_current_channel_state(self.data_channel_error)
+
+        assert subscribe.await_count == 1
+        assert client.current_channel is None
 
     async def test_register_unregiser_and_clear_callbacks(self):
         client = await WebOsClient.create("x", states=[], client_key="x")

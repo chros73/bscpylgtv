@@ -493,3 +493,35 @@ class TestWebOsClientLite():
 
         assert cal_info == client._calibration_info
 
+
+
+@pytest.mark.asyncio
+async def test_power_off_callback_does_not_deadlock_teardown():
+    """set_power_state(off) runs in a callback task that the teardown waits for."""
+    client = await WebOsClient.create("x", states=[], client_key="x")
+    started = asyncio.Event()
+
+    async def power_off_callback():
+        started.set()
+        await client.set_power_state({"state": "Suspend"})
+
+    async def fake_connect_handler():
+        callback_task = asyncio.create_task(power_off_callback())
+        try:
+            await asyncio.sleep(3600)
+        except asyncio.CancelledError:
+            pass
+        finally:
+            # Same closeout loop as WebOsClient.consumer_handler and connect_handler.
+            closeout = asyncio.create_task(asyncio.wait({callback_task}))
+            while not closeout.done():
+                try:
+                    await asyncio.shield(closeout)
+                except asyncio.CancelledError:
+                    pass
+
+    client.connect_task = asyncio.create_task(fake_connect_handler())
+    await started.wait()
+    # is_on is False for "Suspend", so the callback requests a disconnect.
+    done, _ = await asyncio.wait({client.connect_task}, timeout=5)
+    assert done, "teardown deadlocked on the power-off callback"

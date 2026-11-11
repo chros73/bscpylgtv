@@ -92,6 +92,7 @@ class WebOsClient:
         self.getHelloInfo = get_hello_info
         self.storage = storage
         self.connect_task = None
+        self._disconnect_task = None
         self.connect_result = None
         self.connection = None
         self.input_connection = None
@@ -590,7 +591,12 @@ class WebOsClient:
         self._power_state = {"state": payload.get("state", "Unknown")}
 
         if not self.is_on:
-            await self.disconnect()
+            # This runs inside a callback task that the connection teardown waits for.
+            # disconnect() awaits connect_task, so awaiting it here deadlocks both:
+            # the teardown re-shields its closeout and swallows the forwarded cancel.
+            # Run it as a separate task so this callback can return.
+            if self._disconnect_task is None or self._disconnect_task.done():
+                self._disconnect_task = asyncio.create_task(self.disconnect())
         elif self.state_update_callbacks and self.doStateUpdate:
             await self.do_state_update_callbacks()
 
